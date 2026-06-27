@@ -297,7 +297,7 @@ def _is_blocked(msg: str) -> bool:
     msg_l = msg.lower()
     return any(b in msg_l for b in BLOCKED_KEYS)
 
-def get_response(message: str, user_data: dict | None = None) -> dict:
+def get_response(message: str, user_data=None) -> dict:
     """
     Returns dict:
       { "text": str, "action": None | {"type":"navigate","url":str} }
