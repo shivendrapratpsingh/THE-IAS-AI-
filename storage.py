@@ -15,7 +15,8 @@ Falls back to local JSON files if DATABASE_URL is not set (local dev).
 """
 import json
 import os
-from datetime import date, datetime
+import random
+from datetime import date, datetime, timedelta
 
 DATA_DIR       = os.path.join(os.path.dirname(__file__), "data")
 USER_DATA_FILE = os.path.join(DATA_DIR, "user_data.json")   # legacy fallback
@@ -34,12 +35,14 @@ DEFAULT_USER_DATA = {
         "preferred_subjects": [],
         "avatar_id": "ias",
         "avatar_color": "#F4621F",
+        "phone": "",           # stored in profile for general users too
     },
     "study_plan": None,
     "completed_tasks": [],
     "mcq_stats": {},
     "mcq_history": [],
-    "daily_mcq": {"date": None, "question_ids": [], "answers": {}, "submitted": False},
+    "daily_mcq": {"quiz_day": None, "date": None, "question_ids": [], "answers": {}, "submitted": False},
+    "seen_question_ids": [],   # all question IDs ever shown to this user (no-repeat logic)
     "answer_history": [],
     "bookmarked_affairs": [],
     "daily_legal": {"date": None, "answer": None},
@@ -54,6 +57,7 @@ DEFAULT_USER_DATA = {
         "last_active_page": None,
         "session_count": 0,
         "first_login": None,
+        "activity_log": [],    # ISO date strings, last 90 days, for regularity tracking
     },
 }
 
@@ -223,14 +227,24 @@ def get_all_user_summaries() -> list:
             pct = round(100 * s["correct"] / s["total"]) if s["total"] else 0
             topic_heat[topic] = {"total": s["total"], "correct": s["correct"], "pct": pct}
 
+        # Last active date from activity_log
+        activity_log = prefs.get("activity_log", [])
+        last_active_date = max(activity_log) if activity_log else prefs.get("first_login", "—")
+        days_active_30 = sum(
+            1 for i in range(30)
+            if (date.today() - timedelta(days=i)).isoformat() in set(activity_log)
+        )
+
         result.append({
             "phone":             phone,
-            "name":              data.get("profile", {}).get("name", "—"),
+            "name":              data.get("profile", {}).get("name", ""),
             "user_type":         data.get("user_type", "upsc"),
-            "stage":             data.get("profile", {}).get("stage", "—"),
+            "stage":             data.get("profile", {}).get("stage", ""),
             "avatar_id":         data.get("profile", {}).get("avatar_id", "ias"),
+            "avatar_color":      data.get("profile", {}).get("avatar_color", "#F4621F"),
             "onboarded":         data.get("onboarded", False),
             "streak":            data.get("streak", {}).get("current", 0),
+            "longest_streak":    data.get("streak", {}).get("longest", 0),
             "accuracy":          accuracy,
             "attempted":         total_attempted,
             "correct":           total_correct,
@@ -239,7 +253,11 @@ def get_all_user_summaries() -> list:
             "affairs_read":      len(prefs.get("affairs_read", [])),
             "affairs_described": len(prefs.get("affairs_described", [])),
             "session_count":     prefs.get("session_count", 0),
-            "first_login":       prefs.get("first_login", "—"),
+            "first_login":       prefs.get("first_login", ""),
+            "last_active":       last_active_date,
+            "days_active_30":    days_active_30,
+            "regularity":        compute_regularity(data),
+            "seen_questions":    len(data.get("seen_question_ids", [])),
         })
     return sorted(result, key=lambda x: x["name"])
 
@@ -285,24 +303,33 @@ def save_user_data(data):
 
 def mark_active_today(data):
     today = date.today()
+    today_iso = today.isoformat()
+
+    # Streak
     streak = data.setdefault("streak", _deep_copy(DEFAULT_USER_DATA["streak"]))
     last_active = streak.get("last_active")
 
-    if last_active == today.isoformat():
-        return
-
-    if last_active:
-        last_date = datetime.fromisoformat(last_active).date()
-        gap = (today - last_date).days
-        if gap == 1:
-            streak["current"] = streak.get("current", 0) + 1
+    if last_active != today_iso:
+        if last_active:
+            last_date = datetime.fromisoformat(last_active).date()
+            gap = (today - last_date).days
+            streak["current"] = streak.get("current", 0) + 1 if gap == 1 else 1
         else:
             streak["current"] = 1
-    else:
-        streak["current"] = 1
+        streak["longest"] = max(streak.get("longest", 0), streak["current"])
+        streak["last_active"] = today_iso
 
-    streak["longest"] = max(streak.get("longest", 0), streak["current"])
-    streak["last_active"] = today.isoformat()
+    # Activity log for regularity tracking
+    prefs = data.setdefault("prefs", {})
+    if not prefs.get("first_login"):
+        prefs["first_login"] = today_iso
+
+    activity_log = prefs.setdefault("activity_log", [])
+    if today_iso not in activity_log:
+        activity_log.append(today_iso)
+        cutoff = (today - timedelta(days=90)).isoformat()
+        prefs["activity_log"] = [d for d in activity_log if d >= cutoff]
+        prefs["session_count"] = prefs.get("session_count", 0) + 1
 
 
 # ── Static content ─────────────────────────────────────────────────────────────
@@ -312,19 +339,166 @@ def _load_json(filename):
         return json.load(f)
 
 
-_MCQ_DATA      = _load_json("mcq_bank.json")
-MCQ_TOPICS     = _MCQ_DATA["topics"]
-MCQ_BANK       = _MCQ_DATA["questions"]
-MCQ_BY_ID      = {q["id"]: q for q in MCQ_BANK}
-ANSWER_PROMPTS = _load_json("answer_prompts.json")
-LEGAL_QUESTIONS= _load_json("legal_questions.json")
-CURRENT_AFFAIRS= _load_json("current_affairs.json")
+_MCQ_DATA       = _load_json("mcq_bank.json")
+MCQ_TOPICS      = _MCQ_DATA["topics"]
+MCQ_BANK        = _MCQ_DATA["questions"]
+MCQ_BY_ID       = {q["id"]: q for q in MCQ_BANK}
+ANSWER_PROMPTS  = _load_json("answer_prompts.json")
+LEGAL_QUESTIONS = _load_json("legal_questions.json")
+CURRENT_AFFAIRS = _load_json("current_affairs.json")
 
 
-def get_daily_mcq_set(for_date=None, count=10):
-    import random
-    pool = list(MCQ_BANK)
-    return random.sample(pool, count) if len(pool) > count else pool
+# ── Daily quiz helpers ─────────────────────────────────────────────────────────
+
+def get_quiz_day():
+    """Quiz day resets at 4 AM, not midnight."""
+    now = datetime.now()
+    if now.hour < 4:
+        return (now.date() - timedelta(days=1)).isoformat()
+    return now.date().isoformat()
+
+
+def get_daily_mcq_set(user_data, count=10):
+    """
+    Returns today's MCQ set for this user.
+    - Resets at 4 AM
+    - No question repeats until all questions seen
+    - Modifies user_data in-place; caller must save.
+    """
+    quiz_day = get_quiz_day()
+    daily = user_data.get("daily_mcq", {})
+
+    # Same day: return existing set
+    if daily.get("quiz_day") == quiz_day and daily.get("question_ids"):
+        return [MCQ_BY_ID[qid] for qid in daily["question_ids"] if qid in MCQ_BY_ID]
+
+    # New day: pick unseen questions
+    seen = set(user_data.get("seen_question_ids", []))
+    all_ids = [q["id"] for q in MCQ_BANK]
+    available = [qid for qid in all_ids if qid not in seen]
+
+    # Pool exhausted: reset
+    if len(available) < count:
+        user_data["seen_question_ids"] = []
+        available = all_ids[:]
+
+    random.shuffle(available)
+    chosen_ids = available[:count]
+
+    user_data.setdefault("seen_question_ids", []).extend(chosen_ids)
+    user_data["daily_mcq"] = {
+        "quiz_day":     quiz_day,
+        "date":         quiz_day,
+        "question_ids": chosen_ids,
+        "answers":      {},
+        "submitted":    False,
+    }
+    return [MCQ_BY_ID[qid] for qid in chosen_ids if qid in MCQ_BY_ID]
+
+
+def compute_regularity(data):
+    """
+    Returns regularity label: champion / regular / occasional / at_risk / churned / new
+    """
+    prefs  = data.get("prefs", {})
+    log    = prefs.get("activity_log", [])
+    today  = date.today()
+
+    first_login = prefs.get("first_login")
+    if not first_login:
+        return "new"
+
+    try:
+        days_since_join = (today - date.fromisoformat(first_login)).days
+    except Exception:
+        days_since_join = 0
+
+    if not log:
+        return "new" if days_since_join < 3 else "churned"
+
+    log_set = set(log)
+    try:
+        last_active_d = max(date.fromisoformat(d) for d in log)
+        days_inactive = (today - last_active_d).days
+    except Exception:
+        days_inactive = 999
+
+    if days_inactive > 30:
+        return "churned"
+    if days_inactive > 14:
+        return "at_risk"
+
+    last_7  = sum(1 for i in range(7)  if (today - timedelta(days=i)).isoformat() in log_set)
+    last_30 = sum(1 for i in range(30) if (today - timedelta(days=i)).isoformat() in log_set)
+
+    if last_7 >= 6:
+        return "champion"
+    if last_7 >= 4 or last_30 >= 15:
+        return "regular"
+    if last_30 >= 8:
+        return "occasional"
+    return "at_risk"
+
+
+def get_startup_metrics():
+    """Aggregate KPIs for the admin dashboard."""
+    all_users = load_all_users()
+    today     = date.today()
+    today_iso = today.isoformat()
+
+    dau = wau = mau = 0
+    d1_total = d1_retained = 0
+    streaks = []
+    completed_quiz_users = 0
+    regularity_counts = {
+        "champion": 0, "regular": 0, "occasional": 0,
+        "at_risk": 0, "churned": 0, "new": 0,
+    }
+
+    for _phone, udata in all_users.items():
+        prefs   = udata.get("prefs", {})
+        log_set = set(prefs.get("activity_log", []))
+
+        if today_iso in log_set:
+            dau += 1
+        if any((today - timedelta(days=i)).isoformat() in log_set for i in range(7)):
+            wau += 1
+        if any((today - timedelta(days=i)).isoformat() in log_set for i in range(30)):
+            mau += 1
+
+        reg = compute_regularity(udata)
+        regularity_counts[reg] = regularity_counts.get(reg, 0) + 1
+
+        cs = udata.get("streak", {}).get("current", 0)
+        if cs > 0:
+            streaks.append(cs)
+
+        first_login = prefs.get("first_login")
+        if first_login:
+            try:
+                first_date = date.fromisoformat(first_login)
+                if (today - first_date).days >= 1:
+                    d1_total += 1
+                    if (first_date + timedelta(days=1)).isoformat() in log_set:
+                        d1_retained += 1
+            except Exception:
+                pass
+
+        if udata.get("mcq_history"):
+            completed_quiz_users += 1
+
+    total = len(all_users) or 1
+    return {
+        "total_users":         len(all_users),
+        "dau":                 dau,
+        "wau":                 wau,
+        "mau":                 mau,
+        "d1_retention_pct":    round(100 * d1_retained / d1_total) if d1_total else 0,
+        "avg_streak":          round(sum(streaks) / len(streaks), 1) if streaks else 0,
+        "max_streak":          max(streaks) if streaks else 0,
+        "quiz_completion_pct": round(100 * completed_quiz_users / total),
+        "regularity":          regularity_counts,
+    }
 
 
 def get_daily_answer_prompt(for_date=None):

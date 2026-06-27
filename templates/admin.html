@@ -9,15 +9,20 @@
     body { background:#F3F4F6; }
     .adm-page { max-width:430px; margin:0 auto; min-height:100vh; }
 
-    /* Header */
     .adm-hero {
-      background:linear-gradient(135deg,#27AE60 0%,#1E8449 100%);
+      background:linear-gradient(135deg,#1A1A2E 0%,#27AE60 100%);
       padding:48px 20px 24px; color:#fff;
     }
-    .adm-hero h1 { font-size:26px; font-weight:900; }
-    .adm-hero p  { font-size:13px; color:rgba(255,255,255,.75); margin-top:4px; }
+    .adm-hero h1 { font-size:24px; font-weight:900; }
+    .adm-hero p  { font-size:12px; color:rgba(255,255,255,.7); margin-top:3px; }
 
-    /* Summary strip */
+    /* ── Section heading ── */
+    .adm-sec {
+      font-size:11px; font-weight:700; text-transform:uppercase;
+      letter-spacing:.7px; color:#6B7280; padding:16px 16px 8px;
+    }
+
+    /* ── KPI strip (3 col) ── */
     .adm-strip {
       display:grid; grid-template-columns:repeat(3,1fr);
       background:#fff; border-bottom:1px solid #E5E7EB;
@@ -25,162 +30,334 @@
     .adm-kpi { padding:14px 8px; text-align:center; border-right:1px solid #E5E7EB; }
     .adm-kpi:last-child { border-right:none; }
     .adm-kpi-val { font-size:22px; font-weight:900; color:#F4621F; }
-    .adm-kpi-lbl { font-size:10px; color:#6B7280; font-weight:600; text-transform:uppercase; margin-top:2px; }
+    .adm-kpi-lbl { font-size:9px; color:#6B7280; font-weight:600; text-transform:uppercase; margin-top:2px; letter-spacing:.4px; }
 
-    /* Section heading */
-    .adm-sec { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.7px; color:#6B7280; padding:16px 16px 8px; }
+    /* ── Metric cards (2 col) ── */
+    .metrics-grid {
+      display:grid; grid-template-columns:1fr 1fr;
+      gap:10px; padding:0 12px 4px;
+    }
+    .m-card {
+      background:#fff; border-radius:14px; border:1px solid #E5E7EB;
+      padding:14px 12px; text-align:center;
+    }
+    .m-card-val  { font-size:26px; font-weight:900; }
+    .m-card-lbl  { font-size:10px; color:#6B7280; font-weight:600; text-transform:uppercase; margin-top:4px; letter-spacing:.4px; }
+    .m-card-sub  { font-size:11px; color:#9CA3AF; margin-top:2px; }
+    .col-orange  { color:#F4621F; }
+    .col-green   { color:#27AE60; }
+    .col-blue    { color:#2471A3; }
+    .col-purple  { color:#8E44AD; }
+    .col-gold    { color:#D4AC0D; }
 
-    /* User card */
+    /* ── Regularity segments ── */
+    .reg-grid {
+      display:grid; grid-template-columns:repeat(3,1fr);
+      gap:8px; padding:0 12px 4px;
+    }
+    .reg-pill {
+      border-radius:12px; padding:12px 6px; text-align:center;
+    }
+    .reg-pill-val { font-size:22px; font-weight:900; }
+    .reg-pill-lbl { font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.4px; margin-top:3px; }
+    .reg-champion  { background:#FFF3E0; }
+    .reg-champion .reg-pill-val  { color:#E65100; }
+    .reg-champion .reg-pill-lbl  { color:#BF360C; }
+    .reg-regular   { background:#EAF9F0; }
+    .reg-regular .reg-pill-val   { color:#27AE60; }
+    .reg-regular .reg-pill-lbl   { color:#1E8449; }
+    .reg-occasional { background:#E3F2FD; }
+    .reg-occasional .reg-pill-val { color:#2471A3; }
+    .reg-occasional .reg-pill-lbl { color:#1565C0; }
+    .reg-at_risk   { background:#FFF0E8; }
+    .reg-at_risk .reg-pill-val   { color:#F4621F; }
+    .reg-at_risk .reg-pill-lbl   { color:#C94E18; }
+    .reg-churned   { background:#FDECEA; }
+    .reg-churned .reg-pill-val   { color:#E53935; }
+    .reg-churned .reg-pill-lbl   { color:#B71C1C; }
+    .reg-new       { background:#F3E5F5; }
+    .reg-new .reg-pill-val       { color:#8E44AD; }
+    .reg-new .reg-pill-lbl       { color:#6A1B9A; }
+
+    /* ── Segment bar ── */
+    .seg-bar-wrap { margin:0 12px 16px; background:#F3F4F6; border-radius:99px; height:10px; overflow:hidden; display:flex; }
+    .seg-bar-seg  { height:100%; transition:width .4s; }
+
+    /* ── User card ── */
     .u-card {
       background:#fff; border:1px solid #E5E7EB;
-      border-radius:16px; margin:0 12px 12px; padding:16px;
-      box-shadow:0 1px 4px rgba(0,0,0,0.05);
+      border-radius:16px; margin:0 12px 12px; padding:14px;
     }
-    .u-top { display:flex; align-items:center; gap:12px; margin-bottom:12px; }
+    .u-top { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
     .u-avatar {
-      width:48px; height:48px; border-radius:50%;
+      width:44px; height:44px; border-radius:50%;
       display:flex; align-items:center; justify-content:center;
-      font-size:20px; font-weight:900; color:#fff; flex-shrink:0;
+      font-size:18px; font-weight:900; color:#fff; flex-shrink:0;
     }
-    .u-name { font-size:16px; font-weight:800; color:#1A1A1A; }
-    .u-phone { font-size:12px; color:#6B7280; font-weight:600; margin-top:2px; }
+    .u-name  { font-size:15px; font-weight:800; color:#1A1A1A; }
+    .u-phone { font-size:11px; color:#6B7280; font-weight:600; margin-top:1px; }
 
-    /* Badges */
-    .badge-row { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:10px; }
-    .bdg { font-size:11px; font-weight:700; padding:3px 10px; border-radius:99px; }
-    .bdg-upsc    { background:#FFF0E8; color:#C94E18; }
-    .bdg-general { background:#EDE7F6; color:#4527A0; }
-    .bdg-streak  { background:#FFF3E0; color:#E65100; }
-    .bdg-acc     { background:#EAF9F0; color:#1E8449; }
-    .bdg-lang    { background:#E3F2FD; color:#1565C0; }
-    .bdg-read    { background:#F3E5F5; color:#6A1B9A; }
+    .badge-row { display:flex; flex-wrap:wrap; gap:5px; margin-bottom:8px; }
+    .bdg { font-size:10px; font-weight:700; padding:3px 9px; border-radius:99px; }
+    .bdg-upsc      { background:#FFF0E8; color:#C94E18; }
+    .bdg-general   { background:#EDE7F6; color:#4527A0; }
+    .bdg-streak    { background:#FFF3E0; color:#E65100; }
+    .bdg-acc       { background:#EAF9F0; color:#1E8449; }
+    .bdg-champion  { background:#FFF3E0; color:#E65100; }
+    .bdg-regular   { background:#EAF9F0; color:#27AE60; }
+    .bdg-occasional{ background:#E3F2FD; color:#2471A3; }
+    .bdg-at_risk   { background:#FFF0E8; color:#F4621F; }
+    .bdg-churned   { background:#FDECEA; color:#E53935; }
+    .bdg-new       { background:#F3E5F5; color:#8E44AD; }
 
-    /* Topic heatmap */
-    .heat-title { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; color:#9CA3AF; margin-bottom:8px; }
-    .heat-row { display:flex; align-items:center; gap:8px; margin-bottom:6px; }
-    .heat-label { font-size:11px; font-weight:600; color:#374151; min-width:90px; }
-    .heat-track { flex:1; height:8px; background:#F3F4F6; border-radius:99px; overflow:hidden; }
+    .stats-3 { display:grid; grid-template-columns:repeat(3,1fr); gap:6px; margin-bottom:10px; }
+    .stat-box { border-radius:10px; padding:8px; text-align:center; }
+    .stat-box-val { font-size:16px; font-weight:900; }
+    .stat-box-lbl { font-size:9px; color:#6B7280; font-weight:600; text-transform:uppercase; margin-top:2px; }
+
+    .heat-title { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; color:#9CA3AF; margin-bottom:7px; }
+    .heat-row   { display:flex; align-items:center; gap:6px; margin-bottom:5px; }
+    .heat-label { font-size:10px; font-weight:600; color:#374151; min-width:80px; }
+    .heat-track { flex:1; height:7px; background:#F3F4F6; border-radius:99px; overflow:hidden; }
     .heat-fill  { height:100%; border-radius:99px; }
-    .heat-pct   { font-size:11px; font-weight:700; color:#6B7280; min-width:36px; text-align:right; }
+    .heat-pct   { font-size:10px; font-weight:700; color:#6B7280; min-width:28px; text-align:right; }
 
-    /* MCQ bank table */
+    .u-footer { display:flex; justify-content:space-between; font-size:10px; color:#9CA3AF; margin-top:8px; padding-top:8px; border-top:1px solid #F3F4F6; }
+
+    /* ── MCQ Bank ── */
     .bank-table { background:#fff; border-radius:16px; border:1px solid #E5E7EB; overflow:hidden; margin:0 12px 24px; }
-    .bank-row { display:flex; justify-content:space-between; align-items:center; padding:10px 14px; border-bottom:1px solid #F3F4F6; }
+    .bank-row   { display:flex; justify-content:space-between; align-items:center; padding:9px 14px; border-bottom:1px solid #F3F4F6; }
     .bank-row:last-child { border-bottom:none; }
-    .bank-topic { font-size:13px; font-weight:600; color:#1A1A1A; }
-    .bank-count { font-size:13px; font-weight:800; color:#F4621F; }
+    .bank-topic { font-size:12px; font-weight:600; color:#1A1A1A; }
+    .bank-count { font-size:12px; font-weight:800; color:#F4621F; }
 
-    /* Back button */
     .adm-back {
       display:block; text-align:center; margin:0 12px 32px;
       padding:14px; background:#1A1A1A; color:#fff;
       border-radius:50px; text-decoration:none; font-weight:700; font-size:14px;
     }
-
     .empty-adm { text-align:center; padding:32px; color:#9CA3AF; font-size:14px; }
+
+    /* ── Insight box ── */
+    .insight-box {
+      background:#fff; border-radius:14px; border:1px solid #E5E7EB;
+      margin:0 12px 12px; padding:14px 16px;
+    }
+    .insight-row { display:flex; justify-content:space-between; align-items:center; padding:6px 0; border-bottom:1px solid #F3F4F6; font-size:13px; }
+    .insight-row:last-child { border-bottom:none; }
+    .insight-key { color:#6B7280; font-weight:600; }
+    .insight-val { font-weight:800; color:#1A1A1A; }
+    .insight-val.good  { color:#27AE60; }
+    .insight-val.warn  { color:#F4621F; }
+    .insight-val.bad   { color:#E53935; }
   </style>
 </head>
 <body>
 <div class="adm-page">
 
   <div class="adm-hero">
-    <h1>⚡ Admin Panel</h1>
-    <p>BASS 50 · All Users · Preference Insights</p>
+    <h1>⚡ Admin Dashboard</h1>
+    <p>BASS 50 · Startup Metrics · {{ users|length }} total users</p>
   </div>
 
-  <!-- KPI strip -->
+  <!-- ── Core KPI Strip ── -->
   <div class="adm-strip">
     <div class="adm-kpi">
-      <div class="adm-kpi-val">{{ users|length }}</div>
-      <div class="adm-kpi-lbl">Total Users</div>
+      <div class="adm-kpi-val">{{ metrics.dau }}</div>
+      <div class="adm-kpi-lbl">DAU</div>
     </div>
     <div class="adm-kpi">
-      <div class="adm-kpi-val">{{ users|selectattr('onboarded')|list|length }}</div>
-      <div class="adm-kpi-lbl">Active</div>
+      <div class="adm-kpi-val">{{ metrics.wau }}</div>
+      <div class="adm-kpi-lbl">WAU</div>
     </div>
     <div class="adm-kpi">
-      <div class="adm-kpi-val">{{ mcq_total }}</div>
-      <div class="adm-kpi-lbl">Qs in Bank</div>
+      <div class="adm-kpi-val">{{ metrics.mau }}</div>
+      <div class="adm-kpi-lbl">MAU</div>
     </div>
   </div>
 
-  <!-- User cards -->
+  <!-- ── Startup Health Metrics ── -->
+  <div class="adm-sec">Startup Health</div>
+  <div class="metrics-grid">
+    <div class="m-card">
+      <div class="m-card-val col-green">{{ metrics.d1_retention_pct }}%</div>
+      <div class="m-card-lbl">D1 Retention</div>
+      <div class="m-card-sub">came back next day</div>
+    </div>
+    <div class="m-card">
+      <div class="m-card-val col-orange">{{ metrics.quiz_completion_pct }}%</div>
+      <div class="m-card-lbl">Quiz Completion</div>
+      <div class="m-card-sub">completed ≥1 quiz</div>
+    </div>
+    <div class="m-card">
+      <div class="m-card-val col-gold">{{ metrics.avg_streak }}</div>
+      <div class="m-card-lbl">Avg Streak</div>
+      <div class="m-card-sub">days active in a row</div>
+    </div>
+    <div class="m-card">
+      <div class="m-card-val col-purple">{{ metrics.max_streak }}</div>
+      <div class="m-card-lbl">Best Streak</div>
+      <div class="m-card-sub">longest user streak</div>
+    </div>
+  </div>
+
+  <!-- ── Key Insight Table ── -->
+  <div class="adm-sec">Key Ratios</div>
+  <div class="insight-box">
+    {% set dau_mau = ((metrics.dau / metrics.mau * 100)|round|int) if metrics.mau else 0 %}
+    <div class="insight-row">
+      <span class="insight-key">DAU / MAU ratio</span>
+      <span class="insight-val {{ 'good' if dau_mau >= 20 else ('warn' if dau_mau >= 10 else 'bad') }}">{{ dau_mau }}%</span>
+    </div>
+    <div class="insight-row">
+      <span class="insight-key">D1 Retention</span>
+      <span class="insight-val {{ 'good' if metrics.d1_retention_pct >= 40 else ('warn' if metrics.d1_retention_pct >= 20 else 'bad') }}">{{ metrics.d1_retention_pct }}%</span>
+    </div>
+    <div class="insight-row">
+      <span class="insight-key">Champions + Regulars</span>
+      {% set loyal = metrics.regularity.champion + metrics.regularity.regular %}
+      {% set loyal_pct = ((loyal / users|length * 100)|round|int) if users|length else 0 %}
+      <span class="insight-val {{ 'good' if loyal_pct >= 30 else ('warn' if loyal_pct >= 15 else 'bad') }}">{{ loyal_pct }}% ({{ loyal }} users)</span>
+    </div>
+    <div class="insight-row">
+      <span class="insight-key">At-risk + Churned</span>
+      {% set bad = metrics.regularity.at_risk + metrics.regularity.churned %}
+      {% set bad_pct = ((bad / users|length * 100)|round|int) if users|length else 0 %}
+      <span class="insight-val {{ 'bad' if bad_pct >= 40 else ('warn' if bad_pct >= 20 else 'good') }}">{{ bad_pct }}% ({{ bad }} users)</span>
+    </div>
+    <div class="insight-row">
+      <span class="insight-key">Total users</span>
+      <span class="insight-val">{{ metrics.total_users }}</span>
+    </div>
+    <div class="insight-row">
+      <span class="insight-key">Questions in bank</span>
+      <span class="insight-val">{{ mcq_total }}</span>
+    </div>
+  </div>
+
+  <!-- ── Regularity Segments ── -->
+  <div class="adm-sec">User Regularity</div>
+  <div class="reg-grid">
+    <div class="reg-pill reg-champion">
+      <div class="reg-pill-val">{{ metrics.regularity.champion }}</div>
+      <div class="reg-pill-lbl">🏆 Champion</div>
+    </div>
+    <div class="reg-pill reg-regular">
+      <div class="reg-pill-val">{{ metrics.regularity.regular }}</div>
+      <div class="reg-pill-lbl">✅ Regular</div>
+    </div>
+    <div class="reg-pill reg-occasional">
+      <div class="reg-pill-val">{{ metrics.regularity.occasional }}</div>
+      <div class="reg-pill-lbl">📅 Occasional</div>
+    </div>
+    <div class="reg-pill reg-at_risk">
+      <div class="reg-pill-val">{{ metrics.regularity.at_risk }}</div>
+      <div class="reg-pill-lbl">⚠️ At-Risk</div>
+    </div>
+    <div class="reg-pill reg-churned">
+      <div class="reg-pill-val">{{ metrics.regularity.churned }}</div>
+      <div class="reg-pill-lbl">💤 Churned</div>
+    </div>
+    <div class="reg-pill reg-new">
+      <div class="reg-pill-val">{{ metrics.regularity.new }}</div>
+      <div class="reg-pill-lbl">🌱 New</div>
+    </div>
+  </div>
+
+  <!-- Segment bar -->
+  {% set total_u = users|length or 1 %}
+  <div class="seg-bar-wrap">
+    <div class="seg-bar-seg" style="width:{{ (metrics.regularity.champion / total_u * 100)|round }}%; background:#E65100;"></div>
+    <div class="seg-bar-seg" style="width:{{ (metrics.regularity.regular / total_u * 100)|round }}%; background:#27AE60;"></div>
+    <div class="seg-bar-seg" style="width:{{ (metrics.regularity.occasional / total_u * 100)|round }}%; background:#2471A3;"></div>
+    <div class="seg-bar-seg" style="width:{{ (metrics.regularity.at_risk / total_u * 100)|round }}%; background:#F4621F;"></div>
+    <div class="seg-bar-seg" style="width:{{ (metrics.regularity.churned / total_u * 100)|round }}%; background:#E53935;"></div>
+    <div class="seg-bar-seg" style="width:{{ (metrics.regularity.new / total_u * 100)|round }}%; background:#8E44AD;"></div>
+  </div>
+
+  <!-- ── User Cards ── -->
   <div class="adm-sec">All Users ({{ users|length }})</div>
 
   {% if users %}
     {% for u in users %}
     <div class="u-card">
 
-      <!-- Top row: avatar + identity -->
       <div class="u-top">
-        <div class="u-avatar" style="background:{{ u.get('avatar_color','#F4621F') if u.get('avatar_color') else '#F4621F' }};">
+        <div class="u-avatar" style="background:{{ u.get('avatar_color','#F4621F') or '#F4621F' }};">
           {{ u.name[0]|upper if u.name and u.name != '—' else '?' }}
         </div>
-        <div>
+        <div style="flex:1; min-width:0;">
           <div class="u-name">{{ u.name }}</div>
           <div class="u-phone">📱 {{ u.phone }}</div>
         </div>
       </div>
 
-      <!-- Badges -->
       <div class="badge-row">
         <span class="bdg {{ 'bdg-upsc' if u.user_type == 'upsc' else 'bdg-general' }}">
           {{ '🎯 UPSC' if u.user_type == 'upsc' else '📚 General' }}
         </span>
         <span class="bdg bdg-upsc">{{ u.stage|capitalize }}</span>
+        <span class="bdg bdg-{{ u.regularity }}">
+          {% if u.regularity == 'champion' %}🏆 Champion
+          {% elif u.regularity == 'regular' %}✅ Regular
+          {% elif u.regularity == 'occasional' %}📅 Occasional
+          {% elif u.regularity == 'at_risk' %}⚠️ At-Risk
+          {% elif u.regularity == 'churned' %}💤 Churned
+          {% else %}🌱 New{% endif %}
+        </span>
         {% if u.streak > 0 %}
-        <span class="bdg bdg-streak">🔥 {{ u.streak }}-day</span>
+        <span class="bdg bdg-streak">🔥 {{ u.streak }}-day streak</span>
         {% endif %}
         {% if u.accuracy is not none %}
-        <span class="bdg bdg-acc">{{ u.accuracy }}% accuracy</span>
-        {% endif %}
-        {% if u.language and u.language != 'en' %}
-        <span class="bdg bdg-lang">🌐 {{ u.language }}</span>
-        {% endif %}
-        {% if u.affairs_read > 0 %}
-        <span class="bdg bdg-read">📰 {{ u.affairs_read }} read · {{ u.affairs_described }} described</span>
+        <span class="bdg bdg-acc">{{ u.accuracy }}% acc</span>
         {% endif %}
       </div>
 
-      <!-- Stats row -->
-      <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:12px;">
-        <div style="background:#FFF0E8; border-radius:10px; padding:8px; text-align:center;">
-          <div style="font-size:18px; font-weight:900; color:#F4621F;">{{ u.attempted }}</div>
-          <div style="font-size:10px; color:#6B7280; font-weight:600;">Attempted</div>
+      <!-- Stats -->
+      <div class="stats-3">
+        <div class="stat-box" style="background:#FFF0E8;">
+          <div class="stat-box-val" style="color:#F4621F;">{{ u.attempted }}</div>
+          <div class="stat-box-lbl">Attempted</div>
         </div>
-        <div style="background:#EAF9F0; border-radius:10px; padding:8px; text-align:center;">
-          <div style="font-size:18px; font-weight:900; color:#27AE60;">{{ u.correct }}</div>
-          <div style="font-size:10px; color:#6B7280; font-weight:600;">Correct</div>
+        <div class="stat-box" style="background:#EAF9F0;">
+          <div class="stat-box-val" style="color:#27AE60;">{{ u.correct }}</div>
+          <div class="stat-box-lbl">Correct</div>
         </div>
-        <div style="background:#F9FAFB; border-radius:10px; padding:8px; text-align:center;">
-          <div style="font-size:18px; font-weight:900; color:#6B7280;">{{ u.session_count }}</div>
-          <div style="font-size:10px; color:#6B7280; font-weight:600;">Sessions</div>
+        <div class="stat-box" style="background:#F3F4F6;">
+          <div class="stat-box-val" style="color:#6B7280;">{{ u.session_count }}</div>
+          <div class="stat-box-lbl">Sessions</div>
         </div>
+      </div>
+
+      <!-- Active days bar (last 30) -->
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;">
+        <div style="font-size:10px; color:#6B7280; font-weight:600; min-width:70px;">Active / 30d</div>
+        <div style="flex:1; background:#F3F4F6; border-radius:99px; height:7px; overflow:hidden;">
+          <div style="height:100%; border-radius:99px; background:{% if u.days_active_30 >= 20 %}#27AE60{% elif u.days_active_30 >= 10 %}#F4621F{% elif u.days_active_30 >= 5 %}#2471A3{% else %}#9CA3AF{% endif %}; width:{{ (u.days_active_30 / 30 * 100)|round }}%;"></div>
+        </div>
+        <div style="font-size:10px; font-weight:700; color:#6B7280; min-width:28px; text-align:right;">{{ u.days_active_30 }}/30</div>
       </div>
 
       <!-- Topic heatmap -->
       {% if u.topic_heat %}
-      <div class="heat-title">Topic Performance Heatmap</div>
+      <div class="heat-title">Topic Performance</div>
       {% for topic, heat in u.topic_heat.items() %}
       <div class="heat-row">
-        <div class="heat-label">{{ topic[:12] }}</div>
+        <div class="heat-label">{{ topic[:14] }}</div>
         <div class="heat-track">
-          <div class="heat-fill" style="
-            width:{{ heat.pct }}%;
-            background:{{ '#27AE60' if heat.pct >= 70 else ('#F4621F' if heat.pct >= 40 else '#E53935') }};
-          "></div>
+          <div class="heat-fill" style="width:{{ heat.pct }}%; background:{{ '#27AE60' if heat.pct >= 70 else ('#F4621F' if heat.pct >= 40 else '#E53935') }};"></div>
         </div>
         <div class="heat-pct">{{ heat.pct }}%</div>
       </div>
       {% endfor %}
-      {% else %}
-      <div style="font-size:12px; color:#9CA3AF; text-align:center; padding:8px;">No quiz data yet</div>
       {% endif %}
 
-      <!-- First login -->
-      {% if u.first_login and u.first_login != '—' %}
-      <div style="font-size:11px; color:#9CA3AF; margin-top:10px;">First login: {{ u.first_login }}</div>
-      {% endif %}
+      <!-- Footer -->
+      <div class="u-footer">
+        <span>First login: {{ u.first_login }}</span>
+        <span>Last seen: {{ u.last_active }}</span>
+        <span>{{ u.seen_questions }} Qs seen</span>
+      </div>
 
     </div>
     {% endfor %}
@@ -188,7 +365,7 @@
   <div class="empty-adm">👥 No users yet — share the app!</div>
   {% endif %}
 
-  <!-- MCQ Bank breakdown -->
+  <!-- ── MCQ Bank Breakdown ── -->
   <div class="adm-sec">MCQ Bank Breakdown</div>
   <div class="bank-table">
     {% for topic, count in topic_counts.items() %}
@@ -199,7 +376,7 @@
     {% endfor %}
     <div class="bank-row" style="background:#FFF0E8;">
       <span class="bank-topic" style="font-weight:800; color:#F4621F;">TOTAL</span>
-      <span class="bank-count" style="font-size:16px;">{{ mcq_total }}</span>
+      <span class="bank-count" style="font-size:14px;">{{ mcq_total }}</span>
     </div>
   </div>
 

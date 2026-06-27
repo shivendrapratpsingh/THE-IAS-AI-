@@ -9,7 +9,7 @@ Everything runs offline — no API key or internet required.
 """
 import os
 import random
-from datetime import date
+from datetime import date, datetime
 
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 
@@ -191,17 +191,26 @@ def onboarding():
     phone, data = _get_current_user()
 
     if request.method == "POST":
+        # Phone from form (general users enter it here; UPSC users get it pre-filled)
+        form_phone = request.form.get("phone", "").strip()
+        form_country = request.form.get("country_code", "+91").strip()
+        full_phone_entered = (form_country + "".join(filter(str.isdigit, form_phone))) if form_phone else ""
+
         profile = {
-            "name": request.form.get("name", "").strip() or "Aspirant",
-            "stage": request.form.get("stage", "beginner"),
-            "target_year": request.form.get("target_year", "").strip(),
-            "daily_hours": _parse_daily_hours(request.form.get("daily_hours")),
-            "preferred_subjects": request.form.getlist("preferred_subjects"),
+            "name":                request.form.get("name", "").strip() or "Aspirant",
+            "stage":               request.form.get("stage", "beginner"),
+            "target_year":         request.form.get("target_year", "").strip(),
+            "daily_hours":         _parse_daily_hours(request.form.get("daily_hours")),
+            "preferred_subjects":  request.form.getlist("preferred_subjects"),
+            "avatar_id":           data.get("profile", {}).get("avatar_id", "ias"),
+            "avatar_color":        data.get("profile", {}).get("avatar_color", "#F4621F"),
+            "phone":               full_phone_entered or session.get("phone", ""),
         }
         data["profile"] = profile
         data["onboarded"] = True
         data["study_plan"] = study_plan.generate_fallback_plan(profile)
         data["completed_tasks"] = []
+        storage.mark_active_today(data)
         _save_current_user(phone, data)
         return redirect(url_for("avatar_select"))
 
@@ -250,6 +259,10 @@ def home():
     redir = _require_onboarding(data)
     if redir:
         return redir
+
+    # Track activity on every home visit
+    storage.mark_active_today(data)
+    _save_current_user(phone, data)
 
     today_iso = date.today().isoformat()
     daily_mcq = data.get("daily_mcq", {})
@@ -370,20 +383,13 @@ def mcq():
     if redir:
         return redir
 
-    today = date.today()
-    today_iso = today.isoformat()
-    daily = data.get("daily_mcq", {})
+    quiz_day = storage.get_quiz_day()
+    today_iso = date.today().isoformat()
 
-    if daily.get("date") != today_iso:
-        qset = storage.get_daily_mcq_set(today, count=_mcq_count())
-        daily = {
-            "date": today_iso,
-            "question_ids": [q["id"] for q in qset],
-            "answers": {},
-            "submitted": False,
-        }
-        data["daily_mcq"] = daily
-        _save_current_user(phone, data)
+    # Assign today's set (idempotent — only generates once per quiz_day)
+    storage.get_daily_mcq_set(data, count=_mcq_count())
+    daily = data["daily_mcq"]
+    _save_current_user(phone, data)
 
     if request.method == "POST":
         action = request.form.get("action")
@@ -402,7 +408,7 @@ def mcq():
                 topic = q["topic"]
                 ts = stats.setdefault(topic, {"correct": 0, "total": 0})
                 ts["total"] += 1
-                is_correct = selected == q["correctIndex"]
+                is_correct = (selected == q["correctIndex"])
                 if is_correct:
                     ts["correct"] += 1
                 data.setdefault("mcq_history", []).append({
@@ -413,27 +419,27 @@ def mcq():
             storage.mark_active_today(data)
             _save_current_user(phone, data)
 
-        elif action == "new_set":
-            import random as _r
-            pool = list(storage.MCQ_BANK)
-            _r.shuffle(pool)
-            daily = {
-                "date": today_iso,
-                "question_ids": [q["id"] for q in pool[:_mcq_count()]],
-                "answers": {},
-                "submitted": False,
-            }
-            data["daily_mcq"] = daily
-            _save_current_user(phone, data)
-
         return redirect(url_for("mcq"))
 
     questions = [storage.MCQ_BY_ID[qid] for qid in daily["question_ids"] if qid in storage.MCQ_BY_ID]
     score = None
     if daily.get("submitted"):
         answers = daily.get("answers", {})
-        correct = sum(1 for qid, sel in answers.items() if storage.MCQ_BY_ID.get(qid, {}).get("correctIndex") == sel)
+        correct = sum(
+            1 for qid, sel in answers.items()
+            if storage.MCQ_BY_ID.get(qid, {}).get("correctIndex") == sel
+        )
         score = {"correct": correct, "total": len(questions)}
+
+    # Compute reset time for display (next 4 AM)
+    from datetime import timedelta as _td
+    now = datetime.now()
+    if now.hour < 4:
+        reset_at = now.replace(hour=4, minute=0, second=0, microsecond=0)
+    else:
+        reset_at = (now + _td(days=1)).replace(hour=4, minute=0, second=0, microsecond=0)
+    hours_left = int((reset_at - now).total_seconds() // 3600)
+    mins_left  = int(((reset_at - now).total_seconds() % 3600) // 60)
 
     return render_template(
         "mcq.html",
@@ -443,6 +449,10 @@ def mcq():
         profile=data.get("profile"),
         phone=phone,
         is_upsc=_is_upsc(),
+        hours_left=hours_left,
+        mins_left=mins_left,
+        seen_total=len(data.get("seen_question_ids", [])),
+        bank_total=len(storage.MCQ_BANK),
     )
 
 
@@ -566,14 +576,17 @@ def profile():
 @app.route("/admin")
 def admin():
     from collections import Counter
-    users = storage.get_all_user_summaries()
+    users       = storage.get_all_user_summaries()
     topic_counts = Counter(q["topic"] for q in storage.MCQ_BANK)
+    metrics     = storage.get_startup_metrics()
     return render_template(
         "admin.html",
         users=users,
         mcq_total=len(storage.MCQ_BANK),
         topic_counts=dict(topic_counts),
+        metrics=metrics,
     )
+
 
 
 # ── AI ASSISTANT ──────────────────────────────────────────────────────────────
