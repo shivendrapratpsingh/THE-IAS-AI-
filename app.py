@@ -86,7 +86,7 @@ def _mcq_count():
 
 def _require_onboarding(data):
     """Return redirect if not onboarded, else None."""
-    if not data.get("onboarded"):
+    if not data.get("onboarded") and not session.get("onboarded"):
         return redirect(url_for("onboarding"))
     return None
 
@@ -216,6 +216,8 @@ def onboarding():
         data["completed_tasks"] = []
         storage.mark_active_today(data)
         _save_current_user(phone, data)
+        session["onboarded"] = True   # session backup so loop never happens
+        session["profile_name"] = profile["name"]
         flash("Welcome! Let's start your daily quiz 🎯")
         return redirect(url_for("home"))
 
