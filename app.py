@@ -191,6 +191,11 @@ def onboarding():
     phone, data = _get_current_user()
 
     if request.method == "POST":
+        # Mode selection (UPSC vs general)
+        user_mode = request.form.get("user_mode", "upsc")
+        session["user_mode"] = user_mode
+        data["user_type"] = user_mode
+
         # Phone from form (general users enter it here; UPSC users get it pre-filled)
         form_phone = request.form.get("phone", "").strip()
         form_country = request.form.get("country_code", "+91").strip()
@@ -205,6 +210,7 @@ def onboarding():
             "avatar_id":           data.get("profile", {}).get("avatar_id", "ias"),
             "avatar_color":        data.get("profile", {}).get("avatar_color", "#F4621F"),
             "phone":               full_phone_entered or session.get("phone", ""),
+            "user_mode":           user_mode,
         }
         # Set default avatar if none chosen yet
         if not data.get("profile", {}).get("avatar_id"):
@@ -573,12 +579,19 @@ def profile():
         flash("Profile updated.")
         return redirect(url_for("profile"))
 
+    stats = data.get("mcq_stats", {})
+    total_attempted = sum(s["total"] for s in stats.values())
+    total_correct   = sum(s["correct"] for s in stats.values())
+    overall_accuracy = round(100 * total_correct / total_attempted) if total_attempted else 0
     return render_template(
         "profile.html",
         subjects=study_plan.SUBJECT_CATEGORIES,
         profile=data.get("profile"),
         streak=data.get("streak", {}),
         phone=phone,
+        total_attempted=total_attempted,
+        overall_accuracy=overall_accuracy,
+        is_upsc=_is_upsc(),
     )
 
 

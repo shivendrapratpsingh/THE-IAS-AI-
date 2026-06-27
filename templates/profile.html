@@ -3,78 +3,150 @@
 
 {% block content %}
 
-<div class="dash-greeting">
-  <h2>👤 Profile</h2>
-  <p>Update your prep preferences</p>
-</div>
+<!-- ── Profile Hero ── -->
+<div style="background:linear-gradient(135deg,#F4621F 0%,#8B2500 100%); padding:32px 20px 28px; position:relative; overflow:hidden;">
+  <!-- decorative circles -->
+  <div style="position:absolute;top:-30px;right:-30px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,0.07);"></div>
+  <div style="position:absolute;bottom:-20px;left:-20px;width:80px;height:80px;border-radius:50%;background:rgba(255,255,255,0.06);"></div>
 
-{% with messages = get_flashed_messages() %}
-  {% if messages %}{% for msg in messages %}
-    <div class="flash">{{ msg }}</div>
-  {% endfor %}{% endif %}
-{% endwith %}
-
-{# Streak card #}
-{% if streak.current_streak %}
-<div class="streak-banner" style="margin:0 14px 14px;">
-  <div class="streak-flame">🔥</div>
-  <div class="streak-text">
-    <h3>{{ streak.current_streak }}-Day Streak</h3>
-    <p>Longest: {{ streak.longest_streak or streak.current_streak }} days</p>
+  <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px;position:relative;">
+    <div style="width:76px;height:76px;border-radius:50%;overflow:hidden;border:3px solid rgba(255,255,255,0.5);flex-shrink:0;background:rgba(255,255,255,0.15);">
+      {% if profile and profile.avatar_id %}
+        <img src="{{ url_for('avatar_svg_route', avatar_id=profile.avatar_id) }}?color={{ profile.avatar_color|urlencode }}"
+             width="76" height="76" alt="{{ profile.name }}" style="display:block;">
+      {% else %}
+        <div style="width:76px;height:76px;display:flex;align-items:center;justify-content:center;font-size:34px;color:#fff;font-weight:900;">
+          {{ (profile.name[0]|upper) if profile and profile.name else 'A' }}
+        </div>
+      {% endif %}
+    </div>
+    <div style="flex:1;">
+      <div style="font-size:22px;font-weight:900;color:#fff;line-height:1.2;">
+        {{ profile.name if profile and profile.name else 'Aspirant' }}
+      </div>
+      <div style="font-size:12px;color:rgba(255,255,255,0.7);margin-top:4px;">
+        📱 ···· {{ phone[-4:] if phone and not phone.startswith('guest_') else '—' }}
+      </div>
+      <div style="margin-top:8px;">
+        <span style="background:rgba(255,255,255,0.2);color:#fff;font-size:11px;font-weight:700;padding:4px 12px;border-radius:99px;letter-spacing:.3px;">
+          {{ '🎯 UPSC Aspirant' if is_upsc else '📚 General Practice' }}
+        </span>
+        {% if profile and profile.stage %}
+        <span style="background:rgba(255,255,255,0.12);color:rgba(255,255,255,0.85);font-size:11px;font-weight:600;padding:4px 12px;border-radius:99px;margin-left:6px;">
+          {{ profile.stage|capitalize }}
+        </span>
+        {% endif %}
+      </div>
+    </div>
   </div>
-</div>
-{% endif %}
 
-<div style="padding:0 16px 40px;">
+  <!-- Stats strip -->
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;position:relative;">
+    <div style="background:rgba(255,255,255,0.15);backdrop-filter:blur(4px);border-radius:14px;padding:14px 8px;text-align:center;">
+      <div style="font-size:24px;font-weight:900;color:#fff;">{{ streak.current if streak and streak.current else 0 }}</div>
+      <div style="font-size:10px;color:rgba(255,255,255,0.75);font-weight:700;letter-spacing:.4px;margin-top:2px;">🔥 STREAK</div>
+    </div>
+    <div style="background:rgba(255,255,255,0.15);backdrop-filter:blur(4px);border-radius:14px;padding:14px 8px;text-align:center;">
+      <div style="font-size:24px;font-weight:900;color:#fff;">{{ total_attempted }}</div>
+      <div style="font-size:10px;color:rgba(255,255,255,0.75);font-weight:700;letter-spacing:.4px;margin-top:2px;">🧠 ATTEMPTED</div>
+    </div>
+    <div style="background:rgba(255,255,255,0.15);backdrop-filter:blur(4px);border-radius:14px;padding:14px 8px;text-align:center;">
+      <div style="font-size:24px;font-weight:900;color:#fff;">{{ overall_accuracy }}<span style="font-size:14px;">%</span></div>
+      <div style="font-size:10px;color:rgba(255,255,255,0.75);font-weight:700;letter-spacing:.4px;margin-top:2px;">🎯 ACCURACY</div>
+    </div>
+  </div>
+
+  {% if streak and streak.longest %}
+  <div style="text-align:center;margin-top:12px;font-size:12px;color:rgba(255,255,255,0.65);position:relative;">
+    🏆 Best streak: <strong style="color:rgba(255,255,255,0.9);">{{ streak.longest }} days</strong>
+    {% if profile and profile.target_year %}
+     · 📅 Target: <strong style="color:rgba(255,255,255,0.9);">UPSC {{ profile.target_year }}</strong>
+    {% endif %}
+  </div>
+  {% endif %}
+</div>
+
+<!-- ── Edit Section ── -->
+<div style="background:#fff;border-radius:24px 24px 0 0;padding:28px 20px 100px;margin-top:-12px;position:relative;z-index:1;">
+
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:20px;">
+    <div style="width:4px;height:20px;background:#F4621F;border-radius:4px;"></div>
+    <div style="font-size:16px;font-weight:800;color:#1A1A1A;">Edit Profile</div>
+  </div>
+
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}{% for msg in messages %}
+      <div style="background:#F0FFF4;border-left:4px solid #27AE60;border-radius:10px;padding:12px 16px;margin-bottom:16px;font-size:13px;color:#27AE60;font-weight:600;">✓ {{ msg }}</div>
+    {% endfor %}{% endif %}
+  {% endwith %}
+
   <form method="post">
 
     <div class="form-group">
-      <label class="form-label" for="name">Full Name</label>
-      <input class="form-input" type="text" id="name" name="name"
+      <label class="form-label" for="p-name">Full Name</label>
+      <input class="form-input" type="text" id="p-name" name="name"
              placeholder="Your name"
-             value="{{ profile.name if profile else '' }}">
+             value="{{ profile.name if profile else '' }}" required>
     </div>
 
     <div class="form-group">
-      <label class="form-label" for="stage">Prep Stage</label>
-      <select class="form-select" id="stage" name="stage">
-        <option value="beginner"     {{ 'selected' if profile and profile.stage == 'beginner' }}>Beginner</option>
-        <option value="intermediate" {{ 'selected' if profile and profile.stage == 'intermediate' }}>Intermediate</option>
-        <option value="advanced"     {{ 'selected' if profile and profile.stage == 'advanced' }}>Advanced</option>
+      <label class="form-label" for="p-stage">Prep Stage</label>
+      <select class="form-select" id="p-stage" name="stage">
+        <option value="beginner"     {{ 'selected' if profile and profile.stage == 'beginner'     }}>🌱 Beginner</option>
+        <option value="intermediate" {{ 'selected' if profile and profile.stage == 'intermediate' }}>📖 Preparing</option>
+        <option value="advanced"     {{ 'selected' if profile and profile.stage == 'advanced'     }}>🔥 Advanced</option>
+        <option value="revision"     {{ 'selected' if profile and profile.stage == 'revision'     }}>⚡ Revision</option>
       </select>
     </div>
 
     <div class="form-group">
-      <label class="form-label" for="target_year">Target Year</label>
-      <input class="form-input" type="text" id="target_year" name="target_year"
-             placeholder="e.g. 2027"
-             value="{{ profile.target_year if profile else '' }}">
-    </div>
-
-    <div class="form-group">
-      <label class="form-label" for="daily_hours">Daily Study Hours</label>
-      <input class="form-input" type="number" id="daily_hours" name="daily_hours"
-             min="1" max="16" value="{{ profile.daily_hours if profile else 4 }}">
+      <label class="form-label" for="p-year">Target Exam Year</label>
+      <select class="form-select" id="p-year" name="target_year">
+        {% for y in range(2025, 2031) %}
+        <option value="{{ y }}" {{ 'selected' if profile and profile.target_year|string == y|string }}>UPSC CSE {{ y }}</option>
+        {% endfor %}
+      </select>
     </div>
 
     <div class="form-group">
       <label class="form-label">Focus Subjects</label>
       <div class="subject-grid">
         {% for subject in subjects %}
-        <label class="subject-chip {{ 'checked' if profile and subject in profile.preferred_subjects }}"
+        <label class="subject-chip {{ 'checked' if profile and subject in (profile.preferred_subjects or []) }}"
                onclick="this.classList.toggle('checked')">
           <input type="checkbox" name="preferred_subjects" value="{{ subject }}"
-            {{ 'checked' if profile and subject in profile.preferred_subjects }}>
+            {{ 'checked' if profile and subject in (profile.preferred_subjects or []) }}>
           {{ subject }}
         </label>
         {% endfor %}
       </div>
     </div>
 
-    <button type="submit" class="btn-primary" style="margin-top:16px;">
+    <button type="submit" style="
+      width:100%; padding:17px; margin-top:8px;
+      background:linear-gradient(135deg,#F4621F 0%,#C94E18 100%);
+      color:#fff; border:none; border-radius:50px;
+      font-size:16px; font-weight:800; font-family:'Poppins',sans-serif;
+      cursor:pointer; box-shadow:0 6px 20px rgba(244,98,31,0.35); letter-spacing:.3px;">
       Save Changes ✓
     </button>
   </form>
+
+  <!-- Actions -->
+  <div style="margin-top:28px;display:flex;flex-direction:column;gap:10px;">
+    <a href="{{ url_for('avatar_select') }}"
+       style="display:flex;align-items:center;gap:12px;padding:16px;background:#F9FAFB;border-radius:16px;text-decoration:none;color:#1A1A1A;font-weight:700;font-size:14px;border:1px solid #F3F4F6;">
+      <span style="font-size:20px;">🎭</span>
+      <span style="flex:1;">Change Avatar</span>
+      <span style="color:#9CA3AF;font-size:20px;">›</span>
+    </a>
+    <a href="{{ url_for('logout') }}"
+       style="display:flex;align-items:center;gap:12px;padding:16px;background:#FEF2F2;border-radius:16px;text-decoration:none;color:#E53935;font-weight:700;font-size:14px;border:1px solid #FECACA;">
+      <span style="font-size:20px;">🚪</span>
+      <span style="flex:1;">Log Out / Switch Account</span>
+      <span style="color:#E53935;font-size:20px;">›</span>
+    </a>
+  </div>
 </div>
 
 {% endblock %}

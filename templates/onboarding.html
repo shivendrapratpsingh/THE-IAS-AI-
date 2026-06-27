@@ -114,6 +114,14 @@
   </style>
 </head>
 <body>
+<div id="ambientCanvas" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden;"></div>
+<style>
+@keyframes particleDrift{0%{transform:translateY(-40px) rotate(0deg);opacity:0}10%{opacity:var(--p-opacity)}90%{opacity:var(--p-opacity)}100%{transform:translateY(110vh) rotate(var(--p-rot));opacity:0}}
+.amb-particle{position:absolute;top:0;font-size:var(--p-size);left:var(--p-x);animation:particleDrift var(--p-dur) linear var(--p-delay) infinite;--p-opacity:0.1;}
+</style>
+<script>
+(function(){const icons=['✏️','📚','📖','🖊️','📝','🎯'];const wrap=document.getElementById('ambientCanvas');for(let i=0;i<14;i++){const el=document.createElement('span');el.className='amb-particle';const size=10+Math.random()*13,x=Math.random()*96,dur=12+Math.random()*14,delay=-(Math.random()*dur),rot=(Math.random()-.5)*180+'deg';el.textContent=icons[Math.floor(Math.random()*icons.length)];el.style.cssText=`--p-size:${size}px;--p-x:${x}%;--p-dur:${dur}s;--p-delay:${delay}s;--p-rot:${rot};--p-opacity:${0.07+Math.random()*0.09};`;wrap.appendChild(el);}})();
+</script>
 <div class="phone-shell">
 <div class="ob-page">
 
@@ -166,6 +174,27 @@
     {% endwith %}
 
     <form method="POST" action="{{ url_for('onboarding') }}">
+
+      <!-- Mode Selection -->
+      <div class="ob-field-wrap">
+        <label class="ob-label">I am preparing for</label>
+        <div class="stage-pills">
+          <div class="stage-pill">
+            <input type="radio" name="user_mode" id="mode-upsc" value="upsc" checked>
+            <label for="mode-upsc">
+              <span class="pill-icon">🎯</span>
+              <span class="pill-text">UPSC / Civil Services</span>
+            </label>
+          </div>
+          <div class="stage-pill">
+            <input type="radio" name="user_mode" id="mode-general" value="general">
+            <label for="mode-general">
+              <span class="pill-icon">📚</span>
+              <span class="pill-text">General Practice</span>
+            </label>
+          </div>
+        </div>
+      </div>
 
       <!-- Name -->
       <div class="ob-field-wrap">

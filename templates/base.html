@@ -32,6 +32,45 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
+
+<!-- ══ Ambient pencil/book particle animation ══ -->
+<div id="ambientCanvas" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden;"></div>
+<style>
+@keyframes particleDrift {
+  0%   { transform: translateY(-40px) rotate(0deg);   opacity: 0; }
+  10%  { opacity: var(--p-opacity); }
+  90%  { opacity: var(--p-opacity); }
+  100% { transform: translateY(110vh) rotate(var(--p-rot)); opacity: 0; }
+}
+.amb-particle {
+  position: absolute;
+  top: 0;
+  font-size: var(--p-size);
+  left: var(--p-x);
+  animation: particleDrift var(--p-dur) linear var(--p-delay) infinite;
+  --p-opacity: 0.13;
+}
+</style>
+<script>
+(function() {
+  const icons = ['✏️','📚','📖','🖊️','📝','🎯','🖋️'];
+  const wrap  = document.getElementById('ambientCanvas');
+  const COUNT = 18;
+  for (let i = 0; i < COUNT; i++) {
+    const el = document.createElement('span');
+    el.className = 'amb-particle';
+    const size  = 12 + Math.random() * 14;
+    const x     = Math.random() * 96;
+    const dur   = 12 + Math.random() * 14;
+    const delay = -(Math.random() * dur);
+    const rot   = (Math.random() - 0.5) * 180 + 'deg';
+    el.textContent = icons[Math.floor(Math.random() * icons.length)];
+    el.style.cssText = `--p-size:${size}px;--p-x:${x}%;--p-dur:${dur}s;--p-delay:${delay}s;--p-rot:${rot};--p-opacity:${0.08 + Math.random()*0.1};`;
+    wrap.appendChild(el);
+  }
+})();
+</script>
+
 <div class="phone-shell">
 
   {% block full_page %}
