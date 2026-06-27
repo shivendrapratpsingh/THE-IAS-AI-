@@ -82,7 +82,10 @@ def _fill_defaults(data):
 def _get_conn():
     """Return a psycopg2 connection to Neon. Raises if DATABASE_URL not set."""
     import psycopg2
-    return psycopg2.connect(DATABASE_URL, sslmode="require")
+    # Strip query params (sslmode, channel_binding) from URL to avoid
+    # psycopg2 conflicts, then enforce SSL via keyword arg instead.
+    base_url = DATABASE_URL.split("?")[0] if "?" in DATABASE_URL else DATABASE_URL
+    return psycopg2.connect(base_url, sslmode="require")
 
 
 def _ensure_table():
