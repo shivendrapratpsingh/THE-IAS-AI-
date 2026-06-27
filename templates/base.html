@@ -317,7 +317,7 @@
 
   <!-- Messages -->
   <div id="aiMessages">
-    <div class="ai-msg bot">Hi {{ profile.name.split()[0] }}! 👋 I'm your BASS 50 assistant. Ask me how anything works, or just say <b>"open quiz"</b> to jump there!</div>
+    <div class="ai-msg bot">Hi {{ (profile.name.split() or ['Aspirant'])[0] }}! 👋 I'm your BASS 50 assistant. Ask me how anything works, or just say <b>"open quiz"</b> to jump there!</div>
   </div>
 
   <!-- Quick suggestions -->

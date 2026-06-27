@@ -206,13 +206,18 @@ def onboarding():
             "avatar_color":        data.get("profile", {}).get("avatar_color", "#F4621F"),
             "phone":               full_phone_entered or session.get("phone", ""),
         }
+        # Set default avatar if none chosen yet
+        if not data.get("profile", {}).get("avatar_id"):
+            profile["avatar_id"]    = "ias"
+            profile["avatar_color"] = "#F4621F"
         data["profile"] = profile
         data["onboarded"] = True
         data["study_plan"] = study_plan.generate_fallback_plan(profile)
         data["completed_tasks"] = []
         storage.mark_active_today(data)
         _save_current_user(phone, data)
-        return redirect(url_for("avatar_select"))
+        flash("Welcome! Let's start your daily quiz 🎯")
+        return redirect(url_for("home"))
 
     # Pre-compute last 10 digits so template never needs string slicing
     phone_digits = phone[-10:] if phone and not phone.startswith("guest_") and len(phone) >= 10 else ""
@@ -244,8 +249,9 @@ def save_avatar():
     key, data = _get_current_user()
     data["profile"]["avatar_id"]    = request.form.get("avatar_id", "ias")
     data["profile"]["avatar_color"] = request.form.get("avatar_color", "#F4621F")
+    data["onboarded"] = True   # ensure this is always set regardless of DB state
     _save_current_user(key, data)
-    flash("Welcome aboard! Your profile is ready. 🎉")
+    flash("Avatar saved! 🎭")
     return redirect(url_for("home"))
 
 
