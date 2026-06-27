@@ -214,10 +214,13 @@ def onboarding():
         _save_current_user(phone, data)
         return redirect(url_for("avatar_select"))
 
+    # Pre-compute last 10 digits so template never needs string slicing
+    phone_digits = phone[-10:] if phone and not phone.startswith("guest_") and len(phone) >= 10 else ""
     return render_template(
         "onboarding.html",
         profile=data.get("profile"),
         phone=phone,
+        phone_digits=phone_digits,
     )
 
 
