@@ -83,8 +83,8 @@
   <header class="top-nav">
     <button class="nav-hamburger" onclick="toggleDrawer()" aria-label="Menu">☰</button>
 
-    {# ── Exilar Circle Indicator (visible when logged in) ── #}
-    {% if profile %}
+    {# ── Exilar Circle Indicator (general-mode users only) ── #}
+    {% if profile and user_mode != 'upsc' %}
     {% set _ex_cap    = exilars if exilars <= 20 else 20 %}
     {% set _ex_circ   = 94.25 %}
     {% set _ex_fill   = (_ex_cap / 20 * _ex_circ) | round(1) %}
@@ -230,9 +230,11 @@
     <a href="{{ url_for('mcq') }}" class="drawer-link {{ 'active' if request.endpoint == 'mcq' }}">
       <span class="drawer-link-icon">🧠</span> Quiz Practice
     </a>
+    {% if user_mode != 'upsc' %}
     <a href="{{ url_for('aaja_page') }}" class="drawer-link {{ 'active' if request.endpoint in ['aaja_page','aaja_quiz'] }}">
       <span class="drawer-link-icon">🔥</span> AAJA 50 !!
     </a>
+    {% endif %}
     <a href="{{ url_for('current_affairs') }}" class="drawer-link {{ 'active' if request.endpoint == 'current_affairs' }}">
       <span class="drawer-link-icon">📰</span> Current Affairs
     </a>

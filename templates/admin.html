@@ -3,164 +3,236 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Admin — BASS 50</title>
+  <title>Admin Console — BASS 50</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
   <style>
-    body { background:#F3F4F6; }
-    .adm-page { max-width:430px; margin:0 auto; min-height:100vh; }
+    body { background:#0A0A0A; color:#fff; }
+    .adm-page { max-width:480px; margin:0 auto; min-height:100vh; padding-bottom:60px; }
 
-    .adm-hero {
-      background:linear-gradient(135deg,#1A1A2E 0%,#27AE60 100%);
-      padding:48px 20px 24px; color:#fff;
+    /* ── Top bar ── */
+    .adm-topbar {
+      background:#111; border-bottom:1px solid rgba(255,255,255,0.08);
+      padding:16px 16px env(safe-area-inset-top,0);
+      display:flex; align-items:center; justify-content:space-between;
+      position:sticky; top:0; z-index:100; backdrop-filter:blur(8px);
     }
-    .adm-hero h1 { font-size:24px; font-weight:900; }
-    .adm-hero p  { font-size:12px; color:rgba(255,255,255,.7); margin-top:3px; }
+    .adm-topbar-title { font-size:17px; font-weight:900; color:#fff; }
+    .adm-topbar-sub   { font-size:10px; color:rgba(255,255,255,0.4); font-weight:600; margin-top:2px; }
+    .adm-logout-btn {
+      padding:8px 16px; background:rgba(229,57,53,0.15);
+      border:1px solid rgba(229,57,53,0.3); border-radius:10px;
+      color:#F87171; font-size:12px; font-weight:700;
+      text-decoration:none; font-family:'Poppins',sans-serif;
+    }
 
-    /* ── Section heading ── */
+    /* ── Section label ── */
     .adm-sec {
-      font-size:11px; font-weight:700; text-transform:uppercase;
-      letter-spacing:.7px; color:#6B7280; padding:16px 16px 8px;
+      font-size:10px; font-weight:700; text-transform:uppercase;
+      letter-spacing:.8px; color:rgba(255,255,255,0.4);
+      padding:20px 16px 8px; display:flex; align-items:center; gap:8px;
+    }
+    .adm-sec::after {
+      content:''; flex:1; height:1px; background:rgba(255,255,255,0.08);
     }
 
-    /* ── KPI strip (3 col) ── */
+    /* ── KPI strip ── */
     .adm-strip {
       display:grid; grid-template-columns:repeat(3,1fr);
-      background:#fff; border-bottom:1px solid #E5E7EB;
-    }
-    .adm-kpi { padding:14px 8px; text-align:center; border-right:1px solid #E5E7EB; }
-    .adm-kpi:last-child { border-right:none; }
-    .adm-kpi-val { font-size:22px; font-weight:900; color:#F4621F; }
-    .adm-kpi-lbl { font-size:9px; color:#6B7280; font-weight:600; text-transform:uppercase; margin-top:2px; letter-spacing:.4px; }
-
-    /* ── Metric cards (2 col) ── */
-    .metrics-grid {
-      display:grid; grid-template-columns:1fr 1fr;
       gap:10px; padding:0 12px 4px;
     }
+    .adm-kpi {
+      background:#1C1C1E; border:1px solid rgba(255,255,255,0.08);
+      border-radius:16px; padding:16px 8px; text-align:center;
+    }
+    .adm-kpi-val { font-size:28px; font-weight:900; color:#F4621F; }
+    .adm-kpi-lbl { font-size:9px; color:rgba(255,255,255,0.45); font-weight:700;
+                   text-transform:uppercase; margin-top:4px; letter-spacing:.5px; }
+
+    /* ── Metric cards ── */
+    .metrics-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; padding:0 12px 4px; }
     .m-card {
-      background:#fff; border-radius:14px; border:1px solid #E5E7EB;
-      padding:14px 12px; text-align:center;
+      background:#1C1C1E; border:1px solid rgba(255,255,255,0.08);
+      border-radius:16px; padding:16px; text-align:center;
     }
-    .m-card-val  { font-size:26px; font-weight:900; }
-    .m-card-lbl  { font-size:10px; color:#6B7280; font-weight:600; text-transform:uppercase; margin-top:4px; letter-spacing:.4px; }
-    .m-card-sub  { font-size:11px; color:#9CA3AF; margin-top:2px; }
-    .col-orange  { color:#F4621F; }
-    .col-green   { color:#27AE60; }
-    .col-blue    { color:#2471A3; }
-    .col-purple  { color:#8E44AD; }
-    .col-gold    { color:#D4AC0D; }
-
-    /* ── Regularity segments ── */
-    .reg-grid {
-      display:grid; grid-template-columns:repeat(3,1fr);
-      gap:8px; padding:0 12px 4px;
-    }
-    .reg-pill {
-      border-radius:12px; padding:12px 6px; text-align:center;
-    }
-    .reg-pill-val { font-size:22px; font-weight:900; }
-    .reg-pill-lbl { font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.4px; margin-top:3px; }
-    .reg-champion  { background:#FFF3E0; }
-    .reg-champion .reg-pill-val  { color:#E65100; }
-    .reg-champion .reg-pill-lbl  { color:#BF360C; }
-    .reg-regular   { background:#EAF9F0; }
-    .reg-regular .reg-pill-val   { color:#27AE60; }
-    .reg-regular .reg-pill-lbl   { color:#1E8449; }
-    .reg-occasional { background:#E3F2FD; }
-    .reg-occasional .reg-pill-val { color:#2471A3; }
-    .reg-occasional .reg-pill-lbl { color:#1565C0; }
-    .reg-at_risk   { background:#FFF0E8; }
-    .reg-at_risk .reg-pill-val   { color:#F4621F; }
-    .reg-at_risk .reg-pill-lbl   { color:#C94E18; }
-    .reg-churned   { background:#FDECEA; }
-    .reg-churned .reg-pill-val   { color:#E53935; }
-    .reg-churned .reg-pill-lbl   { color:#B71C1C; }
-    .reg-new       { background:#F3E5F5; }
-    .reg-new .reg-pill-val       { color:#8E44AD; }
-    .reg-new .reg-pill-lbl       { color:#6A1B9A; }
-
-    /* ── Segment bar ── */
-    .seg-bar-wrap { margin:0 12px 16px; background:#F3F4F6; border-radius:99px; height:10px; overflow:hidden; display:flex; }
-    .seg-bar-seg  { height:100%; transition:width .4s; }
-
-    /* ── User card ── */
-    .u-card {
-      background:#fff; border:1px solid #E5E7EB;
-      border-radius:16px; margin:0 12px 12px; padding:14px;
-    }
-    .u-top { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
-    .u-avatar {
-      width:44px; height:44px; border-radius:50%;
-      display:flex; align-items:center; justify-content:center;
-      font-size:18px; font-weight:900; color:#fff; flex-shrink:0;
-    }
-    .u-name  { font-size:15px; font-weight:800; color:#1A1A1A; }
-    .u-phone { font-size:11px; color:#6B7280; font-weight:600; margin-top:1px; }
-
-    .badge-row { display:flex; flex-wrap:wrap; gap:5px; margin-bottom:8px; }
-    .bdg { font-size:10px; font-weight:700; padding:3px 9px; border-radius:99px; }
-    .bdg-upsc      { background:#FFF0E8; color:#C94E18; }
-    .bdg-general   { background:#EDE7F6; color:#4527A0; }
-    .bdg-streak    { background:#FFF3E0; color:#E65100; }
-    .bdg-acc       { background:#EAF9F0; color:#1E8449; }
-    .bdg-champion  { background:#FFF3E0; color:#E65100; }
-    .bdg-regular   { background:#EAF9F0; color:#27AE60; }
-    .bdg-occasional{ background:#E3F2FD; color:#2471A3; }
-    .bdg-at_risk   { background:#FFF0E8; color:#F4621F; }
-    .bdg-churned   { background:#FDECEA; color:#E53935; }
-    .bdg-new       { background:#F3E5F5; color:#8E44AD; }
-
-    .stats-3 { display:grid; grid-template-columns:repeat(3,1fr); gap:6px; margin-bottom:10px; }
-    .stat-box { border-radius:10px; padding:8px; text-align:center; }
-    .stat-box-val { font-size:16px; font-weight:900; }
-    .stat-box-lbl { font-size:9px; color:#6B7280; font-weight:600; text-transform:uppercase; margin-top:2px; }
-
-    .heat-title { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; color:#9CA3AF; margin-bottom:7px; }
-    .heat-row   { display:flex; align-items:center; gap:6px; margin-bottom:5px; }
-    .heat-label { font-size:10px; font-weight:600; color:#374151; min-width:80px; }
-    .heat-track { flex:1; height:7px; background:#F3F4F6; border-radius:99px; overflow:hidden; }
-    .heat-fill  { height:100%; border-radius:99px; }
-    .heat-pct   { font-size:10px; font-weight:700; color:#6B7280; min-width:28px; text-align:right; }
-
-    .u-footer { display:flex; justify-content:space-between; font-size:10px; color:#9CA3AF; margin-top:8px; padding-top:8px; border-top:1px solid #F3F4F6; }
-
-    /* ── MCQ Bank ── */
-    .bank-table { background:#fff; border-radius:16px; border:1px solid #E5E7EB; overflow:hidden; margin:0 12px 24px; }
-    .bank-row   { display:flex; justify-content:space-between; align-items:center; padding:9px 14px; border-bottom:1px solid #F3F4F6; }
-    .bank-row:last-child { border-bottom:none; }
-    .bank-topic { font-size:12px; font-weight:600; color:#1A1A1A; }
-    .bank-count { font-size:12px; font-weight:800; color:#F4621F; }
-
-    .adm-back {
-      display:block; text-align:center; margin:0 12px 32px;
-      padding:14px; background:#1A1A1A; color:#fff;
-      border-radius:50px; text-decoration:none; font-weight:700; font-size:14px;
-    }
-    .empty-adm { text-align:center; padding:32px; color:#9CA3AF; font-size:14px; }
+    .m-card-val { font-size:28px; font-weight:900; }
+    .m-card-lbl { font-size:9px; color:rgba(255,255,255,0.45); font-weight:700;
+                  text-transform:uppercase; margin-top:4px; letter-spacing:.4px; }
+    .m-card-sub { font-size:10px; color:rgba(255,255,255,0.3); margin-top:3px; }
+    .col-orange { color:#F4621F; }
+    .col-green  { color:#4ADE80; }
+    .col-blue   { color:#60A5FA; }
+    .col-purple { color:#C084FC; }
+    .col-gold   { color:#FCD34D; }
 
     /* ── Insight box ── */
     .insight-box {
-      background:#fff; border-radius:14px; border:1px solid #E5E7EB;
-      margin:0 12px 12px; padding:14px 16px;
+      background:#1C1C1E; border:1px solid rgba(255,255,255,0.08);
+      border-radius:16px; margin:0 12px 4px; overflow:hidden;
     }
-    .insight-row { display:flex; justify-content:space-between; align-items:center; padding:6px 0; border-bottom:1px solid #F3F4F6; font-size:13px; }
+    .insight-row {
+      display:flex; justify-content:space-between; align-items:center;
+      padding:12px 16px; border-bottom:1px solid rgba(255,255,255,0.05);
+      font-size:13px;
+    }
     .insight-row:last-child { border-bottom:none; }
-    .insight-key { color:#6B7280; font-weight:600; }
-    .insight-val { font-weight:800; color:#1A1A1A; }
-    .insight-val.good  { color:#27AE60; }
-    .insight-val.warn  { color:#F4621F; }
-    .insight-val.bad   { color:#E53935; }
+    .insight-key { color:rgba(255,255,255,0.5); font-weight:600; }
+    .insight-val { font-weight:800; }
+    .insight-val.good { color:#4ADE80; }
+    .insight-val.warn { color:#FCD34D; }
+    .insight-val.bad  { color:#F87171; }
+
+    /* ── Regularity pills ── */
+    .reg-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; padding:0 12px 4px; }
+    .reg-pill { border-radius:14px; padding:14px 6px; text-align:center; background:#1C1C1E; border:1px solid rgba(255,255,255,0.08); }
+    .reg-pill-val { font-size:24px; font-weight:900; }
+    .reg-pill-lbl { font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.4px; margin-top:4px; color:rgba(255,255,255,0.5); }
+    .reg-champion .reg-pill-val  { color:#F59E0B; }
+    .reg-regular .reg-pill-val   { color:#4ADE80; }
+    .reg-occasional .reg-pill-val{ color:#60A5FA; }
+    .reg-at_risk .reg-pill-val   { color:#F4621F; }
+    .reg-churned .reg-pill-val   { color:#F87171; }
+    .reg-new .reg-pill-val       { color:#C084FC; }
+
+    /* ── Segment bar ── */
+    .seg-bar-wrap { margin:0 12px 16px; background:rgba(255,255,255,0.06); border-radius:99px; height:10px; overflow:hidden; display:flex; }
+    .seg-bar-seg  { height:100%; }
+
+    /* ── Broadcast panel ── */
+    .broadcast-card {
+      background:#1C1C1E; border:1px solid rgba(244,98,31,0.3);
+      border-radius:16px; margin:0 12px 4px; padding:16px;
+    }
+    .broadcast-card textarea {
+      width:100%; background:rgba(255,255,255,0.06);
+      border:1.5px solid rgba(255,255,255,0.12); border-radius:12px;
+      padding:12px 14px; font-size:13px; font-weight:600;
+      color:#fff; font-family:'Poppins',sans-serif; outline:none;
+      resize:none; min-height:72px; margin-bottom:10px;
+    }
+    .broadcast-card textarea:focus { border-color:#F4621F; }
+    .broadcast-btn {
+      width:100%; padding:14px; background:linear-gradient(135deg,#F4621F,#C94E18);
+      color:#fff; border:none; border-radius:12px;
+      font-size:14px; font-weight:800; font-family:'Poppins',sans-serif; cursor:pointer;
+    }
+
+    /* ── User cards ── */
+    .u-card {
+      background:#1C1C1E; border:1px solid rgba(255,255,255,0.08);
+      border-radius:20px; margin:0 12px 14px; overflow:hidden;
+    }
+    .u-card-head {
+      padding:16px 16px 12px;
+      border-bottom:1px solid rgba(255,255,255,0.06);
+    }
+    .u-top { display:flex; align-items:center; gap:12px; margin-bottom:10px; }
+    .u-avatar {
+      width:48px; height:48px; border-radius:50%;
+      display:flex; align-items:center; justify-content:center;
+      font-size:20px; font-weight:900; color:#fff; flex-shrink:0;
+    }
+    .u-name  { font-size:16px; font-weight:800; color:#fff; }
+    .u-phone { font-size:11px; color:rgba(255,255,255,0.4); font-weight:600; margin-top:2px; }
+
+    .badge-row { display:flex; flex-wrap:wrap; gap:5px; }
+    .bdg { font-size:10px; font-weight:700; padding:4px 10px; border-radius:99px; }
+    .bdg-upsc      { background:rgba(244,98,31,0.2); color:#FDA87A; }
+    .bdg-general   { background:rgba(139,92,246,0.2); color:#C084FC; }
+    .bdg-streak    { background:rgba(245,158,11,0.2); color:#FCD34D; }
+    .bdg-acc       { background:rgba(74,222,128,0.2); color:#4ADE80; }
+    .bdg-champion  { background:rgba(245,158,11,0.2); color:#FCD34D; }
+    .bdg-regular   { background:rgba(74,222,128,0.2); color:#4ADE80; }
+    .bdg-occasional{ background:rgba(96,165,250,0.2); color:#60A5FA; }
+    .bdg-at_risk   { background:rgba(244,98,31,0.2); color:#F4621F; }
+    .bdg-churned   { background:rgba(248,113,113,0.2); color:#F87171; }
+    .bdg-new       { background:rgba(192,132,252,0.2); color:#C084FC; }
+    .bdg-exilar    { background:rgba(252,211,77,0.2); color:#FCD34D; }
+
+    .stats-3 { display:grid; grid-template-columns:repeat(3,1fr); gap:6px; margin:12px 0 10px; }
+    .stat-box { border-radius:12px; padding:10px 6px; text-align:center; background:rgba(255,255,255,0.04); }
+    .stat-box-val { font-size:18px; font-weight:900; color:#fff; }
+    .stat-box-lbl { font-size:9px; color:rgba(255,255,255,0.4); font-weight:700; text-transform:uppercase; margin-top:2px; }
+
+    .heat-title { font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; color:rgba(255,255,255,0.35); margin-bottom:7px; }
+    .heat-row   { display:flex; align-items:center; gap:6px; margin-bottom:5px; }
+    .heat-label { font-size:10px; font-weight:600; color:rgba(255,255,255,0.55); min-width:80px; }
+    .heat-track { flex:1; height:7px; background:rgba(255,255,255,0.08); border-radius:99px; overflow:hidden; }
+    .heat-fill  { height:100%; border-radius:99px; }
+    .heat-pct   { font-size:10px; font-weight:700; color:rgba(255,255,255,0.4); min-width:28px; text-align:right; }
+
+    .u-footer {
+      display:flex; justify-content:space-between; font-size:10px;
+      color:rgba(255,255,255,0.3); padding:10px 16px;
+      border-top:1px solid rgba(255,255,255,0.05);
+    }
+
+    /* ── Admin action panel ── */
+    .u-actions { padding:12px 16px; background:rgba(244,98,31,0.04); border-top:1px solid rgba(255,255,255,0.06); }
+    .u-actions-title { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; color:rgba(255,255,255,0.3); margin-bottom:10px; }
+    .action-row-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:8px; }
+
+    .adm-form-row { display:flex; gap:8px; align-items:center; margin-bottom:8px; }
+    .adm-form-row input, .adm-form-row select {
+      flex:1; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12);
+      border-radius:10px; padding:10px 12px; font-size:13px; font-weight:600; color:#fff;
+      font-family:'Poppins',sans-serif; outline:none;
+    }
+    .adm-form-row input:focus, .adm-form-row select:focus { border-color:#F4621F; }
+    .adm-form-row select option { background:#1C1C1E; color:#fff; }
+
+    .adm-btn {
+      padding:10px 14px; border:none; border-radius:10px;
+      font-size:12px; font-weight:700; cursor:pointer;
+      font-family:'Poppins',sans-serif; white-space:nowrap;
+    }
+    .adm-btn-orange { background:rgba(244,98,31,0.2); color:#F4621F; border:1px solid rgba(244,98,31,0.3); }
+    .adm-btn-green  { background:rgba(74,222,128,0.15); color:#4ADE80; border:1px solid rgba(74,222,128,0.25); }
+    .adm-btn-blue   { background:rgba(96,165,250,0.15); color:#60A5FA; border:1px solid rgba(96,165,250,0.25); }
+    .adm-btn-red    { background:rgba(248,113,113,0.15); color:#F87171; border:1px solid rgba(248,113,113,0.25); }
+    .adm-btn-full   { width:100%; padding:12px; text-align:center; }
+
+    /* ── MCQ bank ── */
+    .bank-table { background:#1C1C1E; border:1px solid rgba(255,255,255,0.08); border-radius:16px; overflow:hidden; margin:0 12px 24px; }
+    .bank-row   { display:flex; justify-content:space-between; align-items:center; padding:11px 16px; border-bottom:1px solid rgba(255,255,255,0.05); }
+    .bank-row:last-child { border-bottom:none; }
+    .bank-topic { font-size:13px; font-weight:600; color:rgba(255,255,255,0.7); }
+    .bank-count { font-size:14px; font-weight:900; color:#F4621F; }
+
+    .flash-adm { margin:8px 12px 0; padding:12px 16px; border-radius:12px; background:rgba(74,222,128,0.1); border:1px solid rgba(74,222,128,0.2); font-size:13px; color:#4ADE80; font-weight:600; }
+
+    /* ── Collapsible user actions ── */
+    .u-expand-btn {
+      width:100%; padding:12px 16px; background:rgba(255,255,255,0.04);
+      border:none; border-top:1px solid rgba(255,255,255,0.06);
+      color:rgba(255,255,255,0.5); font-size:12px; font-weight:700;
+      font-family:'Poppins',sans-serif; cursor:pointer; text-align:left;
+      display:flex; align-items:center; justify-content:space-between;
+    }
+    .u-expand-btn:hover { background:rgba(255,255,255,0.06); color:#fff; }
+    .u-panel { display:none; }
+    .u-panel.open { display:block; }
   </style>
 </head>
 <body>
 <div class="adm-page">
 
-  <div class="adm-hero">
-    <h1>⚡ Admin Dashboard</h1>
-    <p>BASS 50 · Startup Metrics · {{ users|length }} total users</p>
+  <!-- Sticky top bar -->
+  <div class="adm-topbar">
+    <div>
+      <div class="adm-topbar-title">⚡ Admin Console</div>
+      <div class="adm-topbar-sub">BASS 50 · {{ users|length }} users · Full access</div>
+    </div>
+    <a href="{{ url_for('admin_logout') }}" class="adm-logout-btn">🚪 Logout</a>
   </div>
 
-  <!-- ── Core KPI Strip ── -->
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}{% for msg in messages %}
+      <div class="flash-adm">✓ {{ msg }}</div>
+    {% endfor %}{% endif %}
+  {% endwith %}
+
+  <!-- ── KPI Strip ── -->
+  <div class="adm-sec">Live Metrics</div>
   <div class="adm-strip">
     <div class="adm-kpi">
       <div class="adm-kpi-val">{{ metrics.dau }}</div>
@@ -176,8 +248,8 @@
     </div>
   </div>
 
-  <!-- ── Startup Health Metrics ── -->
-  <div class="adm-sec">Startup Health</div>
+  <!-- ── Health Cards ── -->
+  <div class="adm-sec">Growth Health</div>
   <div class="metrics-grid">
     <div class="m-card">
       <div class="m-card-val col-green">{{ metrics.d1_retention_pct }}%</div>
@@ -186,44 +258,44 @@
     </div>
     <div class="m-card">
       <div class="m-card-val col-orange">{{ metrics.quiz_completion_pct }}%</div>
-      <div class="m-card-lbl">Quiz Completion</div>
+      <div class="m-card-lbl">Quiz Done</div>
       <div class="m-card-sub">completed ≥1 quiz</div>
     </div>
     <div class="m-card">
       <div class="m-card-val col-gold">{{ metrics.avg_streak }}</div>
       <div class="m-card-lbl">Avg Streak</div>
-      <div class="m-card-sub">days active in a row</div>
+      <div class="m-card-sub">days in a row</div>
     </div>
     <div class="m-card">
       <div class="m-card-val col-purple">{{ metrics.max_streak }}</div>
       <div class="m-card-lbl">Best Streak</div>
-      <div class="m-card-sub">longest user streak</div>
+      <div class="m-card-sub">longest user</div>
     </div>
   </div>
 
-  <!-- ── Key Insight Table ── -->
+  <!-- ── Key Ratios ── -->
   <div class="adm-sec">Key Ratios</div>
   <div class="insight-box">
     {% set dau_mau = ((metrics.dau / metrics.mau * 100)|round|int) if metrics.mau else 0 %}
     <div class="insight-row">
-      <span class="insight-key">DAU / MAU ratio</span>
+      <span class="insight-key">DAU / MAU</span>
       <span class="insight-val {{ 'good' if dau_mau >= 20 else ('warn' if dau_mau >= 10 else 'bad') }}">{{ dau_mau }}%</span>
     </div>
     <div class="insight-row">
       <span class="insight-key">D1 Retention</span>
       <span class="insight-val {{ 'good' if metrics.d1_retention_pct >= 40 else ('warn' if metrics.d1_retention_pct >= 20 else 'bad') }}">{{ metrics.d1_retention_pct }}%</span>
     </div>
+    {% set loyal = metrics.regularity.champion + metrics.regularity.regular %}
+    {% set loyal_pct = ((loyal / (users|length) * 100)|round|int) if users|length else 0 %}
     <div class="insight-row">
       <span class="insight-key">Champions + Regulars</span>
-      {% set loyal = metrics.regularity.champion + metrics.regularity.regular %}
-      {% set loyal_pct = ((loyal / users|length * 100)|round|int) if users|length else 0 %}
-      <span class="insight-val {{ 'good' if loyal_pct >= 30 else ('warn' if loyal_pct >= 15 else 'bad') }}">{{ loyal_pct }}% ({{ loyal }} users)</span>
+      <span class="insight-val {{ 'good' if loyal_pct >= 30 else ('warn' if loyal_pct >= 15 else 'bad') }}">{{ loyal_pct }}% ({{ loyal }})</span>
     </div>
+    {% set churned = metrics.regularity.at_risk + metrics.regularity.churned %}
+    {% set churned_pct = ((churned / (users|length) * 100)|round|int) if users|length else 0 %}
     <div class="insight-row">
       <span class="insight-key">At-risk + Churned</span>
-      {% set bad = metrics.regularity.at_risk + metrics.regularity.churned %}
-      {% set bad_pct = ((bad / users|length * 100)|round|int) if users|length else 0 %}
-      <span class="insight-val {{ 'bad' if bad_pct >= 40 else ('warn' if bad_pct >= 20 else 'good') }}">{{ bad_pct }}% ({{ bad }} users)</span>
+      <span class="insight-val {{ 'bad' if churned_pct >= 40 else ('warn' if churned_pct >= 20 else 'good') }}">{{ churned_pct }}% ({{ churned }})</span>
     </div>
     <div class="insight-row">
       <span class="insight-key">Total users</span>
@@ -235,7 +307,7 @@
     </div>
   </div>
 
-  <!-- ── Regularity Segments ── -->
+  <!-- ── Regularity ── -->
   <div class="adm-sec">User Regularity</div>
   <div class="reg-grid">
     <div class="reg-pill reg-champion">
@@ -263,110 +335,161 @@
       <div class="reg-pill-lbl">🌱 New</div>
     </div>
   </div>
-
-  <!-- Segment bar -->
   {% set total_u = users|length or 1 %}
   <div class="seg-bar-wrap">
-    <div class="seg-bar-seg" style="width:{{ (metrics.regularity.champion / total_u * 100)|round }}%; background:#E65100;"></div>
-    <div class="seg-bar-seg" style="width:{{ (metrics.regularity.regular / total_u * 100)|round }}%; background:#27AE60;"></div>
-    <div class="seg-bar-seg" style="width:{{ (metrics.regularity.occasional / total_u * 100)|round }}%; background:#2471A3;"></div>
+    <div class="seg-bar-seg" style="width:{{ (metrics.regularity.champion / total_u * 100)|round }}%; background:#F59E0B;"></div>
+    <div class="seg-bar-seg" style="width:{{ (metrics.regularity.regular / total_u * 100)|round }}%; background:#4ADE80;"></div>
+    <div class="seg-bar-seg" style="width:{{ (metrics.regularity.occasional / total_u * 100)|round }}%; background:#60A5FA;"></div>
     <div class="seg-bar-seg" style="width:{{ (metrics.regularity.at_risk / total_u * 100)|round }}%; background:#F4621F;"></div>
-    <div class="seg-bar-seg" style="width:{{ (metrics.regularity.churned / total_u * 100)|round }}%; background:#E53935;"></div>
-    <div class="seg-bar-seg" style="width:{{ (metrics.regularity.new / total_u * 100)|round }}%; background:#8E44AD;"></div>
+    <div class="seg-bar-seg" style="width:{{ (metrics.regularity.churned / total_u * 100)|round }}%; background:#F87171;"></div>
+    <div class="seg-bar-seg" style="width:{{ (metrics.regularity.new / total_u * 100)|round }}%; background:#C084FC;"></div>
   </div>
 
-  <!-- ── User Cards ── -->
-  <div class="adm-sec">All Users ({{ users|length }})</div>
+  <!-- ── Broadcast ── -->
+  <div class="adm-sec">📢 Broadcast Message</div>
+  <div class="broadcast-card">
+    <form method="POST" action="{{ url_for('admin_broadcast') }}">
+      <textarea name="message" placeholder="Type a message to send to ALL users…" rows="3"></textarea>
+      <button type="submit" class="broadcast-btn">📢 Send to All {{ users|length }} Users</button>
+    </form>
+  </div>
+
+  <!-- ── User Management ── -->
+  <div class="adm-sec">👥 Users ({{ users|length }})</div>
 
   {% if users %}
     {% for u in users %}
     <div class="u-card">
-
-      <div class="u-top">
-        <div class="u-avatar" style="background:{{ u.get('avatar_color','#F4621F') or '#F4621F' }};">
-          {{ u.name[0]|upper if u.name and u.name != '—' else '?' }}
+      <div class="u-card-head">
+        <div class="u-top">
+          <div class="u-avatar" style="background:{{ u.get('avatar_color','#F4621F') or '#F4621F' }};">
+            {{ u.name[0]|upper if u.name and u.name != '—' else '?' }}
+          </div>
+          <div style="flex:1;min-width:0;">
+            <div class="u-name">{{ u.name or '(no name)' }}</div>
+            <div class="u-phone">📱 {{ u.phone }}</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:20px;font-weight:900;color:#FCD34D;">{{ all_raw.get(u.phone,{}).get('exilars',0) }}</div>
+            <div style="font-size:9px;color:rgba(255,255,255,0.35);font-weight:700;">EXILARS</div>
+          </div>
         </div>
-        <div style="flex:1; min-width:0;">
-          <div class="u-name">{{ u.name }}</div>
-          <div class="u-phone">📱 {{ u.phone }}</div>
-        </div>
-      </div>
 
-      <div class="badge-row">
-        <span class="bdg {{ 'bdg-upsc' if u.user_type == 'upsc' else 'bdg-general' }}">
-          {{ '🎯 UPSC' if u.user_type == 'upsc' else '📚 General' }}
-        </span>
-        <span class="bdg bdg-upsc">{{ u.stage|capitalize }}</span>
-        <span class="bdg bdg-{{ u.regularity }}">
-          {% if u.regularity == 'champion' %}🏆 Champion
-          {% elif u.regularity == 'regular' %}✅ Regular
-          {% elif u.regularity == 'occasional' %}📅 Occasional
-          {% elif u.regularity == 'at_risk' %}⚠️ At-Risk
-          {% elif u.regularity == 'churned' %}💤 Churned
-          {% else %}🌱 New{% endif %}
-        </span>
-        {% if u.streak > 0 %}
-        <span class="bdg bdg-streak">🔥 {{ u.streak }}-day streak</span>
+        <div class="badge-row">
+          <span class="bdg {{ 'bdg-upsc' if u.user_type == 'upsc' else 'bdg-general' }}">
+            {{ '🎯 UPSC' if u.user_type == 'upsc' else '📚 General' }}
+          </span>
+          <span class="bdg bdg-{{ u.regularity }}">
+            {% if u.regularity == 'champion' %}🏆 Champion
+            {% elif u.regularity == 'regular' %}✅ Regular
+            {% elif u.regularity == 'occasional' %}📅 Occasional
+            {% elif u.regularity == 'at_risk' %}⚠️ At-Risk
+            {% elif u.regularity == 'churned' %}💤 Churned
+            {% else %}🌱 New{% endif %}
+          </span>
+          {% if u.streak > 0 %}<span class="bdg bdg-streak">🔥 {{ u.streak }}d</span>{% endif %}
+          {% if u.accuracy is not none %}<span class="bdg bdg-acc">{{ u.accuracy }}%</span>{% endif %}
+          {% if u.stage %}<span class="bdg" style="background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.5);">{{ u.stage }}</span>{% endif %}
+        </div>
+
+        <div class="stats-3">
+          <div class="stat-box">
+            <div class="stat-box-val" style="color:#F4621F;">{{ u.attempted }}</div>
+            <div class="stat-box-lbl">Attempted</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-box-val" style="color:#4ADE80;">{{ u.correct }}</div>
+            <div class="stat-box-lbl">Correct</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-box-val" style="color:#60A5FA;">{{ u.days_active_30 }}/30</div>
+            <div class="stat-box-lbl">Active Days</div>
+          </div>
+        </div>
+
+        {% if u.topic_heat %}
+        <div class="heat-title">Topic Performance</div>
+        {% for topic, heat in u.topic_heat.items() %}
+        <div class="heat-row">
+          <div class="heat-label">{{ topic[:14] }}</div>
+          <div class="heat-track">
+            <div class="heat-fill" style="width:{{ heat.pct }}%; background:{{ '#4ADE80' if heat.pct >= 70 else ('#F59E0B' if heat.pct >= 40 else '#F87171') }};"></div>
+          </div>
+          <div class="heat-pct">{{ heat.pct }}%</div>
+        </div>
+        {% endfor %}
         {% endif %}
-        {% if u.accuracy is not none %}
-        <span class="bdg bdg-acc">{{ u.accuracy }}% acc</span>
-        {% endif %}
       </div>
-
-      <!-- Stats -->
-      <div class="stats-3">
-        <div class="stat-box" style="background:#FFF0E8;">
-          <div class="stat-box-val" style="color:#F4621F;">{{ u.attempted }}</div>
-          <div class="stat-box-lbl">Attempted</div>
-        </div>
-        <div class="stat-box" style="background:#EAF9F0;">
-          <div class="stat-box-val" style="color:#27AE60;">{{ u.correct }}</div>
-          <div class="stat-box-lbl">Correct</div>
-        </div>
-        <div class="stat-box" style="background:#F3F4F6;">
-          <div class="stat-box-val" style="color:#6B7280;">{{ u.session_count }}</div>
-          <div class="stat-box-lbl">Sessions</div>
-        </div>
-      </div>
-
-      <!-- Active days bar (last 30) -->
-      <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;">
-        <div style="font-size:10px; color:#6B7280; font-weight:600; min-width:70px;">Active / 30d</div>
-        <div style="flex:1; background:#F3F4F6; border-radius:99px; height:7px; overflow:hidden;">
-          <div style="height:100%; border-radius:99px; background:{% if u.days_active_30 >= 20 %}#27AE60{% elif u.days_active_30 >= 10 %}#F4621F{% elif u.days_active_30 >= 5 %}#2471A3{% else %}#9CA3AF{% endif %}; width:{{ (u.days_active_30 / 30 * 100)|round }}%;"></div>
-        </div>
-        <div style="font-size:10px; font-weight:700; color:#6B7280; min-width:28px; text-align:right;">{{ u.days_active_30 }}/30</div>
-      </div>
-
-      <!-- Topic heatmap -->
-      {% if u.topic_heat %}
-      <div class="heat-title">Topic Performance</div>
-      {% for topic, heat in u.topic_heat.items() %}
-      <div class="heat-row">
-        <div class="heat-label">{{ topic[:14] }}</div>
-        <div class="heat-track">
-          <div class="heat-fill" style="width:{{ heat.pct }}%; background:{{ '#27AE60' if heat.pct >= 70 else ('#F4621F' if heat.pct >= 40 else '#E53935') }};"></div>
-        </div>
-        <div class="heat-pct">{{ heat.pct }}%</div>
-      </div>
-      {% endfor %}
-      {% endif %}
 
       <!-- Footer -->
       <div class="u-footer">
-        <span>First login: {{ u.first_login }}</span>
-        <span>Last seen: {{ u.last_active }}</span>
+        <span>First: {{ u.first_login }}</span>
+        <span>Last: {{ u.last_active }}</span>
         <span>{{ u.seen_questions }} Qs seen</span>
       </div>
 
+      <!-- Admin expand toggle -->
+      <button class="u-expand-btn" onclick="togglePanel(this)">
+        <span>⚙️ Admin Controls</span>
+        <span class="toggle-arrow">▾</span>
+      </button>
+
+      <div class="u-panel">
+        <div class="u-actions">
+          <div class="u-actions-title">Edit User — {{ u.name }}</div>
+
+          <!-- Edit name + stage -->
+          <form method="POST" action="{{ url_for('admin_edit_profile', user_key=u.phone) }}">
+            <div style="font-size:10px;color:rgba(255,255,255,0.35);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">Name &amp; Stage</div>
+            <div class="adm-form-row">
+              <input type="text" name="name" value="{{ u.name }}" placeholder="Name">
+              <select name="stage">
+                <option value="beginner"     {{ 'selected' if u.stage == 'beginner' }}>🌱 Beginner</option>
+                <option value="intermediate" {{ 'selected' if u.stage == 'intermediate' }}>📖 Preparing</option>
+                <option value="advanced"     {{ 'selected' if u.stage == 'advanced' }}>🔥 Advanced</option>
+                <option value="revision"     {{ 'selected' if u.stage == 'revision' }}>⚡ Revision</option>
+              </select>
+            </div>
+
+            <div style="font-size:10px;color:rgba(255,255,255,0.35);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">Exilars &amp; Medals Seen (comma-separated: 5,10,20)</div>
+            <div class="adm-form-row">
+              <input type="number" name="exilars" value="{{ all_raw.get(u.phone,{}).get('exilars',0) }}" min="0" max="999" placeholder="Exilars">
+              <input type="text" name="medals_seen" value="{{ all_raw.get(u.phone,{}).get('medals_seen',[])|join(',') }}" placeholder="e.g. 5,10">
+            </div>
+            <button type="submit" class="adm-btn adm-btn-green adm-btn-full">💾 Save Profile</button>
+          </form>
+
+          <div style="height:10px;"></div>
+
+          <!-- Reset quiz -->
+          <form method="POST" action="{{ url_for('admin_reset_quiz', user_key=u.phone) }}">
+            <button type="submit" class="adm-btn adm-btn-blue adm-btn-full"
+                    onclick="return confirm('Reset today\'s quiz for {{ u.name }}?')">
+              🔄 Reset Today's Quiz (MCQ + AAJA)
+            </button>
+          </form>
+
+          <div style="height:8px;"></div>
+
+          <!-- Delete user -->
+          <form method="POST" action="{{ url_for('admin_delete_user', user_key=u.phone) }}">
+            <button type="submit" class="adm-btn adm-btn-red adm-btn-full"
+                    onclick="return confirm('PERMANENTLY DELETE {{ u.name }} ({{ u.phone }})? This cannot be undone.')">
+              🗑️ Delete This User
+            </button>
+          </form>
+
+        </div>
+      </div>
     </div>
     {% endfor %}
+
   {% else %}
-  <div class="empty-adm">👥 No users yet — share the app!</div>
+  <div style="text-align:center;padding:40px;color:rgba(255,255,255,0.3);font-size:14px;">👥 No users yet</div>
   {% endif %}
 
-  <!-- ── MCQ Bank Breakdown ── -->
-  <div class="adm-sec">MCQ Bank Breakdown</div>
+  <!-- ── MCQ Bank ── -->
+  <div class="adm-sec">📚 MCQ Bank Breakdown</div>
   <div class="bank-table">
     {% for topic, count in topic_counts.items() %}
     <div class="bank-row">
@@ -374,14 +497,23 @@
       <span class="bank-count">{{ count }}</span>
     </div>
     {% endfor %}
-    <div class="bank-row" style="background:#FFF0E8;">
-      <span class="bank-topic" style="font-weight:800; color:#F4621F;">TOTAL</span>
-      <span class="bank-count" style="font-size:14px;">{{ mcq_total }}</span>
+    <div class="bank-row" style="background:rgba(244,98,31,0.08);">
+      <span class="bank-topic" style="font-weight:900;color:#F4621F;">TOTAL</span>
+      <span class="bank-count" style="font-size:16px;">{{ mcq_total }}</span>
     </div>
   </div>
 
-  <a href="{{ url_for('home') }}" class="adm-back">← Back to App</a>
+  <a href="{{ url_for('home') }}" style="display:block;text-align:center;margin:0 12px 32px;padding:16px;background:#1C1C1E;color:rgba(255,255,255,0.5);border-radius:50px;text-decoration:none;font-weight:700;font-size:14px;border:1px solid rgba(255,255,255,0.08);">← Back to App</a>
 
 </div>
+
+<script>
+function togglePanel(btn) {
+  const panel = btn.nextElementSibling;
+  const arrow = btn.querySelector('.toggle-arrow');
+  panel.classList.toggle('open');
+  arrow.textContent = panel.classList.contains('open') ? '▴' : '▾';
+}
+</script>
 </body>
 </html>

@@ -2,37 +2,203 @@
 {% block title %}Profile — BASS 50{% endblock %}
 
 {% block content %}
+<style>
+  .prof-hero {
+    background: linear-gradient(135deg, #F4621F 0%, #8B2500 100%);
+    padding: 32px 20px 80px;
+    position: relative; overflow: hidden;
+  }
+  .prof-hero::before {
+    content:''; position:absolute; top:-60px; right:-60px;
+    width:200px; height:200px; border-radius:50%;
+    background:rgba(255,255,255,0.08); pointer-events:none;
+  }
+  .prof-hero::after {
+    content:''; position:absolute; bottom:-40px; left:-40px;
+    width:130px; height:130px; border-radius:50%;
+    background:rgba(255,255,255,0.06); pointer-events:none;
+  }
+  .prof-body {
+    background:#0F0F0F;
+    border-radius:28px 28px 0 0;
+    margin-top:-50px; position:relative; z-index:2;
+    padding: 28px 16px 120px;
+    min-height: 70vh;
+  }
 
-<!-- ── Profile Hero ── -->
-<div style="background:linear-gradient(135deg,#F4621F 0%,#8B2500 100%); padding:32px 20px 28px; position:relative; overflow:hidden;">
-  <!-- decorative circles -->
-  <div style="position:absolute;top:-30px;right:-30px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,0.07);"></div>
-  <div style="position:absolute;bottom:-20px;left:-20px;width:80px;height:80px;border-radius:50%;background:rgba(255,255,255,0.06);"></div>
+  /* ── Stat strip ── */
+  .stat-strip {
+    display:grid; grid-template-columns:1fr 1fr 1fr;
+    gap:10px; margin-bottom:0;
+  }
+  .stat-strip-cell {
+    background:rgba(255,255,255,0.15);
+    backdrop-filter:blur(8px);
+    border-radius:18px; padding:16px 8px;
+    text-align:center; border:1px solid rgba(255,255,255,0.2);
+  }
+  .stat-strip-val { font-size:26px; font-weight:900; color:#fff; line-height:1; }
+  .stat-strip-lbl { font-size:9px; color:rgba(255,255,255,0.75); font-weight:700;
+                    text-transform:uppercase; letter-spacing:.6px; margin-top:5px; }
 
-  <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px;position:relative;">
-    <div style="width:76px;height:76px;border-radius:50%;overflow:hidden;border:3px solid rgba(255,255,255,0.5);flex-shrink:0;background:rgba(255,255,255,0.15);">
+  /* ── Section label ── */
+  .sec-label {
+    display:flex; align-items:center; gap:10px;
+    margin-bottom:16px; margin-top:28px;
+  }
+  .sec-label-bar { width:5px; height:22px; background:#F4621F; border-radius:4px; flex-shrink:0; }
+  .sec-label-text { font-size:16px; font-weight:800; color:#fff; }
+
+  /* ── Performance cards ── */
+  .perf-card {
+    background:#1C1C1E;
+    border:1px solid rgba(255,255,255,0.1);
+    border-radius:20px;
+    padding:20px;
+    margin-bottom:10px;
+  }
+  .perf-row {
+    display:flex; justify-content:space-between; align-items:center;
+    margin-bottom:10px;
+  }
+  .perf-topic { font-size:14px; font-weight:700; color:#E5E7EB; }
+  .perf-score {
+    font-size:13px; font-weight:800;
+    padding:4px 12px; border-radius:99px;
+  }
+  .perf-score.strong { background:rgba(39,174,96,.2); color:#4ADE80; }
+  .perf-score.average { background:rgba(245,158,11,.2); color:#FCD34D; }
+  .perf-score.weak { background:rgba(229,57,53,.2); color:#F87171; }
+  .perf-bar-bg {
+    height:10px; background:rgba(255,255,255,0.08);
+    border-radius:99px; overflow:hidden;
+  }
+  .perf-bar-fill {
+    height:100%; border-radius:99px;
+    transition: width 1.2s cubic-bezier(.4,0,.2,1);
+  }
+  .perf-bar-fill.strong  { background:linear-gradient(90deg,#27AE60,#4ADE80); }
+  .perf-bar-fill.average { background:linear-gradient(90deg,#F59E0B,#FCD34D); }
+  .perf-bar-fill.weak    { background:linear-gradient(90deg,#E53935,#F87171); }
+  .perf-legend {
+    display:flex; gap:16px; margin-top:14px;
+    font-size:11px; font-weight:600; color:rgba(255,255,255,0.4);
+  }
+  .perf-legend span { display:flex; align-items:center; gap:5px; }
+
+  /* ── Form cards ── */
+  .form-card {
+    background:#1C1C1E;
+    border:1px solid rgba(255,255,255,0.1);
+    border-radius:22px;
+    padding:22px 18px;
+    margin-bottom:14px;
+  }
+  .form-card-label {
+    font-size:11px; font-weight:700; color:rgba(255,255,255,0.45);
+    text-transform:uppercase; letter-spacing:.6px; margin-bottom:8px;
+  }
+  .form-card input,
+  .form-card select {
+    width:100%; background:rgba(255,255,255,0.06);
+    border:1.5px solid rgba(255,255,255,0.12);
+    border-radius:14px; padding:16px 14px;
+    font-size:15px; font-weight:600; color:#fff;
+    font-family:'Poppins',sans-serif;
+    outline:none; transition:border-color .2s;
+    -webkit-appearance:none; appearance:none;
+  }
+  .form-card input:focus,
+  .form-card select:focus { border-color:#F4621F; }
+  .form-card input::placeholder { color:rgba(255,255,255,0.3); }
+  .form-card select option { background:#1C1C1E; color:#fff; }
+
+  /* ── Subject chips ── */
+  .subject-grid-dark {
+    display:flex; flex-wrap:wrap; gap:8px; margin-top:4px;
+  }
+  .subj-chip-dark {
+    padding:10px 16px;
+    border-radius:12px;
+    border:1.5px solid rgba(255,255,255,0.15);
+    background:rgba(255,255,255,0.05);
+    font-size:12px; font-weight:700; color:rgba(255,255,255,0.6);
+    cursor:pointer; transition:all .15s;
+    display:flex; align-items:center;
+  }
+  .subj-chip-dark input { display:none; }
+  .subj-chip-dark.checked {
+    background:rgba(244,98,31,0.2);
+    border-color:#F4621F;
+    color:#F4621F;
+  }
+
+  /* ── Save button ── */
+  .save-btn {
+    width:100%; padding:20px;
+    background:linear-gradient(135deg,#F4621F 0%,#C94E18 100%);
+    color:#fff; border:none; border-radius:18px;
+    font-size:17px; font-weight:800; font-family:'Poppins',sans-serif;
+    cursor:pointer; letter-spacing:.3px;
+    box-shadow:0 8px 28px rgba(244,98,31,0.4);
+    transition:transform .15s, box-shadow .15s;
+    margin-top:6px;
+  }
+  .save-btn:active { transform:scale(0.98); box-shadow:0 4px 14px rgba(244,98,31,0.3); }
+
+  /* ── Action rows ── */
+  .action-row {
+    display:flex; align-items:center; gap:14px;
+    padding:20px 18px;
+    border-radius:20px;
+    text-decoration:none;
+    font-weight:700; font-size:14px;
+    margin-bottom:10px;
+    border:1.5px solid rgba(255,255,255,0.1);
+    background:#1C1C1E;
+    color:#fff;
+    transition:border-color .15s;
+  }
+  .action-row:hover { border-color:rgba(255,255,255,0.25); }
+  .action-row .ar-icon { font-size:22px; }
+  .action-row .ar-text { flex:1; }
+  .action-row .ar-sub { font-size:11px; color:rgba(255,255,255,0.4); font-weight:500; margin-top:2px; }
+  .action-row.danger { border-color:rgba(229,57,53,0.3); }
+  .action-row.danger .ar-text-main { color:#F87171; }
+
+  .flash-success {
+    background:rgba(39,174,96,0.15); border:1px solid rgba(39,174,96,0.3);
+    border-radius:14px; padding:14px 16px; margin-bottom:16px;
+    font-size:13px; color:#4ADE80; font-weight:600;
+  }
+</style>
+
+<!-- Hero -->
+<div class="prof-hero">
+  <div style="display:flex;align-items:center;gap:16px;margin-bottom:24px;position:relative;z-index:1;">
+    <div style="width:82px;height:82px;border-radius:50%;overflow:hidden;border:3px solid rgba(255,255,255,0.6);flex-shrink:0;background:rgba(255,255,255,0.15);box-shadow:0 6px 24px rgba(0,0,0,0.3);">
       {% if profile and profile.avatar_id %}
         <img src="{{ url_for('avatar_svg_route', avatar_id=profile.avatar_id) }}?color={{ profile.avatar_color|urlencode }}"
-             width="76" height="76" alt="{{ profile.name }}" style="display:block;">
+             width="82" height="82" alt="{{ profile.name }}" style="display:block;">
       {% else %}
-        <div style="width:76px;height:76px;display:flex;align-items:center;justify-content:center;font-size:34px;color:#fff;font-weight:900;">
+        <div style="width:82px;height:82px;display:flex;align-items:center;justify-content:center;font-size:36px;color:#fff;font-weight:900;">
           {{ (profile.name[0]|upper) if profile and profile.name else 'A' }}
         </div>
       {% endif %}
     </div>
-    <div style="flex:1;">
-      <div style="font-size:22px;font-weight:900;color:#fff;line-height:1.2;">
+    <div style="flex:1;position:relative;z-index:1;">
+      <div style="font-size:24px;font-weight:900;color:#fff;line-height:1.2;text-shadow:0 2px 8px rgba(0,0,0,0.3);">
         {{ profile.name if profile and profile.name else 'Aspirant' }}
       </div>
-      <div style="font-size:12px;color:rgba(255,255,255,0.7);margin-top:4px;">
+      <div style="font-size:12px;color:rgba(255,255,255,0.65);margin-top:5px;">
         📱 ···· {{ phone[-4:] if phone and not phone.startswith('guest_') else '—' }}
       </div>
-      <div style="margin-top:8px;">
-        <span style="background:rgba(255,255,255,0.2);color:#fff;font-size:11px;font-weight:700;padding:4px 12px;border-radius:99px;letter-spacing:.3px;">
+      <div style="margin-top:10px;display:flex;flex-wrap:wrap;gap:6px;">
+        <span style="background:rgba(255,255,255,0.22);color:#fff;font-size:11px;font-weight:700;padding:5px 14px;border-radius:99px;letter-spacing:.3px;backdrop-filter:blur(4px);">
           {{ '🎯 UPSC Aspirant' if is_upsc else '📚 General Practice' }}
         </span>
         {% if profile and profile.stage %}
-        <span style="background:rgba(255,255,255,0.12);color:rgba(255,255,255,0.85);font-size:11px;font-weight:600;padding:4px 12px;border-radius:99px;margin-left:6px;">
+        <span style="background:rgba(255,255,255,0.12);color:rgba(255,255,255,0.9);font-size:11px;font-weight:600;padding:5px 14px;border-radius:99px;backdrop-filter:blur(4px);">
           {{ profile.stage|capitalize }}
         </span>
         {% endif %}
@@ -40,110 +206,106 @@
     </div>
   </div>
 
-  <!-- Stats strip -->
-  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;position:relative;">
-    <div style="background:rgba(255,255,255,0.15);backdrop-filter:blur(4px);border-radius:14px;padding:14px 8px;text-align:center;">
-      <div style="font-size:24px;font-weight:900;color:#fff;">{{ streak.current if streak and streak.current else 0 }}</div>
-      <div style="font-size:10px;color:rgba(255,255,255,0.75);font-weight:700;letter-spacing:.4px;margin-top:2px;">🔥 STREAK</div>
+  <!-- Stat strip -->
+  <div class="stat-strip" style="position:relative;z-index:1;">
+    <div class="stat-strip-cell">
+      <div class="stat-strip-val">{{ streak.current if streak and streak.current else 0 }}</div>
+      <div class="stat-strip-lbl">🔥 Streak</div>
     </div>
-    <div style="background:rgba(255,255,255,0.15);backdrop-filter:blur(4px);border-radius:14px;padding:14px 8px;text-align:center;">
-      <div style="font-size:24px;font-weight:900;color:#fff;">{{ total_attempted }}</div>
-      <div style="font-size:10px;color:rgba(255,255,255,0.75);font-weight:700;letter-spacing:.4px;margin-top:2px;">🧠 ATTEMPTED</div>
+    <div class="stat-strip-cell">
+      <div class="stat-strip-val">{{ total_attempted }}</div>
+      <div class="stat-strip-lbl">🧠 Done</div>
     </div>
-    <div style="background:rgba(255,255,255,0.15);backdrop-filter:blur(4px);border-radius:14px;padding:14px 8px;text-align:center;">
-      <div style="font-size:24px;font-weight:900;color:#fff;">{{ overall_accuracy }}<span style="font-size:14px;">%</span></div>
-      <div style="font-size:10px;color:rgba(255,255,255,0.75);font-weight:700;letter-spacing:.4px;margin-top:2px;">🎯 ACCURACY</div>
+    <div class="stat-strip-cell">
+      <div class="stat-strip-val">{{ overall_accuracy }}<span style="font-size:14px">%</span></div>
+      <div class="stat-strip-lbl">🎯 Accuracy</div>
     </div>
   </div>
-
-  {% if streak and streak.longest %}
-  <div style="text-align:center;margin-top:12px;font-size:12px;color:rgba(255,255,255,0.65);position:relative;">
-    🏆 Best streak: <strong style="color:rgba(255,255,255,0.9);">{{ streak.longest }} days</strong>
-    {% if profile and profile.target_year %}
-     · 📅 Target: <strong style="color:rgba(255,255,255,0.9);">UPSC {{ profile.target_year }}</strong>
-    {% endif %}
-  </div>
-  {% endif %}
 </div>
 
-<!-- ── Edit Section ── -->
-<div style="background:#fff;border-radius:24px 24px 0 0;padding:28px 20px 100px;margin-top:-12px;position:relative;z-index:1;">
-
-  <!-- Subject Performance Chart -->
-  {% if topic_data %}
-  <div style="margin-bottom:28px;">
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;">
-      <div style="width:4px;height:20px;background:#F4621F;border-radius:4px;"></div>
-      <div style="font-size:16px;font-weight:800;color:#1A1A1A;">Subject Performance</div>
-    </div>
-    {% for topic, t in topic_data.items() %}
-    <div style="margin-bottom:12px;">
-      <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:600;color:#374151;margin-bottom:5px;">
-        <span>{{ topic }}</span>
-        <span style="color:{{ '#27AE60' if t.grade=='strong' else ('#F59E0B' if t.grade=='average' else '#E53935') }}">
-          {{ t.correct }}/{{ t.total }} · {{ t.pct }}%
-          {% if t.grade=='strong' %}💪{% elif t.grade=='average' %}📈{% else %}⚠️{% endif %}
-        </span>
-      </div>
-      <div style="height:8px;background:#F3F4F6;border-radius:99px;overflow:hidden;">
-        <div style="height:100%;border-radius:99px;width:{{ t.pct }}%;
-          background:{{ 'linear-gradient(90deg,#27AE60,#52C47A)' if t.grade=='strong' else ('linear-gradient(90deg,#F59E0B,#FBBF24)' if t.grade=='average' else 'linear-gradient(90deg,#E53935,#F87171)') }};
-          transition:width 1s ease;"></div>
-      </div>
-    </div>
-    {% endfor %}
-    <div style="display:flex;gap:14px;margin-top:10px;font-size:11px;font-weight:600;color:#6B7280;">
-      <span><span style="color:#27AE60;">●</span> Strong ≥70%</span>
-      <span><span style="color:#F59E0B;">●</span> Average</span>
-      <span><span style="color:#E53935;">●</span> Needs Work</span>
-    </div>
-  </div>
-  {% endif %}
-
-  <div style="display:flex;align-items:center;gap:8px;margin-bottom:20px;">
-    <div style="width:4px;height:20px;background:#F4621F;border-radius:4px;"></div>
-    <div style="font-size:16px;font-weight:800;color:#1A1A1A;">Edit Profile</div>
-  </div>
+<!-- Dark body sheet -->
+<div class="prof-body">
 
   {% with messages = get_flashed_messages() %}
     {% if messages %}{% for msg in messages %}
-      <div style="background:#F0FFF4;border-left:4px solid #27AE60;border-radius:10px;padding:12px 16px;margin-bottom:16px;font-size:13px;color:#27AE60;font-weight:600;">✓ {{ msg }}</div>
+      <div class="flash-success">✓ {{ msg }}</div>
     {% endfor %}{% endif %}
   {% endwith %}
 
+  <!-- Subject Performance -->
+  {% if topic_data %}
+  <div class="sec-label">
+    <div class="sec-label-bar"></div>
+    <div class="sec-label-text">Subject Performance</div>
+  </div>
+  {% for topic, t in topic_data.items() %}
+  <div class="perf-card">
+    <div class="perf-row">
+      <div class="perf-topic">{{ topic }}</div>
+      <div class="perf-score {{ t.grade }}">
+        {{ t.correct }}/{{ t.total }} &nbsp; {{ t.pct }}%
+        {% if t.grade=='strong' %}💪{% elif t.grade=='average' %}📈{% else %}⚠️{% endif %}
+      </div>
+    </div>
+    <div class="perf-bar-bg">
+      <div class="perf-bar-fill {{ t.grade }}" style="width:{{ t.pct }}%;"></div>
+    </div>
+  </div>
+  {% endfor %}
+  <div class="perf-legend" style="padding:0 4px 4px;">
+    <span><span style="color:#4ADE80;">●</span> Strong ≥70%</span>
+    <span><span style="color:#FCD34D;">●</span> Average</span>
+    <span><span style="color:#F87171;">●</span> Needs Work</span>
+  </div>
+  {% endif %}
+
+  <!-- Edit Profile -->
+  <div class="sec-label">
+    <div class="sec-label-bar"></div>
+    <div class="sec-label-text">Edit Profile</div>
+  </div>
+
   <form method="post">
 
-    <div class="form-group">
-      <label class="form-label" for="p-name">Full Name</label>
-      <input class="form-input" type="text" id="p-name" name="name"
-             placeholder="Your name"
+    <div class="form-card">
+      <div class="form-card-label">Full Name</div>
+      <input type="text" name="name" placeholder="Your name"
              value="{{ profile.name if profile else '' }}" required>
     </div>
 
-    <div class="form-group">
-      <label class="form-label" for="p-stage">Prep Stage</label>
-      <select class="form-select" id="p-stage" name="stage">
+    <div class="form-card">
+      <div class="form-card-label">Prep Stage</div>
+      <select name="stage">
         <option value="beginner"     {{ 'selected' if profile and profile.stage == 'beginner'     }}>🌱 Beginner</option>
         <option value="intermediate" {{ 'selected' if profile and profile.stage == 'intermediate' }}>📖 Preparing</option>
         <option value="advanced"     {{ 'selected' if profile and profile.stage == 'advanced'     }}>🔥 Advanced</option>
-        <option value="revision"     {{ 'selected' if profile and profile.stage == 'revision'     }}>⚡ Revision</option>
+        <option value="revision"     {{ 'selected' if profile and profile.stage == 'revision'     }}>⚡ Revision Mode</option>
       </select>
     </div>
 
-    <div class="form-group">
-      <label class="form-label" for="p-year">Target Exam Year</label>
-      <select class="form-select" id="p-year" name="target_year">
+    <div class="form-card">
+      <div class="form-card-label">Target Exam Year</div>
+      <select name="target_year">
         {% for y in range(2025, 2031) %}
         <option value="{{ y }}" {{ 'selected' if profile and profile.target_year|string == y|string }}>UPSC CSE {{ y }}</option>
         {% endfor %}
       </select>
     </div>
 
-    <div class="form-group">
-      <label class="form-label">Focus Subjects</label>
-      <div class="subject-grid">
+    <div class="form-card">
+      <div class="form-card-label">Daily Study Hours</div>
+      <select name="daily_hours">
+        {% for h in [1,2,3,4,5,6,7,8,10,12] %}
+        <option value="{{ h }}" {{ 'selected' if profile and profile.daily_hours|int == h }}>{{ h }} hour{{ 's' if h != 1 }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="form-card">
+      <div class="form-card-label">Focus Subjects</div>
+      <div class="subject-grid-dark" id="subjGrid">
         {% for subject in subjects %}
-        <label class="subject-chip {{ 'checked' if profile and subject in (profile.preferred_subjects or []) }}"
+        <label class="subj-chip-dark {{ 'checked' if profile and subject in (profile.preferred_subjects or []) }}"
                onclick="this.classList.toggle('checked')">
           <input type="checkbox" name="preferred_subjects" value="{{ subject }}"
             {{ 'checked' if profile and subject in (profile.preferred_subjects or []) }}>
@@ -153,31 +315,49 @@
       </div>
     </div>
 
-    <button type="submit" style="
-      width:100%; padding:17px; margin-top:8px;
-      background:linear-gradient(135deg,#F4621F 0%,#C94E18 100%);
-      color:#fff; border:none; border-radius:50px;
-      font-size:16px; font-weight:800; font-family:'Poppins',sans-serif;
-      cursor:pointer; box-shadow:0 6px 20px rgba(244,98,31,0.35); letter-spacing:.3px;">
-      Save Changes ✓
-    </button>
+    <button type="submit" class="save-btn">Save Changes ✓</button>
   </form>
 
   <!-- Actions -->
-  <div style="margin-top:28px;display:flex;flex-direction:column;gap:10px;">
-    <a href="{{ url_for('avatar_select') }}"
-       style="display:flex;align-items:center;gap:12px;padding:16px;background:#F9FAFB;border-radius:16px;text-decoration:none;color:#1A1A1A;font-weight:700;font-size:14px;border:1px solid #F3F4F6;">
-      <span style="font-size:20px;">🎭</span>
-      <span style="flex:1;">Change Avatar</span>
-      <span style="color:#9CA3AF;font-size:20px;">›</span>
-    </a>
-    <a href="{{ url_for('logout') }}"
-       style="display:flex;align-items:center;gap:12px;padding:16px;background:#FEF2F2;border-radius:16px;text-decoration:none;color:#E53935;font-weight:700;font-size:14px;border:1px solid #FECACA;">
-      <span style="font-size:20px;">🚪</span>
-      <span style="flex:1;">Log Out / Switch Account</span>
-      <span style="color:#E53935;font-size:20px;">›</span>
-    </a>
+  <div class="sec-label" style="margin-top:28px;">
+    <div class="sec-label-bar"></div>
+    <div class="sec-label-text">Account</div>
   </div>
-</div>
 
+  <a href="{{ url_for('avatar_select') }}" class="action-row">
+    <span class="ar-icon">🎭</span>
+    <div class="ar-text">
+      <div class="ar-text-main">Change Avatar</div>
+      <div class="ar-sub">Pick a new look</div>
+    </div>
+    <span style="color:rgba(255,255,255,0.3);font-size:20px;">›</span>
+  </a>
+
+  {% if streak and streak.longest %}
+  <div style="background:#1C1C1E;border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:18px;margin-bottom:10px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;">
+      <div>
+        <div style="font-size:13px;font-weight:700;color:rgba(255,255,255,0.6);">Best Streak</div>
+        <div style="font-size:28px;font-weight:900;color:#F59E0B;margin-top:2px;">{{ streak.longest }} <span style="font-size:14px;">days 🏆</span></div>
+      </div>
+      {% if profile and profile.target_year %}
+      <div style="text-align:right;">
+        <div style="font-size:11px;color:rgba(255,255,255,0.4);">Target</div>
+        <div style="font-size:16px;font-weight:800;color:#60A5FA;margin-top:2px;">UPSC {{ profile.target_year }}</div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+  {% endif %}
+
+  <a href="{{ url_for('logout') }}" class="action-row danger">
+    <span class="ar-icon">🚪</span>
+    <div class="ar-text">
+      <div class="ar-text-main" style="color:#F87171;">Log Out / Switch Account</div>
+      <div class="ar-sub">End your session</div>
+    </div>
+    <span style="color:rgba(229,57,53,0.5);font-size:20px;">›</span>
+  </a>
+
+</div>
 {% endblock %}

@@ -64,13 +64,20 @@ def _get_current_user():
     data = storage.load_user(key)
     # Sync Exilar count to session so all templates can access it via context processor
     session["exilars_count"] = data.get("exilars", 0)
+    # Restore user_mode from stored data (handles returning users whose session expired)
+    stored_mode = data.get("user_type") or data.get("profile", {}).get("user_mode")
+    if stored_mode:
+        session["user_mode"] = stored_mode
     return key, data
 
 
 @app.context_processor
 def inject_globals():
-    """Inject Exilar count into every template context."""
-    return {"exilars": session.get("exilars_count", 0)}
+    """Inject Exilar count and user_mode into every template context."""
+    return {
+        "exilars":   session.get("exilars_count", 0),
+        "user_mode": session.get("user_mode", "upsc"),
+    }
 
 
 def _save_current_user(key, data):
@@ -145,15 +152,20 @@ def login():
 
         full_phone = code + phone
         session["phone"] = full_phone
-        session["user_mode"] = "upsc"
         session.permanent = True
 
-        # Admin auto-redirect
+        # Admin auto-redirect → password gate
         if full_phone == ADMIN_PHONE:
-            return redirect(url_for("admin"))
+            session["user_mode"] = "upsc"
+            session["admin_phone_verified"] = True   # phone OK; password still needed
+            return redirect(url_for("admin_auth"))
 
-        # First time? Redirect to onboarding
+        # First time? Redirect to onboarding (mode set during onboarding)
         data = storage.load_user(full_phone)
+        # Restore stored user_mode so returning general-mode users aren't reset to upsc
+        stored_mode = data.get("user_type") or data.get("profile", {}).get("user_mode")
+        session["user_mode"] = stored_mode if stored_mode else "upsc"
+
         if not data.get("onboarded"):
             return redirect(url_for("onboarding"))
         return redirect(url_for("home"))
@@ -615,4 +627,381 @@ def aaja_quiz():
                 topic = q["topic"]
                 ts = stats.setdefault(topic, {"correct": 0, "total": 0})
                 ts["total"] += 1
-                is_correct 
+                is_correct = (selected == q["correctIndex"])
+                if is_correct:
+                    ts["correct"] += 1
+
+            # Award Exilar if both quizzes completed today
+            awarded = storage.check_and_award_exilar(data)
+
+            # Check for new medal milestone
+            new_medal = None
+            if awarded:
+                new_medal = storage.check_medal(data)
+
+            data["aaja_mcq"] = aaja
+            _save_current_user(phone, data)
+
+            if new_medal:
+                session["pending_medal"] = new_medal
+
+            return redirect(url_for("aaja_quiz"))
+
+        return redirect(url_for("aaja_quiz"))
+
+    # ── GET ──────────────────────────────────────────────────────────────────
+    questions = [storage.MCQ_BY_ID[qid] for qid in aaja["question_ids"]
+                 if qid in storage.MCQ_BY_ID]
+    score = None
+    today_topics = {}
+    alltime_topics = {}
+
+    if aaja.get("submitted"):
+        answers = aaja.get("answers", {})
+        correct = sum(
+            1 for qid, sel in answers.items()
+            if storage.MCQ_BY_ID.get(qid, {}).get("correctIndex") == sel
+        )
+        score = {"correct": correct, "total": len(questions),
+                 "pct": round(100 * correct / len(questions)) if questions else 0}
+        for qid, selected in answers.items():
+            q = storage.MCQ_BY_ID.get(qid)
+            if not q:
+                continue
+            t = q["topic"]
+            today_topics.setdefault(t, {"correct": 0, "total": 0})
+            today_topics[t]["total"] += 1
+            if selected == q.get("correctIndex"):
+                today_topics[t]["correct"] += 1
+        for t in today_topics:
+            d = today_topics[t]
+            d["pct"] = round(100 * d["correct"] / d["total"]) if d["total"] else 0
+
+    for topic, s in data.get("mcq_stats", {}).items():
+        pct = round(100 * s["correct"] / s["total"]) if s["total"] else 0
+        alltime_topics[topic] = {
+            "correct": s["correct"], "total": s["total"], "pct": pct,
+            "grade": "strong" if pct >= 70 else ("average" if pct >= 40 else "weak")
+        }
+
+    from datetime import timedelta as _td
+    now = datetime.now()
+    if now.hour < 4:
+        reset_at = now.replace(hour=4, minute=0, second=0, microsecond=0)
+    else:
+        reset_at = (now + _td(days=1)).replace(hour=4, minute=0, second=0, microsecond=0)
+    hours_left = int((reset_at - now).total_seconds() // 3600)
+    mins_left  = int(((reset_at - now).total_seconds() % 3600) // 60)
+
+    new_medal = session.pop("pending_medal", None)
+    return render_template("aaja_quiz.html",
+        questions=questions, aaja=aaja, score=score,
+        today_topics=today_topics, alltime_topics=alltime_topics,
+        profile=data.get("profile"), phone=phone,
+        exilars=data.get("exilars", 0),
+        new_medal=new_medal,
+        hours_left=hours_left, mins_left=mins_left,
+    )
+
+
+# ── ANSWER WRITING ────────────────────────────────────────────────────────────
+
+@app.route("/answers", methods=["GET", "POST"])
+def answers():
+    redir = _require_login()
+    if redir: return redir
+    phone, data = _get_current_user()
+    redir = _require_onboarding(data)
+    if redir: return redir
+
+    today = date.today()
+    today_iso = today.isoformat()
+    prompt = storage.get_daily_answer_prompt(today)
+    history = data.setdefault("answer_history", [])
+    today_entry = next((a for a in history if a["date"] == today_iso and a["prompt_id"] == prompt["id"]), None)
+
+    if request.method == "POST":
+        text = request.form.get("answer_text", "").strip()
+        ocr_used = False
+        image_file = request.files.get("answer_image")
+        if image_file and image_file.filename:
+            extracted, err = ocr.extract_text(image_file.stream)
+            if err:
+                flash(err)
+                return redirect(url_for("answers"))
+            text = extracted
+            ocr_used = True
+
+        word_count = len(text.split()) if text else 0
+        score = grading.score_answer(text, prompt)
+        entry = {
+            "date": today_iso, "prompt_id": prompt["id"],
+            "paper": prompt["paper"], "question": prompt["question"],
+            "word_limit": prompt["wordLimit"], "answer_text": text,
+            "word_count": word_count, "score": score, "ocr_used": ocr_used,
+        }
+        if today_entry:
+            history.remove(today_entry)
+        history.append(entry)
+        storage.mark_active_today(data)
+        _save_current_user(phone, data)
+        flash(f"Answer saved — scored {score['total']}/{score['max']}.")
+        return redirect(url_for("answers"))
+
+    return render_template(
+        "answers.html",
+        prompt=prompt, today_entry=today_entry,
+        history=sorted(history, key=lambda a: a["date"], reverse=True)[:10],
+        profile=data.get("profile"), phone=phone,
+    )
+
+
+# ── CURRENT AFFAIRS ───────────────────────────────────────────────────────────
+
+@app.route("/current-affairs", methods=["GET", "POST"])
+def current_affairs():
+    redir = _require_login()
+    if redir: return redir
+    phone, data = _get_current_user()
+    redir = _require_onboarding(data)
+    if redir: return redir
+
+    tab = request.args.get("tab", "week")
+    if request.method == "POST":
+        item_id = request.form.get("item_id")
+        bookmarks = data.setdefault("bookmarked_affairs", [])
+        if item_id in bookmarks:
+            bookmarks.remove(item_id)
+        else:
+            bookmarks.append(item_id)
+        _save_current_user(phone, data)
+        return redirect(url_for("current_affairs", tab=tab))
+
+    bookmarks = data.get("bookmarked_affairs", [])
+    items = ([i for i in storage.CURRENT_AFFAIRS if i["id"] in bookmarks]
+             if tab == "saved" else storage.get_weekly_current_affairs())
+
+    return render_template(
+        "current_affairs.html",
+        items=items, tab=tab, bookmarks=bookmarks,
+        profile=data.get("profile"), phone=phone,
+    )
+
+
+# ── PROFILE ───────────────────────────────────────────────────────────────────
+
+@app.route("/profile", methods=["GET", "POST"])
+def profile():
+    redir = _require_login()
+    if redir: return redir
+    phone, data = _get_current_user()
+    redir = _require_onboarding(data)
+    if redir: return redir
+
+    if request.method == "POST":
+        existing = data.get("profile", {})
+        data["profile"] = {
+            "name":               request.form.get("name", "").strip() or "Aspirant",
+            "stage":              request.form.get("stage", "beginner"),
+            "target_year":        request.form.get("target_year", "").strip(),
+            "daily_hours":        _parse_daily_hours(request.form.get("daily_hours")),
+            "preferred_subjects": request.form.getlist("preferred_subjects"),
+            # Preserve avatar + mode fields not in the profile form
+            "avatar_id":          existing.get("avatar_id", "ias"),
+            "avatar_color":       existing.get("avatar_color", "#F4621F"),
+            "phone":              existing.get("phone", session.get("phone", "")),
+            "user_mode":          existing.get("user_mode", session.get("user_mode", "upsc")),
+        }
+        _save_current_user(phone, data)
+        flash("Profile updated.")
+        return redirect(url_for("profile"))
+
+    stats = data.get("mcq_stats", {})
+    total_attempted = sum(s["total"] for s in stats.values())
+    total_correct   = sum(s["correct"] for s in stats.values())
+    overall_accuracy = round(100 * total_correct / total_attempted) if total_attempted else 0
+    topic_data = {}
+    for topic, s in stats.items():
+        pct = round(100 * s["correct"] / s["total"]) if s["total"] else 0
+        topic_data[topic] = {
+            "correct": s["correct"], "total": s["total"], "pct": pct,
+            "grade": "strong" if pct >= 70 else ("average" if pct >= 40 else "weak")
+        }
+    return render_template(
+        "profile.html",
+        subjects=study_plan.SUBJECT_CATEGORIES,
+        profile=data.get("profile"),
+        streak=data.get("streak", {}),
+        phone=phone,
+        total_attempted=total_attempted,
+        overall_accuracy=overall_accuracy,
+        is_upsc=_is_upsc(),
+        topic_data=topic_data,
+    )
+
+
+# ── ADMIN ─────────────────────────────────────────────────────────────────────
+
+ADMIN_PASSWORD = "qwerty123"
+
+
+def _require_admin():
+    if not session.get("is_admin"):
+        return redirect(url_for("admin_auth"))
+    return None
+
+
+@app.route("/admin-auth", methods=["GET", "POST"])
+def admin_auth():
+    if not session.get("admin_phone_verified"):
+        return redirect(url_for("login"))
+    if session.get("is_admin"):
+        return redirect(url_for("admin"))
+    error = None
+    if request.method == "POST":
+        pw = request.form.get("password", "")
+        if pw == ADMIN_PASSWORD:
+            session["is_admin"] = True
+            session.pop("admin_phone_verified", None)
+            return redirect(url_for("admin"))
+        error = "Wrong password. Try again."
+    return render_template("admin_auth.html", error=error)
+
+
+@app.route("/admin")
+def admin():
+    redir = _require_admin()
+    if redir: return redir
+    from collections import Counter
+    users        = storage.get_all_user_summaries()
+    topic_counts = Counter(q["topic"] for q in storage.MCQ_BANK)
+    metrics      = storage.get_startup_metrics()
+    all_raw      = storage.load_all_users()
+    return render_template(
+        "admin.html",
+        users=users,
+        mcq_total=len(storage.MCQ_BANK),
+        topic_counts=dict(topic_counts),
+        metrics=metrics,
+        all_raw=all_raw,
+    )
+
+
+@app.route("/admin/user/<path:user_key>")
+def admin_user_detail(user_key):
+    redir = _require_admin()
+    if redir: return redir
+    data = storage.load_user(user_key)
+    return render_template("admin_user.html", user_key=user_key, data=data)
+
+
+@app.route("/admin/user/<path:user_key>/set-exilars", methods=["POST"])
+def admin_set_exilars(user_key):
+    redir = _require_admin()
+    if redir: return redir
+    data = storage.load_user(user_key)
+    val = int(request.form.get("exilars", 0))
+    data["exilars"] = max(0, val)
+    storage.save_user(user_key, data)
+    flash(f"Exilars set to {data['exilars']} for {user_key}")
+    return redirect(url_for("admin"))
+
+
+@app.route("/admin/user/<path:user_key>/reset-quiz", methods=["POST"])
+def admin_reset_quiz(user_key):
+    redir = _require_admin()
+    if redir: return redir
+    data = storage.load_user(user_key)
+    data["daily_mcq"] = {"quiz_day": None, "date": None, "question_ids": [], "answers": {}, "submitted": False}
+    data["aaja_mcq"]  = {"quiz_day": None, "date": None, "question_ids": [], "answers": {}, "submitted": False}
+    storage.save_user(user_key, data)
+    flash(f"Quiz reset for {user_key}")
+    return redirect(url_for("admin"))
+
+
+@app.route("/admin/user/<path:user_key>/delete", methods=["POST"])
+def admin_delete_user(user_key):
+    redir = _require_admin()
+    if redir: return redir
+    all_users = storage.load_all_users()
+    all_users.pop(user_key, None)
+    storage.save_all_users(all_users)
+    flash(f"Deleted user: {user_key}")
+    return redirect(url_for("admin"))
+
+
+@app.route("/admin/user/<path:user_key>/edit-profile", methods=["POST"])
+def admin_edit_profile(user_key):
+    redir = _require_admin()
+    if redir: return redir
+    data = storage.load_user(user_key)
+    name  = request.form.get("name", "").strip() or data.get("profile", {}).get("name", "")
+    stage = request.form.get("stage", data.get("profile", {}).get("stage", "beginner"))
+    exilars = request.form.get("exilars")
+    medals_seen = request.form.get("medals_seen", "")
+    if not data.get("profile"):
+        data["profile"] = {}
+    data["profile"]["name"]  = name
+    data["profile"]["stage"] = stage
+    if exilars is not None:
+        data["exilars"] = max(0, int(exilars))
+    try:
+        data["medals_seen"] = [int(x.strip()) for x in medals_seen.split(",") if x.strip()]
+    except Exception:
+        pass
+    storage.save_user(user_key, data)
+    flash(f"Updated profile for {user_key}")
+    return redirect(url_for("admin"))
+
+
+@app.route("/admin/broadcast", methods=["POST"])
+def admin_broadcast():
+    redir = _require_admin()
+    if redir: return redir
+    msg = request.form.get("message", "").strip()
+    if msg:
+        all_users = storage.load_all_users()
+        for key, data in all_users.items():
+            data.setdefault("notifications", []).append({
+                "text": msg, "date": date.today().isoformat(), "read": False
+            })
+        storage.save_all_users(all_users)
+        flash(f"Broadcast sent to {len(all_users)} users")
+    return redirect(url_for("admin"))
+
+
+@app.route("/admin/logout")
+def admin_logout():
+    session.pop("is_admin", None)
+    session.pop("admin_phone_verified", None)
+    session.clear()
+    return redirect(url_for("login"))
+
+
+# ── AI ASSISTANT ──────────────────────────────────────────────────────────────
+
+@app.route("/assistant/chat", methods=["POST"])
+def assistant_chat():
+    from flask import jsonify
+    import assistant as asst
+    data_json = request.get_json(silent=True) or {}
+    message   = data_json.get("message", "").strip()
+    key, user_data = _get_current_user()
+    result = asst.get_response(message, user_data)
+    return jsonify(result)
+
+
+# ── AVATAR SVG ENDPOINT ───────────────────────────────────────────────────────
+
+@app.route("/avatar/svg/<avatar_id>")
+def avatar_svg_route(avatar_id):
+    from flask import Response
+    import svg_avatars
+    color = request.args.get("color", "#F4621F")
+    svg = svg_avatars.get_avatar_svg(avatar_id, color)
+    return Response(svg, mimetype="image/svg+xml",
+                    headers={"Cache-Control": "public, max-age=3600"})
+
+
+if __name__ == "__main__":
+    app.run(debug=os.environ.get("FLASK_DEBUG", "false").lower() == "true")

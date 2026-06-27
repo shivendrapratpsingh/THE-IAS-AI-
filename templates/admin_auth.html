@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Admin Access — BASS 50</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <style>
+    body { background:#0A0A0A; display:flex; align-items:center; justify-content:center; min-height:100vh; }
+    .gate-shell {
+      width:100%; max-width:400px; padding:0 20px;
+    }
+    .gate-logo {
+      text-align:center; margin-bottom:40px;
+    }
+    .gate-logo-title {
+      font-size:32px; font-weight:900; color:#fff;
+      letter-spacing:-1px;
+    }
+    .gate-logo-sub {
+      font-size:13px; color:rgba(255,255,255,0.4); margin-top:4px; font-weight:600;
+    }
+    .gate-icon {
+      font-size:56px; margin-bottom:16px; display:block;
+      filter:drop-shadow(0 4px 20px rgba(244,98,31,0.5));
+    }
+    .gate-card {
+      background:#1C1C1E;
+      border:1px solid rgba(255,255,255,0.1);
+      border-radius:24px;
+      padding:32px 24px;
+    }
+    .gate-title {
+      font-size:22px; font-weight:900; color:#fff;
+      margin-bottom:6px;
+    }
+    .gate-sub {
+      font-size:13px; color:rgba(255,255,255,0.45);
+      margin-bottom:28px; line-height:1.5;
+    }
+    .gate-label {
+      font-size:11px; font-weight:700; color:rgba(255,255,255,0.45);
+      text-transform:uppercase; letter-spacing:.6px; margin-bottom:8px;
+    }
+    .gate-input {
+      width:100%; background:rgba(255,255,255,0.06);
+      border:1.5px solid rgba(255,255,255,0.12);
+      border-radius:14px; padding:18px 16px;
+      font-size:16px; font-weight:600; color:#fff;
+      font-family:'Poppins',sans-serif; outline:none;
+      letter-spacing:2px;
+      transition:border-color .2s; margin-bottom:20px;
+    }
+    .gate-input:focus { border-color:#F4621F; }
+    .gate-btn {
+      width:100%; padding:18px;
+      background:linear-gradient(135deg,#F4621F 0%,#C94E18 100%);
+      color:#fff; border:none; border-radius:14px;
+      font-size:16px; font-weight:800;
+      font-family:'Poppins',sans-serif; cursor:pointer;
+      box-shadow:0 8px 28px rgba(244,98,31,0.4);
+    }
+    .gate-error {
+      background:rgba(229,57,53,0.15);
+      border:1px solid rgba(229,57,53,0.3);
+      border-radius:12px; padding:12px 16px;
+      font-size:13px; color:#F87171; font-weight:600;
+      margin-bottom:16px; text-align:center;
+    }
+    .gate-back {
+      display:block; text-align:center; margin-top:20px;
+      color:rgba(255,255,255,0.35); font-size:13px; font-weight:600;
+      text-decoration:none;
+    }
+    .gate-back:hover { color:rgba(255,255,255,0.6); }
+  </style>
+</head>
+<body>
+<div class="gate-shell">
+  <div class="gate-logo">
+    <span class="gate-icon">⚡</span>
+    <div class="gate-logo-title">BASS 50</div>
+    <div class="gate-logo-sub">Admin Console Access</div>
+  </div>
+
+  <div class="gate-card">
+    <div class="gate-title">Enter Password</div>
+    <div class="gate-sub">Admin access verified by phone. Enter your console password to continue.</div>
+
+    {% if error %}
+    <div class="gate-error">🔒 {{ error }}</div>
+    {% endif %}
+
+    <form method="POST">
+      <div class="gate-label">Password</div>
+      <input class="gate-input" type="password" name="password"
+             placeholder="••••••••" autofocus autocomplete="current-password">
+      <button class="gate-btn" type="submit">Enter Console →</button>
+    </form>
+  </div>
+
+  <a href="{{ url_for('login') }}" class="gate-back">← Not you? Go back to login</a>
+</div>
+</body>
+</html>
