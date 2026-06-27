@@ -117,6 +117,43 @@
 <div class="phone-shell">
 <div class="ob-page">
 
+  <!-- Language bar -->
+  <div style="display:flex; justify-content:flex-end; padding:12px 16px 0; position:relative; z-index:10;">
+    <button onclick="document.getElementById('ob-lang-panel').classList.toggle('show')"
+      style="background:rgba(255,255,255,0.2); border:1px solid rgba(255,255,255,0.35);
+             border-radius:99px; padding:6px 14px; color:#fff; font-size:12px;
+             font-weight:700; font-family:'Poppins',sans-serif; cursor:pointer; letter-spacing:.3px;">
+      🌐 Language
+    </button>
+    <div id="ob-lang-panel" style="display:none; position:absolute; top:44px; right:16px;
+      background:#1A1A1A; border-radius:14px; padding:12px 14px; z-index:100;
+      box-shadow:0 8px 24px rgba(0,0,0,0.3); min-width:200px;">
+      <div style="font-size:10px; font-weight:700; text-transform:uppercase; color:rgba(255,255,255,.5); letter-spacing:.6px; margin-bottom:10px;">Choose Language</div>
+      <div style="display:flex; flex-wrap:wrap; gap:7px;">
+        <button onclick="setObLang('en')"   class="ob-lang-pill">🇬🇧 English</button>
+        <button onclick="setObLang('hi')"   class="ob-lang-pill">🇮🇳 Hindi</button>
+        <button onclick="setObLang('pa')"   class="ob-lang-pill">🇮🇳 Punjabi</button>
+        <button onclick="setObLang('ta')"   class="ob-lang-pill">🇮🇳 Tamil</button>
+        <button onclick="setObLang('te')"   class="ob-lang-pill">🇮🇳 Telugu</button>
+        <button onclick="setObLang('mr')"   class="ob-lang-pill">🇮🇳 Marathi</button>
+        <button onclick="setObLang('bn')"   class="ob-lang-pill">🇧🇩 Bengali</button>
+      </div>
+    </div>
+  </div>
+  <style>
+    #ob-lang-panel.show { display:block !important; }
+    .ob-lang-pill {
+      padding:6px 12px; border-radius:99px;
+      background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2);
+      color:#fff; font-size:11px; font-weight:600; cursor:pointer;
+      font-family:'Poppins',sans-serif;
+    }
+    .ob-lang-pill:hover { background:#F4621F; border-color:#F4621F; }
+  </style>
+  <!-- Google Translate (hidden) -->
+  <div id="google_translate_element" style="display:none;"></div>
+  <style>.goog-te-banner-frame,.skiptranslate{display:none!important}body{top:0!important}</style>
+
   <div class="ob-top">
     <div class="ob-step-badge">🚀 Quick Setup</div>
     <div class="ob-headline">Let's set up<br>your profile</div>
@@ -234,5 +271,41 @@
   </div>
 </div>
 </div>
+
+<script>
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({
+    pageLanguage: 'en',
+    includedLanguages: 'hi,pa,ta,te,mr,bn,gu,kn,ml,ur,en',
+    autoDisplay: false
+  }, 'google_translate_element');
+}
+
+function setObLang(langCode) {
+  document.getElementById('ob-lang-panel').classList.remove('show');
+  if (!langCode || langCode === 'en') {
+    const sel = document.querySelector('.goog-te-combo');
+    if (sel) { sel.value = 'en'; sel.dispatchEvent(new Event('change')); }
+    return;
+  }
+  const waitForGT = setInterval(() => {
+    const sel = document.querySelector('.goog-te-combo');
+    if (sel) {
+      clearInterval(waitForGT);
+      sel.value = langCode;
+      sel.dispatchEvent(new Event('change'));
+    }
+  }, 200);
+}
+
+// Close language panel when clicking outside
+document.addEventListener('click', function(e) {
+  const panel = document.getElementById('ob-lang-panel');
+  if (!e.target.closest('#ob-lang-panel') && !e.target.closest('button[onclick*="ob-lang-panel"]')) {
+    panel.classList.remove('show');
+  }
+});
+</script>
+<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" onerror="console.log('Translate offline')"></script>
 </body>
 </html>
