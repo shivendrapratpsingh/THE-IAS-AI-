@@ -82,14 +82,20 @@ def _get_conn():
 
 
 def _ensure_table():
-    """Create users table if it doesn't exist yet."""
+    """Create users table if it doesn't exist, and add missing columns if schema is old."""
     with _get_conn() as conn:
         with conn.cursor() as cur:
+            # Create table with correct schema
             cur.execute("""
                 CREATE TABLE IF NOT EXISTS users (
                     phone TEXT PRIMARY KEY,
                     data  JSONB NOT NULL DEFAULT '{}'
                 )
+            """)
+            # If table existed with wrong schema, add the data column safely
+            cur.execute("""
+                ALTER TABLE users
+                ADD COLUMN IF NOT EXISTS data JSONB NOT NULL DEFAULT '{}'
             """)
         conn.commit()
 
