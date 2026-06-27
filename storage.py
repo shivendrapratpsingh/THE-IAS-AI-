@@ -191,12 +191,15 @@ def save_user(phone: str, data: dict):
             return
         except Exception as e:
             print(f"[storage] save_user DB error: {e}")
-    # ── fallback ──
-    users = load_all_users()
-    users[phone] = data
-    os.makedirs(DATA_DIR, exist_ok=True)
-    with open(USERS_FILE, "w", encoding="utf-8") as f:
-        json.dump(users, f, indent=2, ensure_ascii=False)
+    # ── fallback: local JSON (read-only filesystems like Vercel will skip silently) ──
+    try:
+        users = load_all_users()
+        users[phone] = data
+        os.makedirs(DATA_DIR, exist_ok=True)
+        with open(USERS_FILE, "w", encoding="utf-8") as f:
+            json.dump(users, f, indent=2, ensure_ascii=False)
+    except Exception as e:
+        print(f"[storage] save_user local fallback error (read-only fs?): {e}")
 
 
 def user_exists(phone: str) -> bool:
