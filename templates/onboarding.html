@@ -139,9 +139,10 @@
                required maxlength="60" autocomplete="name">
       </div>
 
-      <!-- Phone Number -->
+      <!-- Phone Number — only shown to general/guest users; UPSC users already gave it on login -->
+      {% if not phone or phone.startswith('guest_') %}
       <div class="ob-field-wrap">
-        <label class="ob-label">Mobile Number</label>
+        <label class="ob-label">Mobile Number <span style="color:#9CA3AF; font-weight:400; text-transform:none;">(optional)</span></label>
         <div style="display:flex; gap:8px;">
           <select name="country_code" style="
             width:90px; padding:14px 10px;
@@ -160,15 +161,15 @@
                  placeholder="10-digit number"
                  inputmode="numeric" maxlength="10"
                  oninput="this.value=this.value.replace(/\D/g,'')"
-                 value="{{ profile.phone[-10:] if profile and profile.get('phone') and profile.phone|length >= 10 else '' }}"
                  style="flex:1; margin-bottom:0;">
         </div>
-        {% if profile and profile.get('phone') %}
-        <div style="font-size:11px; color:#27AE60; margin-top:6px; font-weight:600;">✓ Saved: {{ profile.phone }}</div>
-        {% else %}
-        <div style="font-size:11px; color:#9CA3AF; margin-top:6px;">Used to track your progress across devices</div>
-        {% endif %}
+        <div style="font-size:11px; color:#9CA3AF; margin-top:6px;">Helps track your progress if you switch devices</div>
       </div>
+      {% else %}
+      <!-- UPSC user: phone already saved as their account key, pass it silently -->
+      <input type="hidden" name="phone" value="{{ phone[-10:] if phone|length >= 10 else phone }}">
+      <input type="hidden" name="country_code" value="{{ phone[:-10] if phone|length > 10 else '+91' }}">
+      {% endif %}
 
       <!-- Prep stage pills -->
       <div class="ob-field-wrap">
