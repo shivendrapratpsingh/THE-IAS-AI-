@@ -1,20 +1,31 @@
 """
-Local JSON-file storage layer for the IAS Prep Companion (Flask edition).
+Storage layer for IAS Prep Companion.
 
-Multi-user: each phone number gets its own profile in data/users.json.
-Legacy single-user data (user_data.json) is still readable for migration.
+User data is stored in Neon (free PostgreSQL) as JSONB — one row per user.
+Static content (MCQ bank, prompts, etc.) still loads from local JSON files.
+
+Schema (auto-created on first run):
+    CREATE TABLE users (
+        phone TEXT PRIMARY KEY,
+        data  JSONB NOT NULL DEFAULT '{}'
+    );
+
+Set DATABASE_URL environment variable on Render to your Neon connection string.
+Falls back to local JSON files if DATABASE_URL is not set (local dev).
 """
 import json
 import os
-from datetime import date, datetime, timedelta
+from datetime import date, datetime
 
-DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
-USER_DATA_FILE = os.path.join(DATA_DIR, "user_data.json")   # legacy
-USERS_FILE     = os.path.join(DATA_DIR, "users.json")        # multi-user
+DATA_DIR       = os.path.join(os.path.dirname(__file__), "data")
+USER_DATA_FILE = os.path.join(DATA_DIR, "user_data.json")   # legacy fallback
+USERS_FILE     = os.path.join(DATA_DIR, "users.json")        # local fallback
+
+DATABASE_URL = os.environ.get("DATABASE_URL", "")
 
 DEFAULT_USER_DATA = {
     "onboarded": False,
-    "user_type": "upsc",          # "upsc" | "general"
+    "user_type": "upsc",
     "profile": {
         "name": "",
         "stage": "beginner",
@@ -33,17 +44,16 @@ DEFAULT_USER_DATA = {
     "bookmarked_affairs": [],
     "daily_legal": {"date": None, "answer": None},
     "streak": {"current": 0, "longest": 0, "last_active": None},
-    # ── Preference tracking (add new keys freely) ──────────────────────────
     "prefs": {
-        "language": "en",               # last selected language code
-        "topic_time": {},               # topic → total seconds spent in quiz
-        "topic_correct_pct": {},        # topic → running accuracy %
-        "affairs_read": [],             # list of affair IDs user opened summary for
-        "affairs_described": [],        # list of affair IDs user clicked Describe
-        "affairs_time": {},             # affair_id → seconds spent reading
-        "last_active_page": None,       # last route visited
-        "session_count": 0,             # total login sessions
-        "first_login": None,            # ISO date of first login
+        "language": "en",
+        "topic_time": {},
+        "topic_correct_pct": {},
+        "affairs_read": [],
+        "affairs_described": [],
+        "affairs_time": {},
+        "last_active_page": None,
+        "session_count": 0,
+        "first_login": None,
     },
 }
 
@@ -53,7 +63,6 @@ def _deep_copy(obj):
 
 
 def _fill_defaults(data):
-    """Fill missing keys from DEFAULT_USER_DATA."""
     defaults = _deep_copy(DEFAULT_USER_DATA)
     for key, value in defaults.items():
         if key not in data:
@@ -64,10 +73,52 @@ def _fill_defaults(data):
     return data
 
 
-# ── Multi-user helpers ──────────────────────────────────────────────────────
+# ── Database connection ────────────────────────────────────────────────────────
 
-def load_all_users():
-    """Return dict of phone → user_data."""
+def _get_conn():
+    """Return a psycopg2 connection to Neon. Raises if DATABASE_URL not set."""
+    import psycopg2
+    return psycopg2.connect(DATABASE_URL, sslmode="require")
+
+
+def _ensure_table():
+    """Create users table if it doesn't exist yet."""
+    with _get_conn() as conn:
+        with conn.cursor() as cur:
+            cur.execute("""
+                CREATE TABLE IF NOT EXISTS users (
+                    phone TEXT PRIMARY KEY,
+                    data  JSONB NOT NULL DEFAULT '{}'
+                )
+            """)
+        conn.commit()
+
+
+# Auto-create table when module loads (only if DB is configured)
+if DATABASE_URL:
+    try:
+        _ensure_table()
+    except Exception as _e:
+        print(f"[storage] DB init warning: {_e}")
+
+
+# ── Core user operations ───────────────────────────────────────────────────────
+
+def _use_db() -> bool:
+    return bool(DATABASE_URL)
+
+
+def load_all_users() -> dict:
+    if _use_db():
+        try:
+            with _get_conn() as conn:
+                with conn.cursor() as cur:
+                    cur.execute("SELECT phone, data FROM users")
+                    return {row[0]: row[1] for row in cur.fetchall()}
+        except Exception as e:
+            print(f"[storage] load_all_users DB error: {e}")
+            return {}
+    # ── fallback: local JSON ──
     if not os.path.exists(USERS_FILE):
         return {}
     with open(USERS_FILE, "r", encoding="utf-8") as f:
@@ -77,82 +128,125 @@ def load_all_users():
             return {}
 
 
-def save_all_users(users):
+def save_all_users(users: dict):
+    """Bulk-save all users. Used by migration only; prefer save_user() for single updates."""
+    if _use_db():
+        try:
+            with _get_conn() as conn:
+                with conn.cursor() as cur:
+                    for phone, data in users.items():
+                        cur.execute("""
+                            INSERT INTO users (phone, data)
+                            VALUES (%s, %s::jsonb)
+                            ON CONFLICT (phone) DO UPDATE SET data = EXCLUDED.data
+                        """, (phone, json.dumps(data)))
+                conn.commit()
+            return
+        except Exception as e:
+            print(f"[storage] save_all_users DB error: {e}")
+    # ── fallback: local JSON ──
     os.makedirs(DATA_DIR, exist_ok=True)
     with open(USERS_FILE, "w", encoding="utf-8") as f:
         json.dump(users, f, indent=2, ensure_ascii=False)
 
 
-def load_user(phone):
-    """Load a single user's data by phone number."""
+def load_user(phone: str) -> dict:
+    if _use_db():
+        try:
+            with _get_conn() as conn:
+                with conn.cursor() as cur:
+                    cur.execute("SELECT data FROM users WHERE phone = %s", (phone,))
+                    row = cur.fetchone()
+                    data = row[0] if row else {}
+                    return _fill_defaults(data)
+        except Exception as e:
+            print(f"[storage] load_user DB error: {e}")
+            return _fill_defaults({})
+    # ── fallback ──
     users = load_all_users()
-    data = users.get(phone, {})
-    return _fill_defaults(data)
+    return _fill_defaults(users.get(phone, {}))
 
 
-def save_user(phone, data):
-    """Save a single user's data by phone number."""
+def save_user(phone: str, data: dict):
+    if _use_db():
+        try:
+            with _get_conn() as conn:
+                with conn.cursor() as cur:
+                    cur.execute("""
+                        INSERT INTO users (phone, data)
+                        VALUES (%s, %s::jsonb)
+                        ON CONFLICT (phone) DO UPDATE SET data = EXCLUDED.data
+                    """, (phone, json.dumps(data)))
+                conn.commit()
+            return
+        except Exception as e:
+            print(f"[storage] save_user DB error: {e}")
+    # ── fallback ──
     users = load_all_users()
     users[phone] = data
-    save_all_users(users)
+    os.makedirs(DATA_DIR, exist_ok=True)
+    with open(USERS_FILE, "w", encoding="utf-8") as f:
+        json.dump(users, f, indent=2, ensure_ascii=False)
 
 
-def user_exists(phone):
+def user_exists(phone: str) -> bool:
+    if _use_db():
+        try:
+            with _get_conn() as conn:
+                with conn.cursor() as cur:
+                    cur.execute("SELECT 1 FROM users WHERE phone = %s", (phone,))
+                    return cur.fetchone() is not None
+        except Exception as e:
+            print(f"[storage] user_exists DB error: {e}")
+            return False
     return phone in load_all_users()
 
 
-def get_all_user_summaries():
-    """Return list of summary_dicts for admin page. Easily extensible."""
+def get_all_user_summaries() -> list:
     users = load_all_users()
     result = []
     for phone, data in users.items():
-        stats  = data.get("mcq_stats", {})
-        prefs  = data.get("prefs", {})
+        stats = data.get("mcq_stats", {})
+        prefs = data.get("prefs", {})
         total_attempted = sum(s["total"]   for s in stats.values())
         total_correct   = sum(s["correct"] for s in stats.values())
         accuracy = round(100 * total_correct / total_attempted) if total_attempted else None
 
-        # Topic heatmap: {topic: {"total": N, "correct": M, "pct": P}}
         topic_heat = {}
         for topic, s in stats.items():
             pct = round(100 * s["correct"] / s["total"]) if s["total"] else 0
             topic_heat[topic] = {"total": s["total"], "correct": s["correct"], "pct": pct}
 
         result.append({
-            # Identity
-            "phone":      phone,
-            "name":       data.get("profile", {}).get("name", "—"),
-            "user_type":  data.get("user_type", "upsc"),
-            "stage":      data.get("profile", {}).get("stage", "—"),
-            "avatar_id":  data.get("profile", {}).get("avatar_id", "ias"),
-            "onboarded":  data.get("onboarded", False),
-            # Activity
-            "streak":     data.get("streak", {}).get("current", 0),
-            "accuracy":   accuracy,
-            "attempted":  total_attempted,
-            "correct":    total_correct,
-            # Topic heatmap
-            "topic_heat": topic_heat,
-            # Preferences & reading behaviour
-            "language":           prefs.get("language", "en"),
-            "affairs_read":       len(prefs.get("affairs_read", [])),
-            "affairs_described":  len(prefs.get("affairs_described", [])),
-            "session_count":      prefs.get("session_count", 0),
-            "first_login":        prefs.get("first_login", "—"),
-            # ADD MORE FIELDS HERE as needed ↓
+            "phone":             phone,
+            "name":              data.get("profile", {}).get("name", "—"),
+            "user_type":         data.get("user_type", "upsc"),
+            "stage":             data.get("profile", {}).get("stage", "—"),
+            "avatar_id":         data.get("profile", {}).get("avatar_id", "ias"),
+            "onboarded":         data.get("onboarded", False),
+            "streak":            data.get("streak", {}).get("current", 0),
+            "accuracy":          accuracy,
+            "attempted":         total_attempted,
+            "correct":           total_correct,
+            "topic_heat":        topic_heat,
+            "language":          prefs.get("language", "en"),
+            "affairs_read":      len(prefs.get("affairs_read", [])),
+            "affairs_described": len(prefs.get("affairs_described", [])),
+            "session_count":     prefs.get("session_count", 0),
+            "first_login":       prefs.get("first_login", "—"),
         })
     return sorted(result, key=lambda x: x["name"])
 
 
+# ── Preference helpers ─────────────────────────────────────────────────────────
+
 def record_pref(data, key, value):
-    """Utility: write a preference key into data['prefs'] and return data."""
     prefs = data.setdefault("prefs", {})
     prefs[key] = value
     return data
 
 
 def record_affair_read(data, affair_id, described=False):
-    """Track that user read (and optionally described) a current affair."""
     prefs = data.setdefault("prefs", {})
     reads = prefs.setdefault("affairs_read", [])
     if affair_id not in reads:
@@ -164,7 +258,7 @@ def record_affair_read(data, affair_id, described=False):
     return data
 
 
-# ── Legacy single-user (kept for backward compat) ──────────────────────────
+# ── Legacy single-user (kept for backward compat) ─────────────────────────────
 
 def load_user_data():
     if not os.path.exists(USER_DATA_FILE):
@@ -184,13 +278,12 @@ def save_user_data(data):
 
 
 def mark_active_today(data):
-    """Update the study streak based on today's activity."""
     today = date.today()
     streak = data.setdefault("streak", _deep_copy(DEFAULT_USER_DATA["streak"]))
     last_active = streak.get("last_active")
 
     if last_active == today.isoformat():
-        return  # already counted today
+        return
 
     if last_active:
         last_date = datetime.fromisoformat(last_active).date()
@@ -206,32 +299,26 @@ def mark_active_today(data):
     streak["last_active"] = today.isoformat()
 
 
-# ---------------------------------------------------------------------------
-# Static content
-# ---------------------------------------------------------------------------
+# ── Static content ─────────────────────────────────────────────────────────────
 
 def _load_json(filename):
     with open(os.path.join(DATA_DIR, filename), "r", encoding="utf-8") as f:
         return json.load(f)
 
 
-_MCQ_DATA = _load_json("mcq_bank.json")
-MCQ_TOPICS = _MCQ_DATA["topics"]
-MCQ_BANK   = _MCQ_DATA["questions"]
-MCQ_BY_ID  = {q["id"]: q for q in MCQ_BANK}
-
-ANSWER_PROMPTS   = _load_json("answer_prompts.json")
-LEGAL_QUESTIONS  = _load_json("legal_questions.json")
-CURRENT_AFFAIRS  = _load_json("current_affairs.json")
+_MCQ_DATA      = _load_json("mcq_bank.json")
+MCQ_TOPICS     = _MCQ_DATA["topics"]
+MCQ_BANK       = _MCQ_DATA["questions"]
+MCQ_BY_ID      = {q["id"]: q for q in MCQ_BANK}
+ANSWER_PROMPTS = _load_json("answer_prompts.json")
+LEGAL_QUESTIONS= _load_json("legal_questions.json")
+CURRENT_AFFAIRS= _load_json("current_affairs.json")
 
 
 def get_daily_mcq_set(for_date=None, count=10):
-    """Truly random selection from the MCQ bank."""
     import random
     pool = list(MCQ_BANK)
-    if len(pool) <= count:
-        return pool
-    return random.sample(pool, count)
+    return random.sample(pool, count) if len(pool) > count else pool
 
 
 def get_daily_answer_prompt(for_date=None):
