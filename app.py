@@ -61,7 +61,16 @@ def _get_current_user():
     key = session.get("phone") or session.get("guest_id")
     if not key:
         return None, None
-    return key, storage.load_user(key)
+    data = storage.load_user(key)
+    # Sync Exilar count to session so all templates can access it via context processor
+    session["exilars_count"] = data.get("exilars", 0)
+    return key, data
+
+
+@app.context_processor
+def inject_globals():
+    """Inject Exilar count into every template context."""
+    return {"exilars": session.get("exilars_count", 0)}
 
 
 def _save_current_user(key, data):
@@ -435,6 +444,9 @@ def mcq():
 
             storage.mark_active_today(data)
             _save_current_user(phone, data)
+            # General users → AAJA transition page; UPSC users → result on /mcq
+            if not _is_upsc():
+                return redirect(url_for("aaja_page"))
 
         return redirect(url_for("mcq"))
 
@@ -499,178 +511,108 @@ def mcq():
     )
 
 
-# ── ANSWER WRITING ────────────────────────────────────────────────────────────
+# ─────────────────────────────────────────────────────────────────────────────
+# AAJA !! — BASS 50 bonus 50-question daily challenge
+# ─────────────────────────────────────────────────────────────────────────────
 
-@app.route("/answers", methods=["GET", "POST"])
-def answers():
+@app.route("/aaja")
+def aaja_page():
+    """Transition page shown after completing the 10-question general quiz."""
     redir = _require_login()
-    if redir: return redir
+    if redir:
+        return redir
     phone, data = _get_current_user()
     redir = _require_onboarding(data)
-    if redir: return redir
+    if redir:
+        return redir
 
-    today = date.today()
-    today_iso = today.isoformat()
-    prompt = storage.get_daily_answer_prompt(today)
-    history = data.setdefault("answer_history", [])
-    today_entry = next((a for a in history if a["date"] == today_iso and a["prompt_id"] == prompt["id"]), None)
+    quiz_day = storage.get_quiz_day()
+    daily    = data.get("daily_mcq", {})
 
-    if request.method == "POST":
-        text = request.form.get("answer_text", "").strip()
-        ocr_used = False
-        image_file = request.files.get("answer_image")
-        if image_file and image_file.filename:
-            extracted, err = ocr.extract_text(image_file.stream)
-            if err:
-                flash(err)
-                return redirect(url_for("answers"))
-            text = extracted
-            ocr_used = True
+    # If daily 10q not yet submitted, redirect back to quiz
+    if not daily.get("submitted") or daily.get("quiz_day") != quiz_day:
+        return redirect(url_for("mcq"))
 
-        word_count = len(text.split()) if text else 0
-        score = grading.score_answer(text, prompt)
-        entry = {
-            "date": today_iso, "prompt_id": prompt["id"],
-            "paper": prompt["paper"], "question": prompt["question"],
-            "word_limit": prompt["wordLimit"], "answer_text": text,
-            "word_count": word_count, "score": score, "ocr_used": ocr_used,
-        }
-        if today_entry:
-            history.remove(today_entry)
-        history.append(entry)
-        storage.mark_active_today(data)
-        _save_current_user(phone, data)
-        flash(f"Answer saved — scored {score['total']}/{score['max']}.")
-        return redirect(url_for("answers"))
+    # Score from today's 10-question quiz
+    answers = daily.get("answers", {})
+    correct = sum(1 for qid, sel in answers.items()
+                  if storage.MCQ_BY_ID.get(qid, {}).get("correctIndex") == sel)
+    total   = len(daily.get("question_ids", []))
+    pct     = round(100 * correct / total) if total else 0
+
+    aaja     = data.get("aaja_mcq", {})
+    aaja_done = aaja.get("submitted") and aaja.get("quiz_day") == quiz_day
 
     return render_template(
-        "answers.html",
-        prompt=prompt, today_entry=today_entry,
-        history=sorted(history, key=lambda a: a["date"], reverse=True)[:10],
-        profile=data.get("profile"), phone=phone,
-    )
-
-
-# ── CURRENT AFFAIRS ───────────────────────────────────────────────────────────
-
-@app.route("/current-affairs", methods=["GET", "POST"])
-def current_affairs():
-    redir = _require_login()
-    if redir: return redir
-    phone, data = _get_current_user()
-    redir = _require_onboarding(data)
-    if redir: return redir
-
-    tab = request.args.get("tab", "week")
-    if request.method == "POST":
-        item_id = request.form.get("item_id")
-        bookmarks = data.setdefault("bookmarked_affairs", [])
-        if item_id in bookmarks:
-            bookmarks.remove(item_id)
-        else:
-            bookmarks.append(item_id)
-        _save_current_user(phone, data)
-        return redirect(url_for("current_affairs", tab=tab))
-
-    bookmarks = data.get("bookmarked_affairs", [])
-    items = ([i for i in storage.CURRENT_AFFAIRS if i["id"] in bookmarks]
-             if tab == "saved" else storage.get_weekly_current_affairs())
-
-    return render_template(
-        "current_affairs.html",
-        items=items, tab=tab, bookmarks=bookmarks,
-        profile=data.get("profile"), phone=phone,
-    )
-
-
-# ── PROFILE ───────────────────────────────────────────────────────────────────
-
-@app.route("/profile", methods=["GET", "POST"])
-def profile():
-    redir = _require_login()
-    if redir: return redir
-    phone, data = _get_current_user()
-    redir = _require_onboarding(data)
-    if redir: return redir
-
-    if request.method == "POST":
-        data["profile"] = {
-            "name": request.form.get("name", "").strip() or "Aspirant",
-            "stage": request.form.get("stage", "beginner"),
-            "target_year": request.form.get("target_year", "").strip(),
-            "daily_hours": _parse_daily_hours(request.form.get("daily_hours")),
-            "preferred_subjects": request.form.getlist("preferred_subjects"),
-        }
-        _save_current_user(phone, data)
-        flash("Profile updated.")
-        return redirect(url_for("profile"))
-
-    stats = data.get("mcq_stats", {})
-    total_attempted = sum(s["total"] for s in stats.values())
-    total_correct   = sum(s["correct"] for s in stats.values())
-    overall_accuracy = round(100 * total_correct / total_attempted) if total_attempted else 0
-    topic_data = {}
-    for topic, s in stats.items():
-        pct = round(100 * s["correct"] / s["total"]) if s["total"] else 0
-        topic_data[topic] = {
-            "correct": s["correct"], "total": s["total"], "pct": pct,
-            "grade": "strong" if pct >= 70 else ("average" if pct >= 40 else "weak")
-        }
-    return render_template(
-        "profile.html",
-        subjects=study_plan.SUBJECT_CATEGORIES,
+        "aaja.html",
         profile=data.get("profile"),
-        streak=data.get("streak", {}),
         phone=phone,
-        total_attempted=total_attempted,
-        overall_accuracy=overall_accuracy,
-        is_upsc=_is_upsc(),
-        topic_data=topic_data,
+        score_correct=correct,
+        score_total=total,
+        score_pct=pct,
+        aaja_done=aaja_done,
+        exilars=data.get("exilars", 0),
     )
 
 
-# ── ADMIN ─────────────────────────────────────────────────────────────────────
+@app.route("/aaja/start", methods=["POST"])
+def aaja_start():
+    """Generate 50-question AAJA set and redirect to the AAJA quiz."""
+    redir = _require_login()
+    if redir:
+        return redir
+    phone, data = _get_current_user()
 
-@app.route("/admin")
-def admin():
-    from collections import Counter
-    users       = storage.get_all_user_summaries()
-    topic_counts = Counter(q["topic"] for q in storage.MCQ_BANK)
-    metrics     = storage.get_startup_metrics()
-    return render_template(
-        "admin.html",
-        users=users,
-        mcq_total=len(storage.MCQ_BANK),
-        topic_counts=dict(topic_counts),
-        metrics=metrics,
-    )
+    quiz_day = storage.get_quiz_day()
+    daily    = data.get("daily_mcq", {})
+    if not daily.get("submitted") or daily.get("quiz_day") != quiz_day:
+        return redirect(url_for("mcq"))
 
+    aaja = data.get("aaja_mcq", {})
+    if aaja.get("submitted") and aaja.get("quiz_day") == quiz_day:
+        return redirect(url_for("aaja_quiz"))
 
-
-# ── AI ASSISTANT ──────────────────────────────────────────────────────────────
-
-@app.route("/assistant/chat", methods=["POST"])
-def assistant_chat():
-    from flask import jsonify
-    import assistant as asst
-    data_json = request.get_json(silent=True) or {}
-    message   = data_json.get("message", "").strip()
-    key, user_data = _get_current_user()
-    result = asst.get_response(message, user_data)
-    return jsonify(result)
+    storage.get_aaja_mcq_set(data, count=50)
+    _save_current_user(phone, data)
+    return redirect(url_for("aaja_quiz"))
 
 
-# ── AVATAR SVG ENDPOINT ───────────────────────────────────────────────────────
+@app.route("/aaja/quiz", methods=["GET", "POST"])
+def aaja_quiz():
+    """The 50-question AAJA bonus quiz."""
+    redir = _require_login()
+    if redir:
+        return redir
+    phone, data = _get_current_user()
+    redir = _require_onboarding(data)
+    if redir:
+        return redir
 
-@app.route("/avatar/svg/<avatar_id>")
-def avatar_svg_route(avatar_id):
-    from flask import Response
-    import svg_avatars
-    color = request.args.get("color", "#F4621F")
-    svg = svg_avatars.get_avatar_svg(avatar_id, color)
-    return Response(svg, mimetype="image/svg+xml",
-                    headers={"Cache-Control": "public, max-age=3600"})
+    quiz_day  = storage.get_quiz_day()
+    today_iso = date.today().isoformat()
+    aaja      = data.get("aaja_mcq", {})
 
+    if not aaja.get("question_ids") or aaja.get("quiz_day") != quiz_day:
+        return redirect(url_for("aaja_page"))
 
-if __name__ == "__main__":
-    app.run(debug=os.environ.get("FLASK_DEBUG", "false").lower() == "true")
+    if request.method == "POST":
+        action = request.form.get("action")
+        if action == "submit" and not aaja.get("submitted"):
+            answers = {}
+            for qid in aaja["question_ids"]:
+                val = request.form.get(f"answer_{qid}")
+                if val is not None and val != "":
+                    answers[qid] = int(val)
+            aaja["answers"]   = answers
+            aaja["submitted"] = True
+
+            # Update per-topic MCQ stats
+            stats = data.setdefault("mcq_stats", {})
+            for qid, selected in answers.items():
+                q = storage.MCQ_BY_ID.get(qid)
+                if not q:
+                    continue
+                topic = q["topic"]
+                ts = stats.setdefault(topic, {"correct": 0, "total": 0})
+                ts["total"] += 1
+                is_correct 

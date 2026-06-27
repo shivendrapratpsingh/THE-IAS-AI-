@@ -42,6 +42,9 @@ DEFAULT_USER_DATA = {
     "mcq_stats": {},
     "mcq_history": [],
     "daily_mcq": {"quiz_day": None, "date": None, "question_ids": [], "answers": {}, "submitted": False},
+    "aaja_mcq":  {"quiz_day": None, "date": None, "question_ids": [], "answers": {}, "submitted": False},
+    "exilars":   0,
+    "medals_seen": [],         # thresholds already shown: [5, 10, 20]
     "seen_question_ids": [],   # all question IDs ever shown to this user (no-repeat logic)
     "answer_history": [],
     "bookmarked_affairs": [],
@@ -402,6 +405,75 @@ def get_daily_mcq_set(user_data, count=10):
     return [MCQ_BY_ID[qid] for qid in chosen_ids if qid in MCQ_BY_ID]
 
 
+def get_aaja_mcq_set(user_data, count=50):
+    """
+    Returns today's AAJA (bonus 50-question) set.
+    Only generates once per quiz_day; excludes today's daily_mcq questions.
+    Modifies user_data in-place; caller must save.
+    """
+    quiz_day = get_quiz_day()
+    aaja = user_data.get("aaja_mcq", {})
+
+    # Same day: return existing set
+    if aaja.get("quiz_day") == quiz_day and aaja.get("question_ids"):
+        return [MCQ_BY_ID[qid] for qid in aaja["question_ids"] if qid in MCQ_BY_ID]
+
+    # Exclude already-seen questions AND today's daily 10
+    seen = set(user_data.get("seen_question_ids", []))
+    daily_ids = set(user_data.get("daily_mcq", {}).get("question_ids", []))
+    all_ids = [q["id"] for q in MCQ_BANK]
+    available = [qid for qid in all_ids if qid not in seen and qid not in daily_ids]
+
+    # Pool too small: reset seen (but keep daily questions excluded)
+    if len(available) < count:
+        user_data["seen_question_ids"] = list(daily_ids)
+        available = [qid for qid in all_ids if qid not in daily_ids]
+
+    random.shuffle(available)
+    chosen_ids = available[:count]
+
+    user_data.setdefault("seen_question_ids", []).extend(chosen_ids)
+    user_data["aaja_mcq"] = {
+        "quiz_day":     quiz_day,
+        "date":         quiz_day,
+        "question_ids": chosen_ids,
+        "answers":      {},
+        "submitted":    False,
+    }
+    return [MCQ_BY_ID[qid] for qid in chosen_ids if qid in MCQ_BY_ID]
+
+
+def check_and_award_exilar(user_data):
+    """
+    Award 1 Exilar when both daily 10q AND AAJA 50q are submitted today.
+    Returns True if a new Exilar was awarded.
+    """
+    quiz_day = get_quiz_day()
+    daily = user_data.get("daily_mcq", {})
+    aaja  = user_data.get("aaja_mcq",  {})
+    if (daily.get("quiz_day") == quiz_day and daily.get("submitted") and
+            aaja.get("quiz_day") == quiz_day and aaja.get("submitted") and
+            not aaja.get("exilar_awarded")):
+        user_data["exilars"] = user_data.get("exilars", 0) + 1
+        user_data["aaja_mcq"]["exilar_awarded"] = True
+        return True
+    return False
+
+
+def check_medal(user_data):
+    """
+    Returns medal type string if a new threshold was just crossed, else None.
+    Marks the threshold as seen so the popup only fires once.
+    """
+    exilars = user_data.get("exilars", 0)
+    seen    = set(user_data.get("medals_seen", []))
+    for threshold, medal in [(20, "platinum"), (10, "silver"), (5, "wooden")]:
+        if exilars >= threshold and threshold not in seen:
+            user_data.setdefault("medals_seen", []).append(threshold)
+            return medal
+    return None
+
+
 def compute_regularity(data):
     """
     Returns regularity label: champion / regular / occasional / at_risk / churned / new
@@ -422,6 +494,7 @@ def compute_regularity(data):
     if not log:
         return "new" if days_since_join < 3 else "churned"
 
+    log_set = set(log)
     log_set = set(log)
     try:
         last_active_d = max(date.fromisoformat(d) for d in log)

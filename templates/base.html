@@ -82,6 +82,41 @@
   {% block show_nav %}
   <header class="top-nav">
     <button class="nav-hamburger" onclick="toggleDrawer()" aria-label="Menu">☰</button>
+
+    {# ── Exilar Circle Indicator (visible when logged in) ── #}
+    {% if profile %}
+    {% set _ex_cap    = exilars if exilars <= 20 else 20 %}
+    {% set _ex_circ   = 94.25 %}
+    {% set _ex_fill   = (_ex_cap / 20 * _ex_circ) | round(1) %}
+    {% set _ex_empty  = (_ex_circ - _ex_fill) | round(1) %}
+    {% set _ex_color  = '#FFD700' if exilars >= 20 else ('#C0C0C0' if exilars >= 10 else ('#CD853F' if exilars >= 5 else '#F4621F')) %}
+    <a href="{{ url_for('aaja_page') }}" class="exilar-ring-wrap" title="{{ exilars }}/20 Exilars">
+      <svg width="34" height="34" viewBox="0 0 36 36">
+        <circle cx="18" cy="18" r="15" fill="none" stroke="rgba(255,255,255,0.18)" stroke-width="3.5"/>
+        <circle cx="18" cy="18" r="15" fill="none"
+                stroke="{{ _ex_color }}"
+                stroke-width="3.5" stroke-linecap="round"
+                stroke-dasharray="{{ _ex_fill }} {{ _ex_empty }}"
+                transform="rotate(-90 18 18)"
+                style="transition:stroke-dasharray .6s ease;"/>
+      </svg>
+      <span class="exilar-ring-num">{{ exilars }}</span>
+    </a>
+    <style>
+    .exilar-ring-wrap {
+      position: relative; width: 34px; height: 34px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; text-decoration: none;
+    }
+    .exilar-ring-num {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 10px; font-weight: 900; color: #fff; line-height: 1;
+      font-family: 'Poppins', sans-serif;
+    }
+    </style>
+    {% endif %}
+
     <div class="nav-title"><span class="nav-brand">BASS 50</span></div>
     <div class="nav-actions">
       <button class="nav-icon-btn" onclick="toggleLangPanel()" aria-label="Language" title="Change language" style="background:rgba(255,255,255,0.15); border:none; cursor:pointer; font-size:16px;">🌐</button>
@@ -152,10 +187,10 @@
       {% if request.endpoint == 'home' %}<div class="tab-dot"></div>{% endif %}
     </a>
     <a href="{{ url_for('mcq') }}"
-       class="tab-btn {{ 'active' if request.endpoint == 'mcq' }}">
+       class="tab-btn {{ 'active' if request.endpoint in ['mcq','aaja_page','aaja_quiz'] }}">
       <span class="tab-icon">🧠</span>
       <span>Quiz</span>
-      {% if request.endpoint == 'mcq' %}<div class="tab-dot"></div>{% endif %}
+      {% if request.endpoint in ['mcq','aaja_page','aaja_quiz'] %}<div class="tab-dot"></div>{% endif %}
     </a>
     <a href="{{ url_for('current_affairs') }}"
        class="tab-btn {{ 'active' if request.endpoint == 'current_affairs' }}">
@@ -194,6 +229,9 @@
     </a>
     <a href="{{ url_for('mcq') }}" class="drawer-link {{ 'active' if request.endpoint == 'mcq' }}">
       <span class="drawer-link-icon">🧠</span> Quiz Practice
+    </a>
+    <a href="{{ url_for('aaja_page') }}" class="drawer-link {{ 'active' if request.endpoint in ['aaja_page','aaja_quiz'] }}">
+      <span class="drawer-link-icon">🔥</span> AAJA 50 !!
     </a>
     <a href="{{ url_for('current_affairs') }}" class="drawer-link {{ 'active' if request.endpoint == 'current_affairs' }}">
       <span class="drawer-link-icon">📰</span> Current Affairs

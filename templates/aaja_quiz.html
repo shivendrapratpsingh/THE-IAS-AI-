@@ -1,0 +1,663 @@
+{% extends "base.html" %}
+{% block title %}AAJA 50 — BASS 50{% endblock %}
+
+{% block content %}
+<div class="quiz-wrap">
+
+{# ══════════════════════════════════════════════
+   MEDAL POPUP — shown once when a new threshold
+   is crossed. Double-tap / double-click to dismiss.
+   ══════════════════════════════════════════════ #}
+{% if new_medal %}
+<style>
+/* ── Medal overlay ── */
+#medalOverlay {
+  position: fixed; inset: 0; z-index: 9999;
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column; gap: 20px;
+  transition: opacity .5s ease;
+  user-select: none; -webkit-user-select: none;
+}
+{% if new_medal == 'wooden' %}
+#medalOverlay { background: rgba(10,5,0,0.92); }
+{% else %}
+#medalOverlay { background: #000; }
+{% endif %}
+
+/* Medal container */
+.medal-stage {
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
+}
+
+{% if new_medal in ['silver','platinum'] %}
+.medal-svg-wrap {
+  animation: medalFlip 4s linear infinite;
+  transform-style: preserve-3d;
+}
+@keyframes medalFlip {
+  0%   { transform: rotateY(0deg); }
+  100% { transform: rotateY(360deg); }
+}
+{% endif %}
+
+{% if new_medal == 'platinum' %}
+/* Gold sparkle particles */
+@keyframes sparkle {
+  0%,100% { transform: translateY(0) scale(1); opacity: 1; }
+  50%      { transform: translateY(-20px) scale(1.4); opacity: 0.6; }
+}
+.spark {
+  position: absolute; font-size: 18px;
+  animation: sparkle var(--s-dur) ease-in-out var(--s-delay) infinite;
+}
+{% endif %}
+
+.medal-title {
+  font-size: 26px; font-weight: 900; text-align: center;
+  letter-spacing: 2px; line-height: 1.2;
+  font-family: 'Poppins', sans-serif;
+}
+.medal-sub {
+  font-size: 14px; font-weight: 500; text-align: center;
+  opacity: 0.6; font-family: 'Poppins', sans-serif;
+}
+.medal-dismiss {
+  font-size: 12px; font-weight: 600; opacity: 0.4; margin-top: 8px;
+  font-family: 'Poppins', sans-serif; letter-spacing: .5px;
+  animation: blink 2s ease-in-out infinite;
+}
+@keyframes blink {
+  0%,100% { opacity: .4; } 50% { opacity: .8; }
+}
+</style>
+
+<div id="medalOverlay">
+  <div class="medal-stage">
+
+    {% if new_medal == 'wooden' %}
+    {# ── Wooden Medal ── #}
+    <div class="medal-svg-wrap">
+      <svg viewBox="0 0 220 240" width="200" height="220" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="woodG1" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%"  stop-color="#DEB887"/>
+            <stop offset="40%" stop-color="#A0522D"/>
+            <stop offset="100%" stop-color="#6B3A1F"/>
+          </linearGradient>
+          <linearGradient id="woodG2" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%"  stop-color="#C8914A"/>
+            <stop offset="100%" stop-color="#7B4011"/>
+          </linearGradient>
+          <radialGradient id="woodSheen" cx="35%" cy="30%">
+            <stop offset="0%" stop-color="rgba(255,255,255,0.25)"/>
+            <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+          </radialGradient>
+        </defs>
+        <!-- Ribbon / pin -->
+        <path d="M90 15 L110 15 L120 40 L100 32 L80 40 Z" fill="#8B1C1C"/>
+        <rect x="92" y="10" width="36" height="14" rx="6" fill="#B22222"/>
+        <rect x="97" y="12" width="26" height="10" rx="4" fill="#CC3333"/>
+        <!-- Medal body -->
+        <circle cx="110" cy="148" r="75" fill="url(#woodG1)"/>
+        <circle cx="110" cy="148" r="75" fill="url(#woodSheen)"/>
+        <!-- Outer ring detail -->
+        <circle cx="110" cy="148" r="72" fill="none" stroke="#C8914A" stroke-width="2.5" opacity="0.6"/>
+        <circle cx="110" cy="148" r="65" fill="none" stroke="#6B3A1F" stroke-width="1.5" opacity="0.5"/>
+        <!-- Wood grain arcs -->
+        <path d="M65 135 Q110 128 155 135" stroke="#8B5820" stroke-width="1.5" fill="none" opacity="0.5"/>
+        <path d="M60 148 Q110 141 160 148" stroke="#8B5820" stroke-width="1.5" fill="none" opacity="0.5"/>
+        <path d="M63 161 Q110 154 157 161" stroke="#8B5820" stroke-width="1.5" fill="none" opacity="0.5"/>
+        <path d="M68 174 Q110 167 152 174" stroke="#8B5820" stroke-width="1.5" fill="none" opacity="0.4"/>
+        <!-- Inner circle -->
+        <circle cx="110" cy="148" r="46" fill="url(#woodG2)" opacity="0.85"/>
+        <!-- Star shape -->
+        <polygon points="110,112 117,136 143,136 122,151 129,175 110,160 91,175 98,151 77,136 103,136"
+                 fill="#F5C842" opacity="0.9"/>
+        <!-- Center star glow -->
+        <circle cx="110" cy="148" r="10" fill="#FFE066" opacity="0.7"/>
+      </svg>
+    </div>
+    <div class="medal-title" style="color:#DEB887;">WOODEN ACHIEVER</div>
+    <div class="medal-sub" style="color:#DEB887;">5 Exilars · The Foundation is Laid</div>
+
+    {% elif new_medal == 'silver' %}
+    {# ── Silver Medal ── #}
+    <div class="medal-svg-wrap">
+      <svg viewBox="0 0 220 240" width="200" height="220" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="silverG1" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%"  stop-color="#E8E8F0"/>
+            <stop offset="35%" stop-color="#A8A8C0"/>
+            <stop offset="70%" stop-color="#686880"/>
+            <stop offset="100%" stop-color="#9090A8"/>
+          </linearGradient>
+          <radialGradient id="silverSheen" cx="30%" cy="25%">
+            <stop offset="0%"  stop-color="rgba(255,255,255,0.8)"/>
+            <stop offset="50%" stop-color="rgba(255,255,255,0.15)"/>
+            <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+          </radialGradient>
+          <linearGradient id="silverRibbon" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%"   stop-color="#B0B0CC"/>
+            <stop offset="100%" stop-color="#6868A0"/>
+          </linearGradient>
+        </defs>
+        <!-- Ribbon -->
+        <path d="M90 15 L110 15 L120 40 L100 32 L80 40 Z" fill="#5050A0"/>
+        <rect x="92" y="8"  width="36" height="16" rx="7" fill="url(#silverRibbon)"/>
+        <rect x="97" y="10" width="26" height="10" rx="5" fill="#C0C0E0"/>
+        <!-- Medal body -->
+        <circle cx="110" cy="148" r="75" fill="url(#silverG1)"/>
+        <circle cx="110" cy="148" r="75" fill="url(#silverSheen)"/>
+        <!-- Concentric rings -->
+        <circle cx="110" cy="148" r="72" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="2"/>
+        <circle cx="110" cy="148" r="66" fill="none" stroke="rgba(150,150,180,0.4)" stroke-width="1.5"/>
+        <!-- Laurel detail -->
+        <path d="M75 148 Q70 135 78 125 Q83 120 90 125 Q80 135 80 148" fill="rgba(255,255,255,0.15)"/>
+        <path d="M145 148 Q150 135 142 125 Q137 120 130 125 Q140 135 140 148" fill="rgba(255,255,255,0.15)"/>
+        <!-- Inner disc -->
+        <circle cx="110" cy="148" r="46" fill="rgba(200,200,230,0.3)" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+        <!-- Star -->
+        <polygon points="110,112 117,136 143,136 122,151 129,175 110,160 91,175 98,151 77,136 103,136"
+                 fill="rgba(255,255,255,0.9)"/>
+        <circle cx="110" cy="148" r="8" fill="#C8C8E8"/>
+        <!-- Shine streak -->
+        <line x1="85" y1="115" x2="95" y2="130" stroke="rgba(255,255,255,0.7)" stroke-width="3" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="medal-title" style="color:#E0E0F0;">SILVER CHAMPION</div>
+    <div class="medal-sub" style="color:#A0A0C0;">10 Exilars · Rising Through the Ranks</div>
+
+    {% elif new_medal == 'platinum' %}
+    {# ── Platinum / Gold Medal ── #}
+    <div style="position:relative; width:200px; height:220px;">
+      <!-- Sparkle particles around medal -->
+      <span class="spark" style="top:10px;left:20px;--s-dur:1.4s;--s-delay:0s;">✨</span>
+      <span class="spark" style="top:5px;left:150px;--s-dur:1.8s;--s-delay:.3s;">⭐</span>
+      <span class="spark" style="top:80px;left:-10px;--s-dur:1.2s;--s-delay:.6s;">💫</span>
+      <span class="spark" style="top:80px;left:185px;--s-dur:1.6s;--s-delay:.9s;">✨</span>
+      <span class="spark" style="top:190px;left:30px;--s-dur:1.5s;--s-delay:.2s;">⭐</span>
+      <span class="spark" style="top:185px;left:140px;--s-dur:1.3s;--s-delay:.7s;">💫</span>
+      <div class="medal-svg-wrap" style="position:absolute;inset:0;">
+        <svg viewBox="0 0 220 240" width="200" height="220" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="goldG1" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%"   stop-color="#FFE066"/>
+              <stop offset="30%"  stop-color="#D4AF37"/>
+              <stop offset="65%"  stop-color="#B8860B"/>
+              <stop offset="100%" stop-color="#DAA520"/>
+            </linearGradient>
+            <linearGradient id="goldG2" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%"   stop-color="#FFF0A0"/>
+              <stop offset="50%"  stop-color="#D4AF37"/>
+              <stop offset="100%" stop-color="#8B6914"/>
+            </linearGradient>
+            <radialGradient id="goldSheen" cx="30%" cy="25%">
+              <stop offset="0%"   stop-color="rgba(255,255,200,0.9)"/>
+              <stop offset="40%"  stop-color="rgba(255,220,50,0.3)"/>
+              <stop offset="100%" stop-color="rgba(255,200,0,0)"/>
+            </radialGradient>
+            <radialGradient id="goldGlow" cx="50%" cy="50%">
+              <stop offset="0%"   stop-color="rgba(255,220,50,0.3)"/>
+              <stop offset="100%" stop-color="rgba(255,220,50,0)"/>
+            </radialGradient>
+          </defs>
+          <!-- Outer glow halo -->
+          <circle cx="110" cy="148" r="85" fill="url(#goldGlow)"/>
+          <!-- Ribbon -->
+          <path d="M88 12 L132 12 L125 40 L110 33 L95 40 Z" fill="#8B6914"/>
+          <rect x="90" y="6"  width="40" height="16" rx="8" fill="url(#goldG1)"/>
+          <rect x="95" y="8"  width="30" height="10" rx="5" fill="#FFE066"/>
+          <!-- Medal body (outer) -->
+          <circle cx="110" cy="148" r="76" fill="url(#goldG1)"/>
+          <circle cx="110" cy="148" r="76" fill="url(#goldSheen)"/>
+          <!-- Decorative rings -->
+          <circle cx="110" cy="148" r="73" fill="none" stroke="#FFE066" stroke-width="1.5" opacity="0.8"/>
+          <circle cx="110" cy="148" r="68" fill="none" stroke="#B8860B" stroke-width="1" opacity="0.6"/>
+          <!-- Laurel wreath lines -->
+          <path d="M68 130 Q60 148 68 166" stroke="#DAA520" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.7"/>
+          <path d="M72 125 Q63 148 72 171" stroke="#FFE066" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.5"/>
+          <path d="M152 130 Q160 148 152 166" stroke="#DAA520" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.7"/>
+          <path d="M148 125 Q157 148 148 171" stroke="#FFE066" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.5"/>
+          <!-- Inner disc -->
+          <circle cx="110" cy="148" r="50" fill="url(#goldG2)"/>
+          <circle cx="110" cy="148" r="48" fill="none" stroke="#FFE066" stroke-width="1.5" opacity="0.6"/>
+          <!-- Crown / star emblem -->
+          <polygon points="110,108 119,135 148,135 124,152 133,179 110,162 87,179 96,152 72,135 101,135"
+                   fill="#FFE066" opacity="0.95"/>
+          <!-- Crown center -->
+          <circle cx="110" cy="148" r="9"  fill="#FFF5CC"/>
+          <circle cx="110" cy="148" r="5"  fill="#D4AF37"/>
+          <!-- Shine streaks -->
+          <line x1="82" y1="114" x2="94"  y2="130" stroke="rgba(255,255,200,0.8)" stroke-width="3" stroke-linecap="round"/>
+          <line x1="86" y1="110" x2="91"  y2="120" stroke="rgba(255,255,200,0.5)" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+    </div>
+    <div class="medal-title" style="color:#FFE066; text-shadow: 0 0 30px rgba(255,220,50,0.8);">PLATINUM ELITE</div>
+    <div class="medal-sub" style="color:#D4AF37;">20 Exilars · You Are Legendary</div>
+    {% endif %}
+
+    <div class="medal-dismiss">Double-tap anywhere to continue</div>
+  </div>
+</div>
+
+<script>
+(function() {
+  const overlay = document.getElementById('medalOverlay');
+  if (!overlay) return;
+
+  function dismissMedal() {
+    overlay.style.opacity = '0';
+    setTimeout(() => { overlay.style.display = 'none'; }, 500);
+  }
+
+  // Double-tap (mobile)
+  let lastTap = 0;
+  overlay.addEventListener('touchend', function(e) {
+    const now = Date.now();
+    if (now - lastTap < 400) dismissMedal();
+    lastTap = now;
+    e.preventDefault();
+  }, { passive: false });
+
+  // Double-click (desktop)
+  let clicks = 0, clickTimer;
+  overlay.addEventListener('click', function() {
+    clicks++;
+    if (clicks === 1) {
+      clickTimer = setTimeout(() => { clicks = 0; }, 400);
+    } else {
+      clearTimeout(clickTimer);
+      clicks = 0;
+      dismissMedal();
+    }
+  });
+})();
+</script>
+{% endif %}
+
+{# ══════════════════════════════════════════════
+   RESULT SCREEN
+   ══════════════════════════════════════════════ #}
+{% if score %}
+{% set pct = score.pct %}
+{% if pct >= 90 %}
+  {% set rank_label = "IAS Ranker" %}
+  {% set rank_icon  = "🏆" %}
+  {% set rank_color = "#D4AF37" %}
+  {% set rank_bg    = "linear-gradient(135deg,#7B4F00,#D4AF37)" %}
+  {% set rank_msg   = "Exceptional! You crushed all 50!" %}
+{% elif pct >= 70 %}
+  {% set rank_label = "On Fire" %}
+  {% set rank_icon  = "🔥" %}
+  {% set rank_color = "#F4621F" %}
+  {% set rank_bg    = "linear-gradient(135deg,#8B2500,#F4621F)" %}
+  {% set rank_msg   = "Brilliant! You're built for AAJA every day!" %}
+{% elif pct >= 50 %}
+  {% set rank_label = "Rising Star" %}
+  {% set rank_icon  = "⭐" %}
+  {% set rank_color = "#2471A3" %}
+  {% set rank_bg    = "linear-gradient(135deg,#1A3A5C,#2471A3)" %}
+  {% set rank_msg   = "Solid across 50 questions. Real progress!" %}
+{% elif pct >= 30 %}
+  {% set rank_label = "Improving" %}
+  {% set rank_icon  = "📈" %}
+  {% set rank_color = "#27AE60" %}
+  {% set rank_bg    = "linear-gradient(135deg,#1A5C38,#27AE60)" %}
+  {% set rank_msg   = "50 questions down. Every attempt builds you." %}
+{% else %}
+  {% set rank_label = "Keep Going" %}
+  {% set rank_icon  = "💪" %}
+  {% set rank_color = "#6B7280" %}
+  {% set rank_bg    = "linear-gradient(135deg,#374151,#6B7280)" %}
+  {% set rank_msg   = "The grind is real. The IAS respect is earned." %}
+{% endif %}
+
+<style>
+.result-wrap { padding: 0 0 100px; }
+
+.fire-row {
+  text-align:center; font-size:32px; margin:16px 0 -8px;
+  animation: fireFlicker 1.2s ease-in-out infinite alternate;
+}
+@keyframes fireFlicker {
+  0%   { transform:scaleY(1) rotate(-2deg); filter:brightness(1); }
+  50%  { transform:scaleY(1.08) rotate(2deg); filter:brightness(1.2); }
+  100% { transform:scaleY(.96) rotate(-1deg); filter:brightness(.9); }
+}
+
+.rank-card {
+  margin:12px 16px 0; border-radius:24px; padding:28px 20px 24px;
+  background:{{ rank_bg }}; text-align:center; position:relative;
+  overflow:hidden; box-shadow:0 12px 40px rgba(0,0,0,0.25);
+}
+.rank-card::before {
+  content:''; position:absolute; top:-40px; right:-40px;
+  width:140px; height:140px; border-radius:50%; background:rgba(255,255,255,0.08);
+}
+.rank-card::after {
+  content:''; position:absolute; bottom:-30px; left:-30px;
+  width:100px; height:100px; border-radius:50%; background:rgba(255,255,255,0.06);
+}
+.rank-badge {
+  display:inline-flex; align-items:center; gap:6px;
+  background:rgba(255,255,255,0.2); border-radius:99px;
+  padding:5px 16px; font-size:13px; font-weight:800;
+  color:#fff; letter-spacing:.4px; margin-bottom:16px;
+}
+.rank-donut-wrap { position:relative; width:130px; height:130px; margin:0 auto 12px; }
+.rank-donut-wrap svg { transform:rotate(-90deg); }
+.rank-pct-label {
+  position:absolute; top:50%; left:50%;
+  transform:translate(-50%,-50%);
+  font-size:28px; font-weight:900; color:#fff; line-height:1;
+}
+.rank-msg { font-size:13px; color:rgba(255,255,255,0.85); line-height:1.5; margin-top:10px; font-style:italic; }
+
+.score-pills { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:14px 16px 0; }
+.score-pill { border-radius:16px; padding:14px 10px; text-align:center; border:2px solid; }
+.score-pill-val { font-size:26px; font-weight:900; }
+.score-pill-lbl { font-size:11px; font-weight:700; letter-spacing:.5px; margin-top:2px; }
+.score-pill.correct { background:#F0FFF4; border-color:#27AE60; color:#27AE60; }
+.score-pill.wrong   { background:#FEF2F2; border-color:#E53935; color:#E53935; }
+
+/* Exilar earned banner */
+.exilar-earned {
+  margin:14px 16px 0;
+  background:linear-gradient(135deg,#1A0A00,#3D1C00);
+  border:1px solid #FFD700; border-radius:18px;
+  padding:16px 20px; display:flex; align-items:center; gap:14px;
+}
+.exilar-earned-icon { font-size:32px; flex-shrink:0; }
+.exilar-earned-text { font-size:13px; color:#FFD700; font-weight:700; line-height:1.5; }
+.exilar-earned-sub  { font-size:11px; color:rgba(255,215,0,0.65); font-weight:500; margin-top:2px; }
+
+.res-section {
+  margin:18px 16px 0; background:#fff; border-radius:20px;
+  padding:18px 16px; border:1px solid #F3F4F6;
+  box-shadow:0 2px 12px rgba(0,0,0,0.04);
+}
+.res-section-title {
+  font-size:13px; font-weight:800; color:#1A1A1A;
+  margin-bottom:14px; display:flex; align-items:center; gap:8px;
+}
+.res-section-title::before {
+  content:''; display:block; width:4px; height:16px;
+  border-radius:4px; background:{{ rank_color }};
+}
+.topic-bar-row { margin-bottom:12px; }
+.topic-bar-row:last-child { margin-bottom:0; }
+.topic-bar-meta {
+  display:flex; justify-content:space-between;
+  font-size:12px; font-weight:600; color:#374151; margin-bottom:5px;
+}
+.topic-bar-track { height:8px; background:#F3F4F6; border-radius:99px; overflow:hidden; }
+.topic-bar-fill  { height:100%; border-radius:99px; transition:width 1s cubic-bezier(.4,0,.2,1); }
+.bar-strong  { background:linear-gradient(90deg,#27AE60,#52C47A); }
+.bar-average { background:linear-gradient(90deg,#F59E0B,#FBBF24); }
+.bar-weak    { background:linear-gradient(90deg,#E53935,#F87171); }
+
+.reset-notice {
+  margin:12px 16px 0; padding:12px 16px;
+  background:#FFF8E8; border-radius:14px; border-left:4px solid #F59E0B;
+  font-size:12px; color:#92400E; font-weight:600;
+}
+.res-nav { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:18px 16px 0; }
+.res-nav-btn {
+  padding:15px 10px; border-radius:16px; text-align:center;
+  font-size:13px; font-weight:800; text-decoration:none;
+  display:flex; align-items:center; justify-content:center; gap:6px;
+  border:none; cursor:pointer; font-family:'Poppins',sans-serif;
+}
+.res-nav-home { background:linear-gradient(135deg,#F4621F,#C94E18); color:#fff; box-shadow:0 4px 14px rgba(244,98,31,.3); }
+.res-nav-quiz { background:#F3F4F6; color:#374151; }
+</style>
+
+<div class="result-wrap">
+
+  {% if pct >= 70 %}
+  <div class="fire-row">🔥 &nbsp;🔥 &nbsp;🔥</div>
+  {% endif %}
+
+  <!-- Rank card with donut -->
+  <div class="rank-card">
+    <div class="rank-badge">{{ rank_icon }} AAJA 50 · {{ rank_label }}</div>
+    {% set circumference = 251.2 %}
+    {% set filled = (pct / 100 * circumference) | round(1) %}
+    {% set empty  = (circumference - filled) | round(1) %}
+    <div class="rank-donut-wrap">
+      <svg viewBox="0 0 100 100" width="130" height="130" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="50" cy="50" r="40" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="12"/>
+        <circle cx="50" cy="50" r="40" fill="none" stroke="rgba(255,255,255,0.9)"  stroke-width="12"
+                stroke-linecap="round"
+                stroke-dasharray="{{ filled }} {{ empty }}"
+                style="transition:stroke-dasharray 1.2s ease;"/>
+      </svg>
+      <div class="rank-pct-label">{{ pct }}%</div>
+    </div>
+    <div style="color:rgba(255,255,255,0.85); font-size:13px; font-weight:600;">
+      {{ score.correct }} correct out of {{ score.total }} questions
+    </div>
+    <div class="rank-msg">"{{ rank_msg }}"</div>
+  </div>
+
+  <!-- Correct / Wrong pills -->
+  <div class="score-pills">
+    <div class="score-pill correct">
+      <div class="score-pill-val">{{ score.correct }}</div>
+      <div class="score-pill-lbl">✅ CORRECT</div>
+    </div>
+    <div class="score-pill wrong">
+      <div class="score-pill-val">{{ score.total - score.correct }}</div>
+      <div class="score-pill-lbl">❌ WRONG</div>
+    </div>
+  </div>
+
+  <!-- Exilar earned banner -->
+  {% set exilar_circ = 94.25 %}
+  {% set ex_capped   = exilars if exilars <= 20 else 20 %}
+  {% set ex_filled   = (ex_capped / 20 * exilar_circ) | round(1) %}
+  {% set ex_empty    = (exilar_circ - ex_filled) | round(1) %}
+  <div class="exilar-earned">
+    <div class="exilar-earned-icon">
+      <svg viewBox="0 0 36 36" width="44" height="44">
+        <circle cx="18" cy="18" r="15" fill="none" stroke="rgba(255,215,0,0.25)" stroke-width="3.5"/>
+        <circle cx="18" cy="18" r="15" fill="none"
+                stroke="{% if exilars >= 20 %}#FFD700{% elif exilars >= 10 %}#E0E0F0{% elif exilars >= 5 %}#CD853F{% else %}#F4621F{% endif %}"
+                stroke-width="3.5" stroke-linecap="round"
+                stroke-dasharray="{{ ex_filled }} {{ ex_empty }}"
+                transform="rotate(-90 18 18)"/>
+        <text x="18" y="23" text-anchor="middle" font-size="11" font-weight="900"
+              fill="#FFD700" font-family="Arial">{{ exilars }}</text>
+      </svg>
+    </div>
+    <div>
+      <div class="exilar-earned-text">+1 Exilar Earned Today! 🌟</div>
+      <div class="exilar-earned-sub">
+        {% if exilars >= 20 %}
+          All 20 Exilars unlocked — Legendary Status! 🏆
+        {% elif exilars >= 10 %}
+          {{ 20 - exilars }} more for Platinum Medal!
+        {% elif exilars >= 5 %}
+          {{ 10 - exilars }} more for Silver Medal!
+        {% else %}
+          {{ 5 - exilars }} more for your first Medal!
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Timer -->
+  <div class="reset-notice">
+    ⏰ New questions at 4 AM — in {{ hours_left }}h {{ mins_left }}m
+  </div>
+
+  <!-- Today's topic breakdown -->
+  {% if today_topics %}
+  <div class="res-section">
+    <div class="res-section-title">Today's Topic Breakdown</div>
+    {% for topic, t in today_topics.items() %}
+    {% set grade = "strong" if t.pct >= 70 else ("average" if t.pct >= 40 else "weak") %}
+    <div class="topic-bar-row">
+      <div class="topic-bar-meta">
+        <span>{{ topic }}</span>
+        <span style="color:{{ '#27AE60' if grade=='strong' else ('#F59E0B' if grade=='average' else '#E53935') }}">
+          {{ t.correct }}/{{ t.total }} · {{ t.pct }}%
+        </span>
+      </div>
+      <div class="topic-bar-track">
+        <div class="topic-bar-fill bar-{{ grade }}" style="width:{{ t.pct }}%"></div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- All-time breakdown -->
+  {% if alltime_topics %}
+  <div class="res-section">
+    <div class="res-section-title">All-Time Subject Performance</div>
+    {% for topic, t in alltime_topics.items() %}
+    <div class="topic-bar-row">
+      <div class="topic-bar-meta">
+        <span>{{ topic }}</span>
+        <span style="color:{{ '#27AE60' if t.grade=='strong' else ('#F59E0B' if t.grade=='average' else '#E53935') }}">
+          {{ t.pct }}%
+          {% if t.grade=='strong' %}💪{% elif t.grade=='average' %}📈{% else %}⚠️{% endif %}
+        </span>
+      </div>
+      <div class="topic-bar-track">
+        <div class="topic-bar-fill bar-{{ t.grade }}" style="width:{{ t.pct }}%"></div>
+      </div>
+    </div>
+    {% endfor %}
+    <div style="display:flex;gap:14px;margin-top:14px;font-size:11px;font-weight:600;">
+      <span><span style="color:#27AE60;">●</span> Strong ≥70%</span>
+      <span><span style="color:#F59E0B;">●</span> Average 40-70%</span>
+      <span><span style="color:#E53935;">●</span> Weak &lt;40%</span>
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Navigation -->
+  <div class="res-nav">
+    <a href="{{ url_for('home') }}"    class="res-nav-btn res-nav-home">🏠 Home</a>
+    <a href="{{ url_for('profile') }}" class="res-nav-btn res-nav-quiz">📊 My Stats</a>
+  </div>
+
+</div>
+
+{# ══════════════════════════════════════════════
+   QUIZ IN PROGRESS
+   ══════════════════════════════════════════════ #}
+{% else %}
+
+<div id="quizActive">
+  <!-- AAJA header badge -->
+  <div style="background:linear-gradient(135deg,#F4621F,#C94E18); padding:10px 16px 8px;
+              display:flex; align-items:center; justify-content:space-between;">
+    <span style="color:#fff; font-size:13px; font-weight:800; letter-spacing:1px;">🔥 AAJA 50</span>
+    <span style="color:rgba(255,255,255,0.7); font-size:11px; font-weight:600;">50 Question Challenge</span>
+  </div>
+
+  <!-- Progress bar -->
+  <div class="quiz-header">
+    <span class="quiz-counter" id="qCounter">Q 1 / {{ questions|length }}</span>
+    <span class="quiz-topic-tag" id="qTopic">—</span>
+  </div>
+  <div class="quiz-progress-track">
+    <div class="quiz-progress-fill" id="qProgress" style="width:0%"></div>
+  </div>
+
+  <!-- Question card -->
+  <div class="question-card" id="questionCard">
+    <div class="question-year-tag" id="qYear"></div>
+    <div class="question-text"    id="qText">Loading…</div>
+  </div>
+
+  <!-- Options -->
+  <div class="options-list" id="optionsList"></div>
+
+  <!-- Explanation popup -->
+  <div class="explanation-popup" id="expPopup">
+    <div class="exp-result" id="expResult"></div>
+    <div class="exp-text"   id="expText"></div>
+    <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next →</button>
+  </div>
+</div>
+
+<!-- Hidden submit form -->
+<form id="submitForm" method="POST" action="{{ url_for('aaja_quiz') }}" style="display:none">
+  <input type="hidden" name="action" value="submit">
+</form>
+
+<script>
+const QUESTIONS = {{ questions | tojson }};
+let idx = 0, answers = {};
+
+function showQuestion(i) {
+  const q = QUESTIONS[i], total = QUESTIONS.length;
+  document.getElementById('qCounter').textContent  = `Q ${i + 1} / ${total}`;
+  document.getElementById('qTopic').textContent    = q.topic || '';
+  document.getElementById('qProgress').style.width = `${(i / total) * 100}%`;
+  document.getElementById('qYear').textContent     = q.year ? `UPSC ${q.year}` : 'Practice';
+  document.getElementById('qText').textContent     = q.question;
+
+  const letters = ['A','B','C','D'];
+  document.getElementById('optionsList').innerHTML = q.options.map((opt, oi) => `
+    <button class="option-btn" onclick="pick(${oi})" id="opt${oi}">
+      <span class="option-letter">${letters[oi]}</span>
+      <span>${opt}</span>
+    </button>
+  `).join('');
+
+  document.getElementById('expPopup').style.display = 'none';
+  document.getElementById('nextBtn').textContent =
+    (i === total - 1) ? 'See Results 🎯' : 'Next →';
+}
+
+function pick(selected) {
+  const q = QUESTIONS[idx];
+  answers[q.id] = selected;
+  ['A','B','C','D'].forEach((_, oi) => {
+    const btn = document.getElementById(`opt${oi}`);
+    if (!btn) return;
+    btn.disabled = true;
+    if (oi === q.correctIndex)  btn.classList.add('correct');
+    else if (oi === selected)   btn.classList.add('wrong');
+  });
+  const correct = selected === q.correctIndex;
+  const letters = ['A','B','C','D'];
+  const res = document.getElementById('expResult');
+  res.className = 'exp-result ' + (correct ? 'correct' : 'wrong');
+  res.textContent = correct ? '✅ Correct!' : `❌ Wrong!  Correct: ${letters[q.correctIndex]}`;
+  document.getElementById('expText').textContent = q.explanation || '';
+  document.getElementById('expPopup').style.display = 'block';
+  document.getElementById('expPopup').scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+function nextQuestion() {
+  if (idx < QUESTIONS.length - 1) {
+    idx++; showQuestion(idx);
+    window.scrollTo({top:0, behavior:'smooth'});
+  } else {
+    submitQuiz();
+  }
+}
+
+function submitQuiz() {
+  const form = document.getElementById('submitForm');
+  Object.entries(answers).forEach(([qid, sel]) => {
+    const inp = document.createElement('input');
+    inp.type = 'hidden'; inp.name = `answer_${qid}`; inp.value = sel;
+    form.appendChild(inp);
+  });
+  form.submit();
+}
+
+showQuestion(0);
+</script>
+{% endif %}
+
+</div>
+{% endblock %}

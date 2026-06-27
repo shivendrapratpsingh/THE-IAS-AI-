@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>BASS 50 — AAJA !!</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; width: 100%; }
+
+    body {
+      background: #0A0A0A;
+      font-family: 'Poppins', sans-serif;
+      display: flex; align-items: center; justify-content: center;
+      min-height: 100vh; overflow: hidden;
+    }
+
+    /* Ambient ember particles */
+    @keyframes emberFloat {
+      0%   { transform: translateY(0) rotate(0deg) scale(1); opacity: 0; }
+      10%  { opacity: var(--e-op); }
+      80%  { opacity: var(--e-op); }
+      100% { transform: translateY(-110vh) rotate(var(--e-rot)) scale(0.5); opacity: 0; }
+    }
+    .ember {
+      position: fixed; bottom: -20px;
+      font-size: var(--e-size);
+      left: var(--e-x);
+      animation: emberFloat var(--e-dur) ease-in var(--e-delay) infinite;
+      pointer-events: none; z-index: 0;
+    }
+
+    /* Glow backdrop */
+    .glow-bg {
+      position: fixed; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 500px; height: 500px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(244,98,31,0.18) 0%, transparent 70%);
+      pointer-events: none; z-index: 0;
+      animation: glowPulse 3s ease-in-out infinite;
+    }
+    @keyframes glowPulse {
+      0%, 100% { opacity: 0.6; transform: translate(-50%,-50%) scale(1); }
+      50%       { opacity: 1;   transform: translate(-50%,-50%) scale(1.15); }
+    }
+
+    .phone-shell {
+      position: relative; z-index: 1;
+      width: 100%; max-width: 430px; min-height: 100vh;
+      display: flex; flex-direction: column;
+    }
+
+    /* Back button */
+    .back-btn {
+      position: absolute; top: env(safe-area-inset-top, 16px); left: 16px;
+      margin-top: 16px;
+      color: rgba(255,255,255,0.6); font-size: 13px; font-weight: 600;
+      text-decoration: none; display: flex; align-items: center; gap: 6px;
+      z-index: 10; transition: color .2s;
+    }
+    .back-btn:hover { color: #fff; }
+    .back-arrow { font-size: 18px; line-height: 1; }
+
+    /* Main content */
+    .aaja-center {
+      flex: 1; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 80px 24px 140px;
+      text-align: center;
+    }
+
+    /* Score badge from 10q quiz */
+    .score-badge {
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 99px;
+      padding: 8px 24px;
+      font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.65);
+      margin-bottom: 32px;
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    .score-badge strong { color: #fff; }
+
+    /* BASS 50!! headline */
+    .bass-headline {
+      font-size: 72px; font-weight: 900; line-height: 1;
+      color: #fff; letter-spacing: -2px;
+      margin-bottom: 4px;
+      text-shadow: 0 0 60px rgba(244,98,31,0.6);
+    }
+    .bass-exclaim {
+      color: #F4621F;
+      animation: exclaim 1.4s ease-in-out infinite alternate;
+    }
+    @keyframes exclaim {
+      0%   { color: #F4621F; text-shadow: 0 0 20px rgba(244,98,31,0.8); }
+      100% { color: #FFB347; text-shadow: 0 0 40px rgba(255,179,71,0.9); }
+    }
+
+    .bass-sub {
+      font-size: 15px; font-weight: 500; color: rgba(255,255,255,0.5);
+      margin-bottom: 40px; line-height: 1.6; max-width: 280px;
+    }
+
+    /* Stats row */
+    .stats-row {
+      display: flex; gap: 16px; margin-bottom: 40px;
+    }
+    .stat-chip {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 16px; padding: 16px 20px; text-align: center;
+    }
+    .stat-val { font-size: 28px; font-weight: 900; color: #fff; line-height: 1; }
+    .stat-lbl { font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.5);
+                text-transform: uppercase; letter-spacing: .5px; margin-top: 4px; }
+
+    /* Exilar count */
+    .exilar-row {
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 40px;
+    }
+    .exilar-mini-ring {
+      position: relative; width: 44px; height: 44px; flex-shrink: 0;
+    }
+    .exilar-mini-ring svg { transform: rotate(-90deg); }
+    .exilar-mini-num {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%,-50%);
+      font-size: 13px; font-weight: 900; color: #FFD700; line-height: 1;
+    }
+    .exilar-text {
+      font-size: 13px; color: rgba(255,255,255,0.6); font-weight: 500; line-height: 1.5;
+    }
+    .exilar-text strong { color: #FFD700; }
+
+    /* Flame divider */
+    .flame-row {
+      font-size: 28px; letter-spacing: 8px; margin-bottom: 16px;
+      animation: flameSway 1.6s ease-in-out infinite alternate;
+    }
+    @keyframes flameSway {
+      0%   { transform: scale(1) rotate(-1deg);   filter: brightness(1); }
+      100% { transform: scale(1.06) rotate(1deg); filter: brightness(1.3); }
+    }
+
+    /* AAJA button */
+    .aaja-btn-wrap {
+      position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+      width: 100%; max-width: 430px;
+      padding: 16px 20px calc(env(safe-area-inset-bottom, 0px) + 20px);
+      background: linear-gradient(to top, #0A0A0A 70%, transparent);
+      z-index: 10;
+    }
+    .aaja-btn {
+      display: block; width: 100%;
+      padding: 22px 20px;
+      background: linear-gradient(135deg, #F4621F 0%, #C94E18 100%);
+      color: #fff; border: none; border-radius: 20px;
+      font-size: 24px; font-weight: 900; font-family: 'Poppins', sans-serif;
+      letter-spacing: 2px; cursor: pointer;
+      box-shadow: 0 8px 32px rgba(244,98,31,0.5), 0 0 60px rgba(244,98,31,0.2);
+      transition: transform .15s, box-shadow .15s;
+      text-decoration: none; text-align: center;
+      animation: btnGlow 2s ease-in-out infinite alternate;
+    }
+    @keyframes btnGlow {
+      0%   { box-shadow: 0 8px 32px rgba(244,98,31,0.4), 0 0 40px rgba(244,98,31,0.15); }
+      100% { box-shadow: 0 12px 48px rgba(244,98,31,0.7), 0 0 80px rgba(244,98,31,0.3); }
+    }
+    .aaja-btn:active { transform: scale(0.97); }
+
+    .aaja-done-msg {
+      display: block; width: 100%;
+      padding: 22px 20px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: rgba(255,255,255,0.5);
+      border-radius: 20px; font-size: 16px; font-weight: 700;
+      text-align: center; letter-spacing: 1px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Glow -->
+<div class="glow-bg"></div>
+
+<!-- Ambient embers -->
+<div id="emberWrap"></div>
+<script>
+(function(){
+  const wrap = document.getElementById('emberWrap');
+  const icons = ['🔥','✨','⚡','💥','🌟'];
+  for (let i = 0; i < 16; i++) {
+    const el = document.createElement('span');
+    el.className = 'ember';
+    const size  = 10 + Math.random() * 14;
+    const x     = Math.random() * 96;
+    const dur   = 8 + Math.random() * 10;
+    const delay = -(Math.random() * dur);
+    const rot   = (Math.random() - 0.5) * 360 + 'deg';
+    const op    = 0.15 + Math.random() * 0.25;
+    el.textContent = icons[Math.floor(Math.random() * icons.length)];
+    el.style.cssText = `--e-size:${size}px;--e-x:${x}%;--e-dur:${dur}s;--e-delay:${delay}s;--e-rot:${rot};--e-op:${op};`;
+    wrap.appendChild(el);
+  }
+})();
+</script>
+
+<div class="phone-shell">
+
+  <!-- Back -->
+  <a href="{{ url_for('home') }}" class="back-btn">
+    <span class="back-arrow">←</span>
+    <span>Back</span>
+  </a>
+
+  <!-- Center content -->
+  <div class="aaja-center">
+
+    <!-- Today's 10q score -->
+    <div class="score-badge">
+      📝 Today's quiz &nbsp;·&nbsp; <strong>{{ score_correct }}/{{ score_total }} correct ({{ score_pct }}%)</strong>
+    </div>
+
+    <!-- Headline -->
+    <div class="bass-headline">BASS <span class="bass-exclaim">50</span><span class="bass-exclaim">!!</span></div>
+    <div class="bass-sub">You've completed your daily 10.<br>Ready to go all the way?</div>
+
+    <!-- Stats chips -->
+    <div class="stats-row">
+      <div class="stat-chip">
+        <div class="stat-val">50</div>
+        <div class="stat-lbl">Questions</div>
+      </div>
+      <div class="stat-chip">
+        <div class="stat-val">{{ exilars }}</div>
+        <div class="stat-lbl">Exilars</div>
+      </div>
+      <div class="stat-chip">
+        <div class="stat-val">{{ "1" if not aaja_done else "✓" }}</div>
+        <div class="stat-lbl">Today's XP</div>
+      </div>
+    </div>
+
+    <!-- Exilar ring mini-display -->
+    {% set ex_capped = exilars if exilars <= 20 else 20 %}
+    {% set ex_circ = 94.25 %}
+    {% set ex_filled = (ex_capped / 20 * ex_circ) | round(1) %}
+    {% set ex_empty  = (ex_circ - ex_filled) | round(1) %}
+    <div class="exilar-row">
+      <div class="exilar-mini-ring">
+        <svg width="44" height="44" viewBox="0 0 36 36">
+          <circle cx="18" cy="18" r="15" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="3.5"/>
+          <circle cx="18" cy="18" r="15" fill="none"
+                  stroke="{% if exilars >= 20 %}#FFD700{% elif exilars >= 10 %}#C0C0C0{% elif exilars >= 5 %}#CD853F{% else %}#F4621F{% endif %}"
+                  stroke-width="3.5" stroke-linecap="round"
+                  stroke-dasharray="{{ ex_filled }} {{ ex_empty }}"
+                  transform="rotate(-90 18 18)"/>
+        </svg>
+        <span class="exilar-mini-num">{{ exilars }}</span>
+      </div>
+      <div class="exilar-text">
+        Complete AAJA today → earn <strong>+1 Exilar</strong><br>
+        {% if exilars < 5 %}
+          {{ 5 - exilars }} more for your first medal!
+        {% elif exilars < 10 %}
+          {{ 10 - exilars }} more for a Silver Medal!
+        {% elif exilars < 20 %}
+          {{ 20 - exilars }} more for Platinum!
+        {% else %}
+          Legendary! You've unlocked all medals! 🏆
+        {% endif %}
+      </div>
+    </div>
+
+    {% if not aaja_done %}
+    <div class="flame-row">🔥 🔥 🔥</div>
+    {% endif %}
+
+  </div>
+
+  <!-- AAJA Button -->
+  <div class="aaja-btn-wrap">
+    {% if aaja_done %}
+      <span class="aaja-done-msg">✓ &nbsp; AAJA Done Today! &nbsp; Come Back Tomorrow</span>
+    {% else %}
+      <form method="post" action="{{ url_for('aaja_start') }}">
+        <button type="submit" class="aaja-btn">AAJA !!</button>
+      </form>
+    {% endif %}
+  </div>
+
+</div>
+</body>
+</html>

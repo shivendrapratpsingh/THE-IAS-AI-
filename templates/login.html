@@ -78,36 +78,4 @@
     <div id="step-general" class="login-step">
       <div style="display:flex; align-items:center; gap:8px; margin-bottom:16px; cursor:pointer;" onclick="backToMode()">
         <span style="font-size:18px;">←</span>
-        <span style="font-size:13px; font-weight:700; color:var(--green);">General Practice</span>
-      </div>
-      <form method="POST" action="{{ url_for('guest_login') }}">
-        <div class="field-label">Your Name</div>
-        <input class="field-input" type="text" name="name" placeholder="Enter your name"
-               maxlength="40" required style="margin-bottom:0">
-        <button type="submit" class="btn-primary btn-green">Start Quiz →</button>
-      </form>
-    </div>
-
-  </div>
-</div>
-</div>
-
-<script>
-function selectMode(mode) {
-  document.getElementById('step-mode').style.display = 'none';
-  if (mode === 'upsc') {
-    document.getElementById('step-upsc').classList.add('active');
-    document.getElementById('card-upsc').classList.add('selected');
-  } else {
-    document.getElementById('step-general').classList.add('active');
-    document.getElementById('card-general').classList.add('selected-green');
-  }
-}
-function backToMode() {
-  document.getElementById('step-mode').style.display = 'block';
-  document.getElementById('step-upsc').classList.remove('active');
-  document.getElementById('step-general').classList.remove('active');
-}
-</script>
-</body>
-</html>
+        <span style="font-size:13px; font-weight:700; color:var(--gre
