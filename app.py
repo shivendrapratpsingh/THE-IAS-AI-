@@ -440,13 +440,37 @@ def mcq():
 
     questions = [storage.MCQ_BY_ID[qid] for qid in daily["question_ids"] if qid in storage.MCQ_BY_ID]
     score = None
+    today_topics = {}
     if daily.get("submitted"):
         answers = daily.get("answers", {})
         correct = sum(
             1 for qid, sel in answers.items()
             if storage.MCQ_BY_ID.get(qid, {}).get("correctIndex") == sel
         )
-        score = {"correct": correct, "total": len(questions)}
+        score = {"correct": correct, "total": len(questions),
+                 "pct": round(100 * correct / len(questions)) if questions else 0}
+        # Today's per-topic breakdown
+        for qid, selected in answers.items():
+            q = storage.MCQ_BY_ID.get(qid)
+            if not q:
+                continue
+            t = q["topic"]
+            today_topics.setdefault(t, {"correct": 0, "total": 0})
+            today_topics[t]["total"] += 1
+            if selected == q.get("correctIndex"):
+                today_topics[t]["correct"] += 1
+        for t in today_topics:
+            d = today_topics[t]
+            d["pct"] = round(100 * d["correct"] / d["total"]) if d["total"] else 0
+
+    # All-time topic breakdown
+    alltime_topics = {}
+    for topic, s in data.get("mcq_stats", {}).items():
+        pct = round(100 * s["correct"] / s["total"]) if s["total"] else 0
+        alltime_topics[topic] = {
+            "correct": s["correct"], "total": s["total"], "pct": pct,
+            "grade": "strong" if pct >= 70 else ("average" if pct >= 40 else "weak")
+        }
 
     # Compute reset time for display (next 4 AM)
     from datetime import timedelta as _td
@@ -462,6 +486,8 @@ def mcq():
         "mcq.html",
         questions=questions, daily=daily, score=score,
         stats=data.get("mcq_stats", {}),
+        today_topics=today_topics,
+        alltime_topics=alltime_topics,
         topics=storage.MCQ_TOPICS,
         profile=data.get("profile"),
         phone=phone,
@@ -583,6 +609,13 @@ def profile():
     total_attempted = sum(s["total"] for s in stats.values())
     total_correct   = sum(s["correct"] for s in stats.values())
     overall_accuracy = round(100 * total_correct / total_attempted) if total_attempted else 0
+    topic_data = {}
+    for topic, s in stats.items():
+        pct = round(100 * s["correct"] / s["total"]) if s["total"] else 0
+        topic_data[topic] = {
+            "correct": s["correct"], "total": s["total"], "pct": pct,
+            "grade": "strong" if pct >= 70 else ("average" if pct >= 40 else "weak")
+        }
     return render_template(
         "profile.html",
         subjects=study_plan.SUBJECT_CATEGORIES,
@@ -592,6 +625,7 @@ def profile():
         total_attempted=total_attempted,
         overall_accuracy=overall_accuracy,
         is_upsc=_is_upsc(),
+        topic_data=topic_data,
     )
 
 

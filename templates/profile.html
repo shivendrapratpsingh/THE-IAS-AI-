@@ -69,6 +69,37 @@
 <!-- ── Edit Section ── -->
 <div style="background:#fff;border-radius:24px 24px 0 0;padding:28px 20px 100px;margin-top:-12px;position:relative;z-index:1;">
 
+  <!-- Subject Performance Chart -->
+  {% if topic_data %}
+  <div style="margin-bottom:28px;">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;">
+      <div style="width:4px;height:20px;background:#F4621F;border-radius:4px;"></div>
+      <div style="font-size:16px;font-weight:800;color:#1A1A1A;">Subject Performance</div>
+    </div>
+    {% for topic, t in topic_data.items() %}
+    <div style="margin-bottom:12px;">
+      <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:600;color:#374151;margin-bottom:5px;">
+        <span>{{ topic }}</span>
+        <span style="color:{{ '#27AE60' if t.grade=='strong' else ('#F59E0B' if t.grade=='average' else '#E53935') }}">
+          {{ t.correct }}/{{ t.total }} · {{ t.pct }}%
+          {% if t.grade=='strong' %}💪{% elif t.grade=='average' %}📈{% else %}⚠️{% endif %}
+        </span>
+      </div>
+      <div style="height:8px;background:#F3F4F6;border-radius:99px;overflow:hidden;">
+        <div style="height:100%;border-radius:99px;width:{{ t.pct }}%;
+          background:{{ 'linear-gradient(90deg,#27AE60,#52C47A)' if t.grade=='strong' else ('linear-gradient(90deg,#F59E0B,#FBBF24)' if t.grade=='average' else 'linear-gradient(90deg,#E53935,#F87171)') }};
+          transition:width 1s ease;"></div>
+      </div>
+    </div>
+    {% endfor %}
+    <div style="display:flex;gap:14px;margin-top:10px;font-size:11px;font-weight:600;color:#6B7280;">
+      <span><span style="color:#27AE60;">●</span> Strong ≥70%</span>
+      <span><span style="color:#F59E0B;">●</span> Average</span>
+      <span><span style="color:#E53935;">●</span> Needs Work</span>
+    </div>
+  </div>
+  {% endif %}
+
   <div style="display:flex;align-items:center;gap:8px;margin-bottom:20px;">
     <div style="width:4px;height:20px;background:#F4621F;border-radius:4px;"></div>
     <div style="font-size:16px;font-weight:800;color:#1A1A1A;">Edit Profile</div>

@@ -6,58 +6,278 @@
 
 {# ── Score screen (shown after submit) ── #}
 {% if score %}
-<div id="scoreScreen" style="display:block; text-align:center; padding: 20px 4px 80px;">
+{% set pct = score.pct %}
+{% if pct >= 90 %}
+  {% set rank_label = "IAS Ranker" %}
+  {% set rank_icon = "🏆" %}
+  {% set rank_color = "#D4AF37" %}
+  {% set rank_bg = "linear-gradient(135deg,#7B4F00,#D4AF37)" %}
+  {% set rank_msg = "Exceptional! You're built for the IAS!" %}
+{% elif pct >= 70 %}
+  {% set rank_label = "On Fire" %}
+  {% set rank_icon = "🔥" %}
+  {% set rank_color = "#F4621F" %}
+  {% set rank_bg = "linear-gradient(135deg,#8B2500,#F4621F)" %}
+  {% set rank_msg = "Brilliant performance! Keep this streak going!" %}
+{% elif pct >= 50 %}
+  {% set rank_label = "Rising Star" %}
+  {% set rank_icon = "⭐" %}
+  {% set rank_color = "#2471A3" %}
+  {% set rank_bg = "linear-gradient(135deg,#1A3A5C,#2471A3)" %}
+  {% set rank_msg = "Solid effort! You're making real progress." %}
+{% elif pct >= 30 %}
+  {% set rank_label = "Improving" %}
+  {% set rank_icon = "📈" %}
+  {% set rank_color = "#27AE60" %}
+  {% set rank_bg = "linear-gradient(135deg,#1A5C38,#27AE60)" %}
+  {% set rank_msg = "Every question teaches you something. Keep going!" %}
+{% else %}
+  {% set rank_label = "Keep Going" %}
+  {% set rank_icon = "💪" %}
+  {% set rank_color = "#6B7280" %}
+  {% set rank_bg = "linear-gradient(135deg,#374151,#6B7280)" %}
+  {% set rank_msg = "The UPSC journey starts with a single step. You've got this!" %}
+{% endif %}
 
-  {% set pct = (score.correct / score.total * 100) | round | int %}
-  {% if pct >= 80 %}
-    <div class="score-emoji">🏆</div>
-    <div class="score-title">Outstanding!</div>
-  {% elif pct >= 60 %}
-    <div class="score-emoji">🎯</div>
-    <div class="score-title">Good Work!</div>
-  {% elif pct >= 40 %}
-    <div class="score-emoji">📚</div>
-    <div class="score-title">Keep Practicing</div>
-  {% else %}
-    <div class="score-emoji">💪</div>
-    <div class="score-title">Don't Give Up!</div>
+<style>
+/* ── Result card styles ── */
+.result-wrap { padding: 0 0 100px; }
+
+/* Fire animation */
+.fire-row {
+  text-align:center; font-size:32px;
+  margin: 16px 0 -8px;
+  animation: fireFlicker 1.2s ease-in-out infinite alternate;
+}
+@keyframes fireFlicker {
+  0%   { transform: scaleY(1)    rotate(-2deg); filter: brightness(1);   }
+  50%  { transform: scaleY(1.08) rotate(2deg);  filter: brightness(1.2); }
+  100% { transform: scaleY(0.96) rotate(-1deg); filter: brightness(0.9); }
+}
+
+/* Rank card */
+.rank-card {
+  margin: 12px 16px 0;
+  border-radius: 24px;
+  padding: 28px 20px 24px;
+  background: {{ rank_bg }};
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.25);
+}
+.rank-card::before {
+  content:'';
+  position:absolute; top:-40px; right:-40px;
+  width:140px; height:140px; border-radius:50%;
+  background:rgba(255,255,255,0.08);
+}
+.rank-card::after {
+  content:'';
+  position:absolute; bottom:-30px; left:-30px;
+  width:100px; height:100px; border-radius:50%;
+  background:rgba(255,255,255,0.06);
+}
+.rank-badge {
+  display:inline-flex; align-items:center; gap:6px;
+  background:rgba(255,255,255,0.2); border-radius:99px;
+  padding:5px 16px; font-size:13px; font-weight:800;
+  color:#fff; letter-spacing:.4px; margin-bottom:16px;
+}
+.rank-donut-wrap {
+  position:relative; width:130px; height:130px;
+  margin:0 auto 12px;
+}
+.rank-donut-wrap svg { transform: rotate(-90deg); }
+.rank-pct-label {
+  position:absolute; top:50%; left:50%;
+  transform:translate(-50%,-50%);
+  font-size:28px; font-weight:900; color:#fff;
+  line-height:1;
+}
+.rank-pct-sub {
+  font-size:11px; color:rgba(255,255,255,0.7);
+  font-weight:600; margin-top:2px;
+}
+.rank-msg {
+  font-size:13px; color:rgba(255,255,255,0.85);
+  line-height:1.5; margin-top:10px;
+  font-style:italic;
+}
+
+/* Score pills */
+.score-pills {
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:10px; margin:14px 16px 0;
+}
+.score-pill {
+  border-radius:16px; padding:14px 10px;
+  text-align:center; border:2px solid;
+}
+.score-pill-val { font-size:26px; font-weight:900; }
+.score-pill-lbl { font-size:11px; font-weight:700; letter-spacing:.5px; margin-top:2px; }
+.score-pill.correct { background:#F0FFF4; border-color:#27AE60; color:#27AE60; }
+.score-pill.wrong   { background:#FEF2F2; border-color:#E53935; color:#E53935; }
+
+/* Section divider */
+.res-section {
+  margin: 18px 16px 0;
+  background:#fff;
+  border-radius:20px;
+  padding:18px 16px;
+  border:1px solid #F3F4F6;
+  box-shadow:0 2px 12px rgba(0,0,0,0.04);
+}
+.res-section-title {
+  font-size:13px; font-weight:800; color:#1A1A1A;
+  margin-bottom:14px; display:flex; align-items:center; gap:8px;
+}
+.res-section-title::before {
+  content:''; display:block; width:4px; height:16px;
+  border-radius:4px; background:{{ rank_color }};
+}
+
+/* Topic bars */
+.topic-bar-row { margin-bottom:12px; }
+.topic-bar-row:last-child { margin-bottom:0; }
+.topic-bar-meta {
+  display:flex; justify-content:space-between;
+  font-size:12px; font-weight:600; color:#374151;
+  margin-bottom:5px;
+}
+.topic-bar-track {
+  height:8px; background:#F3F4F6; border-radius:99px; overflow:hidden;
+}
+.topic-bar-fill {
+  height:100%; border-radius:99px;
+  transition:width 1s cubic-bezier(.4,0,.2,1);
+}
+.bar-strong { background: linear-gradient(90deg,#27AE60,#52C47A); }
+.bar-average { background: linear-gradient(90deg,#F59E0B,#FBBF24); }
+.bar-weak    { background: linear-gradient(90deg,#E53935,#F87171); }
+
+/* Nav buttons */
+.res-nav { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:18px 16px 0; }
+.res-nav-btn {
+  padding:15px 10px; border-radius:16px; text-align:center;
+  font-size:13px; font-weight:800; text-decoration:none;
+  display:flex; align-items:center; justify-content:center; gap:6px;
+  border:none; cursor:pointer; font-family:'Poppins',sans-serif;
+}
+.res-nav-home { background:linear-gradient(135deg,#F4621F,#C94E18); color:#fff; box-shadow:0 4px 14px rgba(244,98,31,.3); }
+.res-nav-quiz { background:#F3F4F6; color:#374151; }
+
+/* Timer notice */
+.reset-notice {
+  margin:12px 16px 0; padding:12px 16px;
+  background:#FFF8E8; border-radius:14px; border-left:4px solid #F59E0B;
+  font-size:12px; color:#92400E; font-weight:600;
+}
+</style>
+
+<div class="result-wrap">
+
+  {# Fire for high scorers #}
+  {% if pct >= 70 %}
+  <div class="fire-row">🔥&nbsp;🔥&nbsp;🔥</div>
   {% endif %}
 
-  <div class="score-sub">Today's Quiz Complete</div>
+  {# Rank card with donut #}
+  <div class="rank-card">
+    <div class="rank-badge">{{ rank_icon }} {{ rank_label }}</div>
 
-  <div class="score-big">{{ score.correct }}<span class="score-denom">/{{ score.total }}</span></div>
-
-  <div class="score-row">
-    <div class="score-box green">
-      <div class="score-box-val">{{ score.correct }}</div>
-      <div class="score-box-lbl">✅ Correct</div>
+    {# SVG Donut chart #}
+    {% set circumference = 251.2 %}
+    {% set filled = (pct / 100 * circumference) | round(1) %}
+    {% set empty  = (circumference - filled) | round(1) %}
+    <div class="rank-donut-wrap">
+      <svg viewBox="0 0 100 100" width="130" height="130" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="50" cy="50" r="40" fill="none"
+                stroke="rgba(255,255,255,0.15)" stroke-width="12"/>
+        <circle cx="50" cy="50" r="40" fill="none"
+                stroke="rgba(255,255,255,0.9)" stroke-width="12"
+                stroke-linecap="round"
+                stroke-dasharray="{{ filled }} {{ empty }}"
+                style="transition:stroke-dasharray 1.2s ease;"/>
+      </svg>
+      <div class="rank-pct-label">{{ pct }}%</div>
     </div>
-    <div class="score-box red">
-      <div class="score-box-val">{{ score.total - score.correct }}</div>
-      <div class="score-box-lbl">❌ Wrong</div>
+
+    <div style="color:rgba(255,255,255,0.85); font-size:13px; font-weight:600;">
+      {{ score.correct }} correct out of {{ score.total }} questions
+    </div>
+    <div class="rank-msg">"{{ rank_msg }}"</div>
+  </div>
+
+  {# Correct / Wrong pills #}
+  <div class="score-pills">
+    <div class="score-pill correct">
+      <div class="score-pill-val">{{ score.correct }}</div>
+      <div class="score-pill-lbl">✅ CORRECT</div>
+    </div>
+    <div class="score-pill wrong">
+      <div class="score-pill-val">{{ score.total - score.correct }}</div>
+      <div class="score-pill-lbl">❌ WRONG</div>
     </div>
   </div>
 
-  {# Topic breakdown #}
-  {% if stats %}
-  <div style="background:#fff; border:1px solid var(--border); border-radius:16px; padding:16px; margin-top:4px; text-align:left;">
-    <div class="section-title" style="margin-bottom:8px;">By Topic</div>
-    {% for topic, s in stats.items() %}
-    <div class="topic-row">
-      <span class="topic-name">{{ topic }}</span>
-      <span class="topic-score">{{ s.correct }}/{{ s.total }}</span>
+  {# Reset timer #}
+  <div class="reset-notice">
+    ⏰ New questions unlock at 4 AM — in {{ hours_left }}h {{ mins_left }}m
+  </div>
+
+  {# Today's topic breakdown #}
+  {% if today_topics %}
+  <div class="res-section">
+    <div class="res-section-title">Today's Topic Breakdown</div>
+    {% for topic, t in today_topics.items() %}
+    {% set grade = "strong" if t.pct >= 70 else ("average" if t.pct >= 40 else "weak") %}
+    <div class="topic-bar-row">
+      <div class="topic-bar-meta">
+        <span>{{ topic }}</span>
+        <span style="color:{{ '#27AE60' if grade=='strong' else ('#F59E0B' if grade=='average' else '#E53935') }}">
+          {{ t.correct }}/{{ t.total }} · {{ t.pct }}%
+        </span>
+      </div>
+      <div class="topic-bar-track">
+        <div class="topic-bar-fill bar-{{ grade }}" style="width:{{ t.pct }}%"></div>
+      </div>
     </div>
     {% endfor %}
   </div>
   {% endif %}
 
-  {# New Set button #}
-  <form method="POST">
-    <input type="hidden" name="action" value="new_set">
-    <button type="submit" class="next-btn" style="margin-top:20px;">
-      🔀 New Set of Questions
-    </button>
-  </form>
+  {# All-time performance chart #}
+  {% if alltime_topics %}
+  <div class="res-section">
+    <div class="res-section-title">All-Time Subject Performance</div>
+    {% for topic, t in alltime_topics.items() %}
+    <div class="topic-bar-row">
+      <div class="topic-bar-meta">
+        <span>{{ topic }}</span>
+        <span style="color:{{ '#27AE60' if t.grade=='strong' else ('#F59E0B' if t.grade=='average' else '#E53935') }}">
+          {{ t.pct }}%
+          {% if t.grade == 'strong' %}💪{% elif t.grade == 'average' %}📈{% else %}⚠️{% endif %}
+        </span>
+      </div>
+      <div class="topic-bar-track">
+        <div class="topic-bar-fill bar-{{ t.grade }}" style="width:{{ t.pct }}%"></div>
+      </div>
+    </div>
+    {% endfor %}
+    <div style="display:flex;gap:14px;margin-top:14px;font-size:11px;font-weight:600;">
+      <span><span style="color:#27AE60;">●</span> Strong ≥70%</span>
+      <span><span style="color:#F59E0B;">●</span> Average 40-70%</span>
+      <span><span style="color:#E53935;">●</span> Weak &lt;40%</span>
+    </div>
+  </div>
+  {% endif %}
+
+  {# Navigation #}
+  <div class="res-nav">
+    <a href="{{ url_for('home') }}" class="res-nav-btn res-nav-home">🏠 Home</a>
+    <a href="{{ url_for('profile') }}" class="res-nav-btn res-nav-quiz">📊 My Stats</a>
+  </div>
 
 </div>
 
