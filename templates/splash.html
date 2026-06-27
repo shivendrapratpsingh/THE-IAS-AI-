@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>BASS 50</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<div class="phone-shell">
+  <div class="splash">
+
+    <div class="splash-logo-wrap">
+      <div class="splash-glow"></div>
+      <div class="splash-logo">
+        <div class="splash-logo-inner">B<br>50</div>
+      </div>
+    </div>
+
+    <div class="splash-brand">BASS 50</div>
+    <span class="splash-exclaim">!!</span>
+    <div class="splash-bar"></div>
+    <p class="splash-hint">Loading your prep...</p>
+
+  </div>
+</div>
+
+<script>
+  setTimeout(function() {
+    window.location.href = "{{ next_url }}";
+  }, 3000);
+</script>
+</body>
+</html>

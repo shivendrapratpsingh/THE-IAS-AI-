@@ -1,0 +1,185 @@
+{% extends "base.html" %}
+{% block title %}Quiz — BASS 50{% endblock %}
+
+{% block content %}
+<div class="quiz-wrap">
+
+{# ── Score screen (shown after submit) ── #}
+{% if score %}
+<div id="scoreScreen" style="display:block; text-align:center; padding: 20px 4px 80px;">
+
+  {% set pct = (score.correct / score.total * 100) | round | int %}
+  {% if pct >= 80 %}
+    <div class="score-emoji">🏆</div>
+    <div class="score-title">Outstanding!</div>
+  {% elif pct >= 60 %}
+    <div class="score-emoji">🎯</div>
+    <div class="score-title">Good Work!</div>
+  {% elif pct >= 40 %}
+    <div class="score-emoji">📚</div>
+    <div class="score-title">Keep Practicing</div>
+  {% else %}
+    <div class="score-emoji">💪</div>
+    <div class="score-title">Don't Give Up!</div>
+  {% endif %}
+
+  <div class="score-sub">Today's Quiz Complete</div>
+
+  <div class="score-big">{{ score.correct }}<span class="score-denom">/{{ score.total }}</span></div>
+
+  <div class="score-row">
+    <div class="score-box green">
+      <div class="score-box-val">{{ score.correct }}</div>
+      <div class="score-box-lbl">✅ Correct</div>
+    </div>
+    <div class="score-box red">
+      <div class="score-box-val">{{ score.total - score.correct }}</div>
+      <div class="score-box-lbl">❌ Wrong</div>
+    </div>
+  </div>
+
+  {# Topic breakdown #}
+  {% if stats %}
+  <div style="background:#fff; border:1px solid var(--border); border-radius:16px; padding:16px; margin-top:4px; text-align:left;">
+    <div class="section-title" style="margin-bottom:8px;">By Topic</div>
+    {% for topic, s in stats.items() %}
+    <div class="topic-row">
+      <span class="topic-name">{{ topic }}</span>
+      <span class="topic-score">{{ s.correct }}/{{ s.total }}</span>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {# New Set button #}
+  <form method="POST">
+    <input type="hidden" name="action" value="new_set">
+    <button type="submit" class="next-btn" style="margin-top:20px;">
+      🔀 New Set of Questions
+    </button>
+  </form>
+
+</div>
+
+{# ── Quiz in progress (one-by-one) ── #}
+{% else %}
+
+<div id="quizActive">
+  {# Progress #}
+  <div class="quiz-header">
+    <span class="quiz-counter" id="qCounter">Q 1 / {{ questions|length }}</span>
+    <span class="quiz-topic-tag" id="qTopic">—</span>
+  </div>
+  <div class="quiz-progress-track">
+    <div class="quiz-progress-fill" id="qProgress" style="width:0%"></div>
+  </div>
+
+  {# Question card #}
+  <div class="question-card" id="questionCard">
+    <div class="question-year-tag" id="qYear"></div>
+    <div class="question-text" id="qText">Loading…</div>
+  </div>
+
+  {# Options #}
+  <div class="options-list" id="optionsList"></div>
+
+  {# Explanation popup #}
+  <div class="explanation-popup" id="expPopup">
+    <div class="exp-result" id="expResult"></div>
+    <div class="exp-text"  id="expText"></div>
+    <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next →</button>
+  </div>
+</div>
+
+{# Hidden submit form #}
+<form id="submitForm" method="POST" style="display:none">
+  <input type="hidden" name="action" value="submit">
+</form>
+
+<script>
+const QUESTIONS = {{ questions | tojson }};
+let idx = 0;
+let answers = {};
+
+function showQuestion(i) {
+  const q = QUESTIONS[i];
+  const total = QUESTIONS.length;
+
+  document.getElementById('qCounter').textContent  = `Q ${i + 1} / ${total}`;
+  document.getElementById('qTopic').textContent    = q.topic || '';
+  document.getElementById('qProgress').style.width = `${(i / total) * 100}%`;
+  document.getElementById('qYear').textContent     = q.year ? `UPSC ${q.year}` : 'Practice';
+  document.getElementById('qText').textContent     = q.question;
+
+  const letters = ['A','B','C','D'];
+  document.getElementById('optionsList').innerHTML = q.options.map((opt, oi) => `
+    <button class="option-btn" onclick="pick(${oi})" id="opt${oi}">
+      <span class="option-letter">${letters[oi]}</span>
+      <span>${opt}</span>
+    </button>
+  `).join('');
+
+  document.getElementById('expPopup').style.display = 'none';
+
+  // Last question: change button label
+  document.getElementById('nextBtn').textContent =
+    (i === total - 1) ? 'See Results 🎯' : 'Next →';
+}
+
+function pick(selected) {
+  const q = QUESTIONS[idx];
+  answers[q.id] = selected;
+
+  // Disable all, colour correct/wrong
+  ['A','B','C','D'].forEach((_, oi) => {
+    const btn = document.getElementById(`opt${oi}`);
+    if (!btn) return;
+    btn.disabled = true;
+    if (oi === q.correctIndex)   btn.classList.add('correct');
+    else if (oi === selected)    btn.classList.add('wrong');
+  });
+
+  // Show explanation
+  const correct = selected === q.correctIndex;
+  const letters = ['A','B','C','D'];
+  const res = document.getElementById('expResult');
+  res.className = 'exp-result ' + (correct ? 'correct' : 'wrong');
+  res.textContent = correct
+    ? '✅ Correct!'
+    : `❌ Wrong!  Correct answer: ${letters[q.correctIndex]}`;
+  document.getElementById('expText').textContent = q.explanation || '';
+  document.getElementById('expPopup').style.display = 'block';
+
+  // Scroll to show popup
+  document.getElementById('expPopup').scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+function nextQuestion() {
+  if (idx < QUESTIONS.length - 1) {
+    idx++;
+    showQuestion(idx);
+    window.scrollTo({top: 0, behavior: 'smooth'});
+  } else {
+    submitQuiz();
+  }
+}
+
+function submitQuiz() {
+  const form = document.getElementById('submitForm');
+  Object.entries(answers).forEach(([qid, sel]) => {
+    const inp = document.createElement('input');
+    inp.type = 'hidden';
+    inp.name = `answer_${qid}`;
+    inp.value = sel;
+    form.appendChild(inp);
+  });
+  form.submit();
+}
+
+// Start
+showQuestion(0);
+</script>
+{% endif %}
+
+</div>
+{% endblock %}

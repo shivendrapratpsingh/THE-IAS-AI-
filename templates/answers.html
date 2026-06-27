@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% block title %}Answer Writing — BASS 50{% endblock %}
+
+{% block content %}
+
+<div class="dash-greeting">
+  <h2>✍️ Answer Writing</h2>
+  <p>Daily Mains practice — write, scan, get scored</p>
+</div>
+
+{% with messages = get_flashed_messages() %}
+  {% if messages %}{% for msg in messages %}
+    <div class="flash">{{ msg }}</div>
+  {% endfor %}{% endif %}
+{% endwith %}
+
+{# Today's prompt #}
+<div class="section-pad">
+  <div class="section-head">Today's Question</div>
+  <div class="prompt-card">
+    <div class="prompt-paper">📝 {{ prompt.paper }}</div>
+    <div class="prompt-q">{{ prompt.question }}</div>
+    <div class="prompt-limit">Word limit: {{ prompt.wordLimit }} words</div>
+  </div>
+</div>
+
+{# If already submitted today, show score #}
+{% if today_entry %}
+<div class="section-pad">
+  <div class="section-head">Your Score</div>
+  <div class="score-mini">
+    <div class="score-mini-num">{{ today_entry.score.total }}/{{ today_entry.score.max }}</div>
+    <div class="score-mini-info">
+      {{ today_entry.word_count }} words written<br>
+      <span style="color:var(--orange);">{{ today_entry.score.feedback }}</span>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+{# Write answer #}
+<div class="section-pad">
+  <div class="section-head">{{ 'Update Answer' if today_entry else 'Write Answer' }}</div>
+  <form method="post" enctype="multipart/form-data">
+    <textarea class="answer-textarea" name="answer_text" id="answerText"
+      placeholder="Start writing your answer here...&#10;&#10;Structure: Introduction → Body → Conclusion"
+      oninput="countWords(this)">{{ today_entry.answer_text if today_entry else '' }}</textarea>
+    <div class="word-count" id="wordCount">0 words</div>
+
+    <div style="margin: 12px 0;">
+      <label class="form-label" style="margin-bottom:6px;">Or upload a photo of your handwritten answer</label>
+      <input type="file" name="answer_image" accept="image/*" capture="environment"
+        style="font-size:13px; color:var(--gray); display:block; padding:10px 0;">
+    </div>
+
+    <button type="submit" class="btn-primary" style="margin-top:8px;">
+      {{ '📤 Update Answer' if today_entry else '📤 Submit Answer' }}
+    </button>
+  </form>
+</div>
+
+{# History #}
+{% if history %}
+<div class="section-pad">
+  <div class="section-head">Past Submissions</div>
+  {% for entry in history %}
+  {% if entry != today_entry %}
+  <div class="history-item">
+    <div class="history-q">{{ entry.question[:100] }}{% if entry.question|length > 100 %}...{% endif %}</div>
+    <div class="history-meta">
+      {{ entry.date }} · {{ entry.word_count }} words ·
+      <span style="color:var(--orange);">{{ entry.score.total }}/{{ entry.score.max }}</span>
+    </div>
+  </div>
+  {% endif %}
+  {% endfor %}
+</div>
+{% endif %}
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function countWords(ta) {
+  var words = ta.value.trim().split(/\s+/).filter(Boolean).length;
+  document.getElementById('wordCount').textContent = words + ' words';
+}
+window.addEventListener('load', function() {
+  var ta = document.getElementById('answerText');
+  if (ta && ta.value) countWords(ta);
+});
+</script>
+{% endblock %}

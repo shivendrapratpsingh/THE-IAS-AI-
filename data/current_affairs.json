@@ -1,0 +1,156 @@
+[
+  {
+    "id": "ca-001",
+    "headline": "India's Green Hydrogen Mission gains momentum with new electrolyser manufacturing incentives",
+    "summary": "The government expanded incentive schemes for domestic electrolyser manufacturing under the National Green Hydrogen Mission. The move aims to cut import dependence and position India as a green hydrogen export hub. Several states have announced dedicated green hydrogen parks.",
+    "tag": "GS3 - Energy & Environment",
+    "date": "2026-06-08",
+    "image_query": "green hydrogen energy solar",
+    "topic_color": "#27AE60",
+    "topic_emoji": "⚡",
+    "description": "India's National Green Hydrogen Mission (NGHM), launched in 2023, aims to produce 5 MMT of green hydrogen annually by 2030. Green hydrogen is produced by electrolyzing water using renewable electricity — making it completely carbon-free. The government's expanded incentive scheme offers production-linked incentives (PLI) for domestic electrolyser manufacturing to reduce import dependence from countries like China and Germany. Several states including Rajasthan, Gujarat, and Andhra Pradesh have announced dedicated green hydrogen parks. India targets becoming a global green hydrogen export hub, particularly to Europe and Japan, which have committed to large-scale hydrogen imports. This initiative directly links to India's goal of achieving net-zero emissions by 2070 and is relevant to GS3 topics on energy security, environment, and industry."
+  },
+  {
+    "id": "ca-002",
+    "headline": "Supreme Court reiterates timelines for Governors' assent to state bills",
+    "summary": "The Supreme Court issued directions on reasonable timeframes within which Governors must act on bills passed by state legislatures. The ruling addresses recurring Centre-State friction over delayed assent. It reaffirms the constitutional role of Governors as facilitators, not obstacles, to legislative processes.",
+    "tag": "GS2 - Polity & Governance",
+    "date": "2026-06-07",
+    "image_query": "supreme court india justice law",
+    "topic_color": "#C94E18",
+    "topic_emoji": "⚖️",
+    "description": "The Supreme Court's ruling addresses the constitutional friction between elected state governments and Governors — often appointed by the Centre. Under Article 200, a Governor may assent to a bill, withhold assent, or reserve it for the President. The SC, in the State of Tamil Nadu vs Governor case (2023), held that Governors cannot sit on bills indefinitely. The court now extends this to prescribe reasonable timelines. This ruling is significant because Governors in opposition-ruled states (Kerala, Tamil Nadu, Telangana) had withheld assent to bills for months or years, creating governance deadlocks. The judgment reaffirms cooperative federalism and the Governor's role as a constitutional head, not a political actor. Relevant to GS2: Federalism, Constitutional Bodies."
+  },
+  {
+    "id": "ca-003",
+    "headline": "India and EU resume talks on the long-pending Free Trade Agreement (FTA)",
+    "summary": "A fresh round of India-EU FTA negotiations focused on market access for agriculture, automobiles, and services, alongside sustainability clauses. Both sides aim to balance trade liberalization with domestic industry protection. The agreement could significantly reshape India's trade relations with its largest trading bloc.",
+    "tag": "GS2/GS3 - International Relations & Economy",
+    "date": "2026-06-06",
+    "image_query": "india europe trade international diplomacy",
+    "topic_color": "#2471A3",
+    "topic_emoji": "🌐",
+    "description": "India-EU FTA negotiations, stalled since 2013, resumed in 2022. The EU is India's largest trading partner (€120 billion trade in 2023). Key sticking points include: India wants easier market access for textiles, pharmaceuticals, and IT services; EU wants India to lower tariffs on automobiles (currently 100%) and open up the government procurement market. A major new element is the EU's Carbon Border Adjustment Mechanism (CBAM) — a carbon tax on imports from countries without carbon pricing, which could affect Indian steel and aluminium exports. The sustainability clause and intellectual property rights (especially pharma patents) remain contentious. Conclusion of the FTA could boost bilateral trade to €500 billion by 2030. Relevant to GS2: International Relations, Trade Policy."
+  },
+  {
+    "id": "ca-004",
+    "headline": "ISRO advances preparations for the Gaganyaan human spaceflight test missions",
+    "summary": "ISRO completed key milestones in crew escape system testing ahead of the Gaganyaan uncrewed test flights. The mission is a precursor to India's first human spaceflight. Success would make India only the fourth country to independently send humans to space.",
+    "tag": "GS3 - Science & Technology",
+    "date": "2026-06-05",
+    "image_query": "ISRO rocket space launch india",
+    "topic_color": "#8E44AD",
+    "topic_emoji": "🚀",
+    "description": "Gaganyaan is India's first human spaceflight mission under ISRO, with a budget of ₹9,023 crore. The mission involves sending a 3-member crew (Vyomanauts) to a 400 km orbit for 3 days. Before the crewed mission, ISRO is completing: TV-D1 (Crew Escape System test — successful Oct 2023), G1 (uncrewed orbital mission), and G2 (second uncrewed mission). The crew module uses a 'push-type' escape system that can pull astronauts away from a failing rocket within milliseconds. Four IAF pilots — Group Captains Prashanth Balakrishnan Nair, Ajit Krishnan, Angad Pratap, and Shubhanshu Shukla — were selected as Vyomanauts and trained in Russia. India will become only the 4th country (after USSR/Russia, USA, China) to independently send humans to space. Relevant to GS3: Space Technology, Science."
+  },
+  {
+    "id": "ca-005",
+    "headline": "New National Education Policy implementation review highlights gaps in foundational literacy",
+    "summary": "A government review of NEP 2020 implementation found uneven progress on foundational literacy and numeracy targets across states. The report recommends increased teacher training and remedial learning programs. Foundational learning is seen as critical for reducing later-stage dropout rates.",
+    "tag": "GS2 - Social Justice / Education",
+    "date": "2026-06-04",
+    "image_query": "school children education india classroom",
+    "topic_color": "#F4621F",
+    "topic_emoji": "📚",
+    "description": "The National Education Policy (NEP) 2020 replaced the 34-year-old NEP 1986. A key pillar is the NIPUN Bharat mission — National Initiative for Proficiency in Reading with Understanding and Numeracy — targeting foundational literacy for all children by Grade 3 by 2026-27. The government review found: only 12 states fully integrated NEP in school curricula, teacher training programs reached only 40% of target teachers, and foundational learning gaps remain high especially in Hindi-belt states. NEP 2020 also introduced the 5+3+3+4 curricular structure replacing the old 10+2. The mother tongue as medium of instruction up to Class 5 is being slowly implemented. Relevant to GS2: Education, Social Justice, Government Schemes."
+  },
+  {
+    "id": "ca-006",
+    "headline": "RBI's Monetary Policy Committee holds repo rate amid easing inflation",
+    "summary": "The RBI's MPC kept the repo rate unchanged, citing a gradual easing in retail inflation while flagging risks from global commodity prices. The central bank maintained its 'withdrawal of accommodation' stance review. Analysts see this as a balancing act between growth support and price stability.",
+    "tag": "GS3 - Indian Economy",
+    "date": "2026-06-03",
+    "image_query": "reserve bank india economy finance",
+    "topic_color": "#27AE60",
+    "topic_emoji": "💰",
+    "description": "The RBI's Monetary Policy Committee (MPC) — a 6-member body with 3 RBI officials and 3 external members — sets the repo rate (rate at which RBI lends to banks). The repo rate was hiked from 4% to 6.5% between May 2022 and Feb 2023 to fight post-COVID inflation. The MPC kept it at 6.5% through 2023-24 as inflation, while easing, remained above the 4% target (touching 5.5-6%). The policy 'stance' of 'withdrawal of accommodation' means RBI is committed to removing excess liquidity. Key risks flagged: food inflation (tomato, onion, pulses price spikes), global crude oil volatility, and El Niño impact on Kharif crops. GDP growth is forecast at 7% for FY25. Relevant to GS3: Indian Economy, Monetary Policy."
+  },
+  {
+    "id": "ca-007",
+    "headline": "India ramps up coastal surveillance with new maritime domain awareness centres",
+    "summary": "New Maritime Domain Awareness (MDA) centres were inaugurated to strengthen real-time tracking of vessels along India's coastline. The initiative is part of efforts to counter smuggling, illegal fishing, and maritime security threats. It complements the Indian Navy's Information Fusion Centre for the Indian Ocean Region.",
+    "tag": "GS3 - Internal Security",
+    "date": "2026-06-02",
+    "image_query": "indian navy ocean maritime security coast",
+    "topic_color": "#1A1A2E",
+    "topic_emoji": "⚓",
+    "description": "India's coastline stretches 7,516 km across 9 states and 4 union territories. The 26/11 Mumbai attacks exposed critical gaps in coastal surveillance. Post-2008 reforms created the National Committee for Strengthening Maritime and Coastal Security (NCSMCS). New MDA centres integrate data from: Automatic Identification System (AIS) transponders on ships, radar chains, satellite imagery, and coastal CCTV. The Indian Navy's Information Fusion Centre for the Indian Ocean Region (IFC-IOR), established in 2018 at Gurugram, now has liaison officers from 12 countries sharing real-time data. These centres help track illegal fishing (especially by Chinese vessels in Indian EEZ), drug smuggling, and potential terror threats. Relevant to GS3: Internal Security, Defence."
+  },
+  {
+    "id": "ca-008",
+    "headline": "Cabinet approves extension of PM Awas Yojana targets for rural housing",
+    "summary": "The Union Cabinet approved an extension and expansion of housing targets under the PM Awas Yojana-Gramin scheme. The decision aims to address the housing shortfall identified in recent socio-economic surveys. Funds will be released in phases linked to construction progress verified via geo-tagging.",
+    "tag": "GS2 - Government Schemes",
+    "date": "2026-06-01",
+    "image_query": "rural india housing village construction",
+    "topic_color": "#E67E22",
+    "topic_emoji": "🏠",
+    "description": "PM Awas Yojana-Gramin (PMAY-G) was launched in 2016 to provide pucca houses to all rural homeless and those living in dilapidated homes. Target: 2.95 crore houses by March 2024. The unit cost is ₹1.2-1.3 lakh in plains and ₹1.3 lakh in hilly/difficult areas, with payment linked to completion stages verified via geo-tagging through the AwaasSoft portal and Aadhar-linked beneficiary accounts. The new extension targets an additional 2 crore houses by 2029. The scheme uses beneficiary-led construction (BLC) model — money goes directly to beneficiaries' bank accounts. Convergence with other schemes: toilets under Swachh Bharat, electricity under Saubhagya, cooking gas under Ujjwala. Relevant to GS2: Government Schemes, Social Justice."
+  },
+  {
+    "id": "ca-009",
+    "headline": "World Health Organization flags rising antimicrobial resistance (AMR) in South Asia",
+    "summary": "A WHO regional report highlighted increasing antimicrobial resistance rates in South Asia, attributing it to overuse of antibiotics in healthcare and agriculture. India's National Action Plan on AMR was cited as a model but with implementation gaps. The report calls for stronger surveillance and stewardship programs.",
+    "tag": "GS2/GS3 - Health & Science",
+    "date": "2026-05-31",
+    "image_query": "medicine antibiotic hospital health",
+    "topic_color": "#C0392B",
+    "topic_emoji": "🦠",
+    "description": "Antimicrobial Resistance (AMR) occurs when bacteria, viruses, fungi, and parasites evolve to resist medicines. WHO calls it one of the top 10 global public health threats. In South Asia, AMR is driven by: overuse of antibiotics in humans (self-medication, over-prescription), massive antibiotic use in animal husbandry and aquaculture, poor sanitation leading to repeated infections, and weak drug regulation. India is the world's largest consumer of antibiotics. The National Action Plan on AMR (NAP-AMR) 2017-2021 focused on surveillance, stewardship, and research. Key resistant organisms in India include Carbapenem-Resistant Enterobacteriaceae (CRE) and MRSA. The economic cost of AMR could reduce global GDP by 3.8% by 2050. Relevant to GS2/GS3: Health, Environment."
+  },
+  {
+    "id": "ca-010",
+    "headline": "India's semiconductor mission attracts new fabrication unit investments",
+    "summary": "Under the India Semiconductor Mission, fresh investment commitments were announced for chip fabrication and packaging units in multiple states. The initiative seeks to reduce reliance on imported semiconductors critical for electronics and defense manufacturing. Skill development programs for semiconductor talent were also announced alongside.",
+    "tag": "GS3 - Science & Technology / Economy",
+    "date": "2026-05-30",
+    "image_query": "india china border himalaya military",
+    "topic_color": "#2C3E50",
+    "topic_emoji": "🏔️",
+    "description": "The India-China border dispute involves 3,488 km of the Line of Actual Control (LAC) — an undemarcated boundary with differing perceptions. The June 2020 Galwan Valley clash (Ladakh) resulted in 20 Indian and 4 Chinese fatalities — the first deaths on the border since 1975. Since then, both sides deployed 50,000+ troops in eastern Ladakh. Key friction points: Depsang Plains, Gogra-Hot Springs, Demchok, and Daulat Beg Oldie. Diplomatic progress: Disengagement at PP14 (Galwan), PP15 (Gogra-Hot Springs, Aug 2021), PP17A (Gogra, Sep 2022). As of 2024, Depsang and Demchok remain unresolved. India also focuses on border infrastructure: BRO has built 100+ strategic roads and 300+ bridges in border areas. Relevant to GS2: India's Neighbourhood, IR."
+  },
+  {
+    "id": "ca-011",
+    "headline": "Parliamentary committee report calls for reforms in the criminal justice system's backlog",
+    "summary": "A parliamentary standing committee report examined the pendency of cases in lower courts and proposed measures including fast-track courts and increased judicial appointments. The report links judicial delays to undertrial overcrowding in prisons. It recommends greater use of technology for case management.",
+    "tag": "GS2 - Judiciary & Governance",
+    "date": "2026-05-29",
+    "image_query": "digital payment mobile phone technology india",
+    "topic_color": "#27AE60",
+    "topic_emoji": "📱",
+    "description": "India's UPI (Unified Payments Interface), launched by NPCI in 2016, processed 14.96 billion transactions worth ₹20.64 lakh crore in March 2024 — making India the global leader in real-time payments with 46% of global volume. The RBI's Digital Payments Index (DPI) shows 5x growth since 2018. Key developments: UPI One World for foreign visitors and NRIs (no Indian bank account needed), UPI Credit Line (linking credit cards to UPI), and UPI 123PAY for feature phone users. International expansion: UPI accepted in UAE, Singapore, France (Eiffel Tower!), UK, Nepal, Bhutan. RuPay cards now accepted in 185+ countries. India is promoting DIGI YATRA (face-recognition-based airport boarding) and CBDC (Digital Rupee) pilot with 1 million users. Relevant to GS3: Economy, Technology."
+  },
+  {
+    "id": "ca-012",
+    "headline": "India hosts multilateral disaster-resilient infrastructure dialogue ahead of monsoon season",
+    "summary": "India convened a multilateral dialogue under the Coalition for Disaster Resilient Infrastructure (CDRI) focusing on monsoon preparedness and climate-proofing infrastructure. Discussions covered early warning systems and resilient urban planning. The initiative builds on India's leadership role in global disaster resilience partnerships.",
+    "tag": "GS3 - Disaster Management",
+    "date": "2026-05-28",
+    "image_query": "climate change flood drought environment india",
+    "topic_color": "#1ABC9C",
+    "topic_emoji": "🌊",
+    "description": "India is among the countries most vulnerable to climate change. The IPCC AR6 report (2023) warns India faces: intensified monsoons with more extreme rainfall events, higher frequency of heat waves (like the 2022 heatwave that reduced wheat yield by 2 million tonnes), sea level rise threatening 7,516 km coastline and coastal cities like Mumbai, Chennai, Kolkata. India's NDC (Nationally Determined Contribution) under Paris Agreement commits to: 45% reduction in emission intensity of GDP by 2030 (vs 2005), 50% cumulative electric power from non-fossil fuels by 2030, and net-zero by 2070. Key government schemes: National Action Plan on Climate Change (NAPCC), PM-KUSUM (solar pumps for farmers), FAME-II (electric vehicles), Green Hydrogen Mission. The Panchamrit goals announced at COP26 guide India's climate roadmap. Relevant to GS3: Environment, Climate Change."
+  },
+  {
+    "id": "ca-013",
+    "headline": "New tribal welfare scheme expands eligibility for forest rights certification",
+    "summary": "An expanded tribal welfare initiative aims to speed up the recognition of community and individual forest rights claims under the Forest Rights Act. The scheme includes digitization of land records for tribal communities. Activists welcomed the move while calling for stronger grievance redressal mechanisms.",
+    "tag": "GS1/GS2 - Social Justice / Tribal Welfare",
+    "date": "2026-05-27",
+    "image_query": "tribal adivasi forest india rights",
+    "topic_color": "#8B4513",
+    "topic_emoji": "🌿",
+    "description": "The Forest Rights Act (FRA) 2006, also called the Scheduled Tribes and Other Traditional Forest Dwellers (Recognition of Forest Rights) Act, recognizes the rights of forest-dwelling communities over land they've lived on for generations. Individual Forest Rights (IFR): up to 4 hectares per family. Community Forest Rights (CFR): rights over common forest areas. The MoTA data shows: of 47 lakh claims filed, only 22 lakh titles granted — a 47% recognition rate. States like Odisha and Chhattisgarh lead; Northeast states have barely implemented FRA. Challenges: gram sabha capacity, forest department resistance, disputed Revenue vs Forest land boundaries. The SC's Godavarman case and subsequent orders complicate FRA implementation. Relevant to GS2: Tribal Issues, Social Justice, GS3: Environment."
+  },
+  {
+    "id": "ca-014",
+    "headline": "India's exports of electronics and defense equipment post record growth",
+    "summary": "Latest trade data showed record growth in India's exports of electronics goods and defense equipment, reflecting gains from production-linked incentive schemes. The growth was attributed to expanding manufacturing capacity and new export destinations. Officials linked the trend to the broader 'Atmanirbhar Bharat' push.",
+    "tag": "GS3 - Economy & Defence",
+    "date": "2026-05-26",
+    "image_query": "india artificial intelligence technology startup",
+    "topic_color": "#8E44AD",
+    "topic_emoji": "🤖",
+    "description": "India's National AI Strategy (NITI Aayog, 2018) — #AIforAll — identifies 5 focus sectors: healthcare, agriculture, education, smart cities, and transport. The IndiaAI Mission (2024) with ₹10,371 crore budget over 5 years targets: a 10,000 GPU public compute infrastructure, datasets for Indian languages and domains, AI skilling for 5 lakh professionals, and support for AI startups. India has 50,000+ AI professionals — 3rd globally after USA and China. Key initiatives: Bhashini (AI for Indian language translation and voice), PM-WANI (public WiFi for digital inclusion), and National Data Governance Framework. Ethical concerns: data privacy (pending DPDP Act implementation), deepfakes and election integrity, algorithmic bias in credit and judicial systems. Relevant to GS3: Science & Technology, Economy."
+  }
+]

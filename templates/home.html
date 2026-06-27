@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+{% block title %}Home — BASS 50{% endblock %}
+
+{% block content %}
+
+{# ── Hero ── #}
+<div class="home-hero">
+  <div style="display:flex; align-items:center; gap:14px; margin-bottom:12px;">
+    {% if profile.avatar_id %}
+    <div style="width:64px; height:64px; border-radius:50%; overflow:hidden; border:3px solid rgba(255,255,255,0.5); flex-shrink:0; background:rgba(255,255,255,0.15);">
+      <img src="{{ url_for('avatar_svg_route', avatar_id=profile.avatar_id) }}?color={{ profile.avatar_color|urlencode }}"
+           width="64" height="64" alt="{{ profile.name }}" style="display:block;">
+    </div>
+    {% endif %}
+    <div>
+      <div class="hero-greeting">Welcome back 👋</div>
+      <div class="hero-name">{{ profile.name }}</div>
+      <span class="hero-badge" style="margin-top:4px; display:inline-block;">
+        {% if is_upsc %}🎯 UPSC Prep{% else %}📚 General Practice{% endif %}
+        {% if streak.current %} · 🔥 {{ streak.current }}-day streak{% endif %}
+      </span>
+    </div>
+  </div>
+  <div class="quote-card">
+    <div class="quote-icon">{{ quote.icon }}</div>
+    <div class="quote-text">"{{ quote.text }}"</div>
+    <div class="quote-author">— {{ quote.author }}</div>
+  </div>
+</div>
+
+{# ── Stats ── #}
+<div class="stats-row">
+  <div class="stat-card">
+    <div class="stat-val">{{ total_attempted }}</div>
+    <div class="stat-lbl">Attempted</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-val green">{{ total_correct }}</div>
+    <div class="stat-lbl">Correct</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-val">{{ overall_accuracy if overall_accuracy is not none else '—' }}{% if overall_accuracy is not none %}<span style="font-size:14px;font-weight:600;">%</span>{% endif %}</div>
+    <div class="stat-lbl">Accuracy</div>
+  </div>
+</div>
+
+{# ── Flash ── #}
+{% with messages = get_flashed_messages() %}
+  {% if messages %}{% for msg in messages %}<div class="flash" style="margin:0 16px 12px;">{{ msg }}</div>{% endfor %}{% endif %}
+{% endwith %}
+
+{# ── Today's tasks ── #}
+<div class="section">
+  <div class="section-title">Today's Tasks</div>
+  <div class="task-menu-card">
+    <a href="{{ url_for('mcq') }}" class="task-menu-item">
+      <div class="task-menu-icon">🧠</div>
+      <span class="task-menu-label">
+        Daily Quiz
+        <span style="font-size:11px; color:var(--muted); font-weight:500; display:block;">
+          {% if is_upsc %}50 random questions{% else %}10 random questions{% endif %}
+        </span>
+      </span>
+      {% if mcq_done_today %}
+        <span class="done-chip">✓ Done</span>
+      {% else %}
+        <span class="task-menu-arrow">›</span>
+      {% endif %}
+    </a>
+    {% if is_upsc %}
+    <a href="{{ url_for('answers') }}" class="task-menu-item">
+      <div class="task-menu-icon green">✍️</div>
+      <span class="task-menu-label">
+        Answer Writing
+        <span style="font-size:11px; color:var(--muted); font-weight:500; display:block;">Today's question</span>
+      </span>
+      {% if answer_done_today %}
+        <span class="done-chip">✓ Done</span>
+      {% else %}
+        <span class="task-menu-arrow">›</span>
+      {% endif %}
+    </a>
+    <a href="{{ url_for('study_plan_view') }}" class="task-menu-item">
+      <div class="task-menu-icon">📅</div>
+      <span class="task-menu-label">
+        Study Plan
+        <span style="font-size:11px; color:var(--muted); font-weight:500; display:block;">{{ completed_count }}/{{ total_tasks }} tasks done</span>
+      </span>
+      <span class="task-menu-arrow">›</span>
+    </a>
+    {% endif %}
+    <a href="{{ url_for('current_affairs') }}" class="task-menu-item">
+      <div class="task-menu-icon green">📰</div>
+      <span class="task-menu-label">
+        Current Affairs
+        <span style="font-size:11px; color:var(--muted); font-weight:500; display:block;">Latest news</span>
+      </span>
+      <span class="task-menu-arrow">›</span>
+    </a>
+  </div>
+</div>
+
+{# ── Daily legal question (UPSC only) ── #}
+{% if is_upsc and legal_q %}
+<div class="section">
+  <div class="section-title">Daily Legal Question</div>
+  <div class="legal-card">
+    <div class="legal-q">{{ legal_q.question }}</div>
+    {% if legal_answered_today %}
+      <div class="legal-answered">✅ You answered: {{ legal_selected }}</div>
+    {% else %}
+      <form method="POST" action="{{ url_for('legal_question') }}">
+        <div class="legal-options">
+          {% for opt in legal_q.options %}
+          <button type="submit" class="legal-btn" name="answer" value="{{ opt }}">{{ opt }}</button>
+          {% endfor %}
+        </div>
+      </form>
+    {% endif %}
+  </div>
+</div>
+{% endif %}
+
+{# ── Logout ── #}
+<div style="padding: 0 16px 8px; text-align:center;">
+  <a href="{{ url_for('logout') }}" style="font-size:13px; color:var(--muted); text-decoration:none;">
+    🚪 Switch account
+  </a>
+</div>
+
+{% endblock %}

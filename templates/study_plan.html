@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}Study Plan — BASS 50{% endblock %}
+
+{% block content %}
+
+<div class="dash-greeting">
+  <h2>📅 8-Week Plan</h2>
+  <p>{{ completed_count }}/{{ total_tasks }} tasks · {{ progress_pct }}% done</p>
+</div>
+
+<div class="section-pad">
+  <div class="progress-bar" style="margin-bottom:16px;">
+    <div class="progress-fill" style="width:{{ progress_pct }}%;"></div>
+  </div>
+
+  {% for week in plan.weeks %}
+  {% set week_tasks_done = completed | select("in", week.tasks | map(attribute="id") | list) | list | length %}
+  <div class="week-accordion">
+    <div class="week-header" onclick="toggleWeek(this)">
+      <div class="week-num">{{ loop.index }}</div>
+      <div class="week-title">{{ week.title }}</div>
+      <div class="week-prog">{{ week_tasks_done }}/{{ week.tasks|length }}</div>
+    </div>
+    <div class="week-body" id="week-{{ loop.index }}">
+      {% for task in week.tasks %}
+      <form method="post" style="margin:0;">
+        <input type="hidden" name="action" value="toggle">
+        <input type="hidden" name="task_id" value="{{ task.id }}">
+        <button type="submit" style="width:100%;background:none;border:none;cursor:pointer;text-align:left;padding:0;">
+          <div class="task-item">
+            <div class="task-check {{ 'done' if task.id in completed }}">
+              {% if task.id in completed %}✓{% endif %}
+            </div>
+            <div class="task-text {{ 'done' if task.id in completed }}">{{ task.description }}</div>
+          </div>
+        </button>
+      </form>
+      {% endfor %}
+    </div>
+  </div>
+  {% endfor %}
+
+  <form method="post" style="margin-top:16px;">
+    <button type="submit" name="action" value="regenerate" class="btn-ghost">
+      🔄 Generate Fresh Plan
+    </button>
+  </form>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function toggleWeek(hdr) {
+  var body = hdr.nextElementSibling;
+  body.classList.toggle('open');
+}
+// Open first incomplete week on load
+window.addEventListener('load', function() {
+  var first = document.querySelector('.week-body');
+  if (first) first.classList.add('open');
+});
+</script>
+{% endblock %}

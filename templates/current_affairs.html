@@ -1,0 +1,183 @@
+{% extends "base.html" %}
+{% block title %}Current Affairs — BASS 50{% endblock %}
+
+{% block content %}
+
+<!-- Language notice strip -->
+<div id="langStrip" style="background:#FFF0E8; border-bottom:1px solid #FFD4B0; padding:8px 16px; font-size:12px; color:#C94E18; font-weight:600; display:flex; align-items:center; gap:8px;">
+  🌐 <span>Use the 🌐 button in the nav to read in your language</span>
+</div>
+
+<div style="padding:16px 16px 100px;" id="caWrap">
+
+  <!-- Single card view -->
+  <div id="caCard" style="position:relative; overflow:hidden; border-radius:20px; box-shadow:0 4px 20px rgba(0,0,0,0.12); margin-bottom:16px;">
+
+    <!-- Topic image / animated bg -->
+    <div id="caImageWrap" style="width:100%; height:180px; position:relative; overflow:hidden;">
+      <!-- Fallback gradient (shown while image loads or offline) -->
+      <div id="caGradientBg" style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; transition:background .4s;">
+        <div id="caEmojiLarge" style="font-size:72px; filter:drop-shadow(0 4px 12px rgba(0,0,0,0.3));"></div>
+      </div>
+      <!-- Online image (fades in on load) -->
+      <img id="caImg" alt="" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0; transition:opacity .5s;"
+           onerror="this.style.opacity=0" onload="this.style.opacity=0.75">
+      <!-- Dark overlay for text legibility -->
+      <div style="position:absolute; bottom:0; left:0; right:0; height:80px; background:linear-gradient(to bottom, transparent, rgba(0,0,0,0.7));"></div>
+      <!-- Tag pill on image -->
+      <div style="position:absolute; top:12px; left:12px;">
+        <span id="caTag" style="background:rgba(255,255,255,0.9); padding:4px 12px; border-radius:99px; font-size:11px; font-weight:700; color:#1A1A1A;"></span>
+      </div>
+      <!-- Date on image -->
+      <div style="position:absolute; bottom:10px; right:12px;">
+        <span id="caDate" style="color:rgba(255,255,255,.85); font-size:11px; font-weight:600;"></span>
+      </div>
+    </div>
+
+    <!-- Content area -->
+    <div style="background:#fff; padding:18px;">
+      <h2 id="caHeadline" style="font-size:16px; font-weight:800; color:#1A1A1A; line-height:1.45; margin-bottom:10px;"></h2>
+      <p id="caSummary" style="font-size:13px; color:#4B5563; line-height:1.65;"></p>
+
+      <!-- Describe section (hidden by default) -->
+      <div id="caDescWrap" style="display:none; margin-top:14px; padding-top:14px; border-top:2px dashed #E5E7EB;">
+        <div style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.6px; color:#F4621F; margin-bottom:8px;">📖 Full Analysis</div>
+        <p id="caDesc" style="font-size:13px; color:#374151; line-height:1.75;"></p>
+      </div>
+
+      <!-- Action buttons -->
+      <div style="display:flex; gap:10px; margin-top:16px;">
+        <button id="descBtn" onclick="toggleDesc()"
+          style="flex:1; padding:11px; background:#FFF0E8; border:2px solid #F4621F; border-radius:12px; font-size:13px; font-weight:700; color:#C94E18; cursor:pointer; font-family:'Poppins',sans-serif;">
+          📖 Describe
+        </button>
+        <button onclick="bookmarkCurrent()"
+          style="width:44px; padding:11px; background:#EAF9F0; border:2px solid #27AE60; border-radius:12px; font-size:16px; cursor:pointer;">
+          <span id="bmIcon">🔖</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Progress dots -->
+  <div id="dotsWrap" style="display:flex; justify-content:center; gap:6px; margin-bottom:16px;"></div>
+
+  <!-- Navigation -->
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+    <button onclick="prevCard()"
+      style="padding:14px; background:#fff; border:2px solid #E5E7EB; border-radius:14px; font-size:14px; font-weight:700; color:#6B7280; cursor:pointer; font-family:'Poppins',sans-serif;">
+      ← Previous
+    </button>
+    <button onclick="nextCard()"
+      style="padding:14px; background:linear-gradient(135deg,#F4621F,#C94E18); border:none; border-radius:14px; font-size:14px; font-weight:700; color:#fff; cursor:pointer; font-family:'Poppins',sans-serif; box-shadow:0 4px 12px rgba(244,98,31,.3);">
+      Next →
+    </button>
+  </div>
+
+  <!-- Counter -->
+  <div style="text-align:center; margin-top:12px; font-size:12px; color:#9CA3AF; font-weight:600;">
+    <span id="counterText"></span>
+  </div>
+
+</div>
+
+<!-- Bookmark form (hidden, posts to server) -->
+<form id="bmForm" method="POST" style="display:none;">
+  <input type="hidden" name="item_id" id="bmItemId">
+</form>
+
+<script>
+const ITEMS    = {{ items | tojson }};
+const BOOKMARKS = {{ bookmarks | tojson }};
+let current = 0;
+let descOpen = false;
+
+function showCard(i) {
+  const item = ITEMS[i];
+  descOpen = false;
+
+  // Image
+  const grad = document.getElementById('caGradientBg');
+  grad.style.background = `linear-gradient(135deg, ${item.topic_color || '#F4621F'} 0%, #1A1A1A 100%)`;
+  document.getElementById('caEmojiLarge').textContent = item.topic_emoji || '📰';
+
+  const img = document.getElementById('caImg');
+  img.style.opacity = 0;
+  if (item.image_query) {
+    // Unsplash source — works when online, silently fails when offline
+    img.src = `https://source.unsplash.com/600x300/?${encodeURIComponent(item.image_query)}`;
+  }
+
+  // Text
+  document.getElementById('caTag').textContent      = item.tag || '';
+  document.getElementById('caDate').textContent     = item.date || '';
+  document.getElementById('caHeadline').textContent = item.headline || '';
+  document.getElementById('caSummary').textContent  = item.summary  || '';
+  document.getElementById('caDesc').textContent     = item.description || item.summary || '';
+
+  // Hide describe section
+  document.getElementById('caDescWrap').style.display = 'none';
+  document.getElementById('descBtn').textContent = '📖 Describe';
+
+  // Bookmark icon
+  const bm = BOOKMARKS.includes(item.id);
+  document.getElementById('bmIcon').textContent = bm ? '⭐' : '🔖';
+
+  // Counter
+  document.getElementById('counterText').textContent = `${i + 1} of ${ITEMS.length}`;
+
+  // Dots
+  renderDots(i);
+}
+
+function renderDots(active) {
+  const wrap = document.getElementById('dotsWrap');
+  wrap.innerHTML = ITEMS.map((_, i) => `
+    <div onclick="goTo(${i})" style="
+      width:${i===active?'20px':'8px'}; height:8px;
+      border-radius:99px; cursor:pointer; transition:all .3s;
+      background:${i===active?'#F4621F':'#E5E7EB'};
+    "></div>
+  `).join('');
+}
+
+function goTo(i) {
+  current = i;
+  showCard(i);
+}
+
+function nextCard() {
+  if (current < ITEMS.length - 1) {
+    current++;
+    showCard(current);
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+}
+
+function prevCard() {
+  if (current > 0) {
+    current--;
+    showCard(current);
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+}
+
+function toggleDesc() {
+  descOpen = !descOpen;
+  document.getElementById('caDescWrap').style.display = descOpen ? 'block' : 'none';
+  document.getElementById('descBtn').textContent = descOpen ? '▲ Close' : '📖 Describe';
+  if (descOpen) {
+    document.getElementById('caDescWrap').scrollIntoView({behavior:'smooth', block:'nearest'});
+  }
+}
+
+function bookmarkCurrent() {
+  const item = ITEMS[current];
+  document.getElementById('bmItemId').value = item.id;
+  document.getElementById('bmForm').submit();
+}
+
+// Init
+showCard(0);
+</script>
+{% endblock %}

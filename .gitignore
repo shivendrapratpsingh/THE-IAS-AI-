@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.env
+venv/
+.venv/
+
+# Node
+node_modules/
+.expo/
+dist/
+web-build/
+
+# User data — never commit real user data to git
+data/users.json
+data/user_data.json
+
+# OS
+.DS_Store
+Thumbs.db

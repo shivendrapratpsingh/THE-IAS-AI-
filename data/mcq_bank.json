@@ -1,0 +1,1945 @@
+{
+  "topics": [
+    "Polity",
+    "History",
+    "Geography",
+    "Economy",
+    "Environment",
+    "Science",
+    "Current Affairs"
+  ],
+  "questions": [
+    {
+      "id": "polity-1",
+      "topic": "Polity",
+      "question": "Which Article of the Indian Constitution deals with the Right to Constitutional Remedies?",
+      "options": [
+        "Article 30",
+        "Article 32",
+        "Article 21",
+        "Article 19"
+      ],
+      "correctIndex": 1,
+      "explanation": "Article 32 empowers citizens to move the Supreme Court directly for enforcement of Fundamental Rights. Dr. B.R. Ambedkar called it the 'heart and soul' of the Constitution."
+    },
+    {
+      "id": "polity-2",
+      "topic": "Polity",
+      "question": "The concept of 'Directive Principles of State Policy' was borrowed from the Constitution of:",
+      "options": [
+        "United States",
+        "Ireland",
+        "Canada",
+        "Australia"
+      ],
+      "correctIndex": 1,
+      "explanation": "DPSPs (Part IV) were inspired by the Irish Constitution of 1937, which itself borrowed the idea from the Spanish Constitution."
+    },
+    {
+      "id": "polity-3",
+      "topic": "Polity",
+      "question": "Who has the power to decide on questions of disqualification of members of Parliament on grounds of defection?",
+      "options": [
+        "The Election Commission",
+        "The Speaker/Chairman of the House",
+        "The President",
+        "The Supreme Court"
+      ],
+      "correctIndex": 1,
+      "explanation": "Under the Tenth Schedule (Anti-Defection Law), the presiding officer (Speaker/Chairman) decides defection questions, subject to judicial review by courts."
+    },
+    {
+      "id": "polity-4",
+      "topic": "Polity",
+      "question": "The 73rd Constitutional Amendment Act, 1992 relates to:",
+      "options": [
+        "Municipalities",
+        "Panchayati Raj Institutions",
+        "Cooperative societies",
+        "Goods and Services Tax"
+      ],
+      "correctIndex": 1,
+      "explanation": "The 73rd Amendment gave constitutional status to Panchayati Raj Institutions by adding Part IX and the Eleventh Schedule."
+    },
+    {
+      "id": "polity-5",
+      "topic": "Polity",
+      "question": "Which of the following is NOT a Fundamental Duty under Article 51A?",
+      "options": [
+        "To safeguard public property and abjure violence",
+        "To provide free legal aid to the poor",
+        "To protect and improve the natural environment",
+        "To develop scientific temper, humanism and the spirit of inquiry"
+      ],
+      "correctIndex": 1,
+      "explanation": "Free legal aid is a Directive Principle (Article 39A), not a Fundamental Duty. Fundamental Duties were added by the 42nd Amendment, 1976."
+    },
+    {
+      "id": "polity-6",
+      "topic": "Polity",
+      "question": "The Union Public Service Commission (UPSC) submits its annual report to:",
+      "options": [
+        "The Parliament directly",
+        "The Prime Minister",
+        "The President of India",
+        "The Supreme Court"
+      ],
+      "correctIndex": 2,
+      "explanation": "UPSC presents its annual performance report to the President, who causes it to be laid before each House of Parliament along with an explanatory memorandum."
+    },
+    {
+      "id": "polity-7",
+      "topic": "Polity",
+      "question": "Which writ is issued by a court to direct a public official to perform a duty they have failed or refused to perform?",
+      "options": [
+        "Habeas Corpus",
+        "Mandamus",
+        "Certiorari",
+        "Quo Warranto"
+      ],
+      "correctIndex": 1,
+      "explanation": "'Mandamus' literally means 'we command'. It directs a public authority to perform a mandatory duty it has neglected."
+    },
+    {
+      "id": "polity-8",
+      "topic": "Polity",
+      "question": "The minimum age prescribed for becoming the Vice-President of India is:",
+      "options": [
+        "25 years",
+        "30 years",
+        "35 years",
+        "40 years"
+      ],
+      "correctIndex": 2,
+      "explanation": "Article 66 prescribes a minimum age of 35 years for the office of Vice-President, the same as for the President."
+    },
+    {
+      "id": "polity-9",
+      "topic": "Polity",
+      "question": "'Money Bills' as defined under Article 110 can be introduced only in:",
+      "options": [
+        "Rajya Sabha",
+        "Lok Sabha",
+        "Either House",
+        "State Legislative Council"
+      ],
+      "correctIndex": 1,
+      "explanation": "Money Bills can only be introduced in the Lok Sabha and on the recommendation of the President; Rajya Sabha can only suggest changes within 14 days."
+    },
+    {
+      "id": "polity-10",
+      "topic": "Polity",
+      "question": "Which constitutional body is described as the 'guardian of the public purse'?",
+      "options": [
+        "NITI Aayog",
+        "Finance Commission",
+        "Comptroller and Auditor General (CAG)",
+        "Public Accounts Committee"
+      ],
+      "correctIndex": 2,
+      "explanation": "The CAG audits government accounts and expenditure, ensuring accountability of the executive to Parliament — hence called the guardian of the public purse."
+    },
+    {
+      "id": "history-1",
+      "topic": "History",
+      "question": "The 'Doctrine of Lapse' was introduced by:",
+      "options": [
+        "Lord Curzon",
+        "Lord Dalhousie",
+        "Lord Cornwallis",
+        "Lord Wellesley"
+      ],
+      "correctIndex": 1,
+      "explanation": "Lord Dalhousie (Governor-General, 1848-56) used the Doctrine of Lapse to annex princely states like Satara, Jhansi, and Nagpur when rulers died without a natural male heir."
+    },
+    {
+      "id": "history-2",
+      "topic": "History",
+      "question": "The Champaran Satyagraha (1917) was Mahatma Gandhi's first major movement in India, concerning:",
+      "options": [
+        "Salt tax",
+        "Indigo cultivation",
+        "Khilafat issue",
+        "Mill workers' wages"
+      ],
+      "correctIndex": 1,
+      "explanation": "Champaran Satyagraha addressed the exploitation of indigo farmers in Bihar under the 'Tinkathia' system imposed by British planters."
+    },
+    {
+      "id": "history-3",
+      "topic": "History",
+      "question": "Who founded the Indian National Army (Azad Hind Fauj) in its original form before Subhas Chandra Bose took command?",
+      "options": [
+        "Rash Behari Bose",
+        "Mohan Singh",
+        "Subhas Chandra Bose",
+        "Captain Mohan Lal"
+      ],
+      "correctIndex": 1,
+      "explanation": "Captain Mohan Singh first organized the INA from Indian POWs in 1942 with Japanese support; Rash Behari Bose later formally inaugurated it before Subhas Chandra Bose revitalized it in 1943."
+    },
+    {
+      "id": "history-4",
+      "topic": "History",
+      "question": "The Dandi March (Salt Satyagraha) began on:",
+      "options": [
+        "26 January 1930",
+        "12 March 1930",
+        "8 August 1942",
+        "15 August 1947"
+      ],
+      "correctIndex": 1,
+      "explanation": "Gandhi began the Dandi March from Sabarmati Ashram on 12 March 1930, reaching Dandi on 6 April 1930 to break the salt law."
+    },
+    {
+      "id": "history-5",
+      "topic": "History",
+      "question": "Which Mughal ruler is associated with the 'Din-i-Ilahi' syncretic religion?",
+      "options": [
+        "Babur",
+        "Akbar",
+        "Jahangir",
+        "Aurangzeb"
+      ],
+      "correctIndex": 1,
+      "explanation": "Akbar promulgated Din-i-Ilahi around 1582, blending elements of various religions, reflecting his policy of religious tolerance ('Sulh-i-Kul')."
+    },
+    {
+      "id": "history-6",
+      "topic": "History",
+      "question": "The Indian Councils Act of 1909 (Morley-Minto Reforms) is significant for introducing:",
+      "options": [
+        "Dyarchy",
+        "Separate electorates for Muslims",
+        "Provincial autonomy",
+        "Universal adult franchise"
+      ],
+      "correctIndex": 1,
+      "explanation": "The 1909 Act introduced separate electorates for Muslims, a step widely seen as deepening communal divisions in Indian politics."
+    },
+    {
+      "id": "history-7",
+      "topic": "History",
+      "question": "The 'Lucknow Pact' of 1916 was an agreement between:",
+      "options": [
+        "Congress and the British government",
+        "Congress and the Muslim League",
+        "Hindu Mahasabha and Muslim League",
+        "Moderates and Extremists within Congress"
+      ],
+      "correctIndex": 1,
+      "explanation": "The Lucknow Pact (Dec 1916) was a temporary rapprochement between INC and the Muslim League, presenting joint demands for self-government to the British."
+    },
+    {
+      "id": "history-8",
+      "topic": "History",
+      "question": "Who is known as the 'Father of Local Self-Government in India'?",
+      "options": [
+        "Lord Ripon",
+        "Lord Curzon",
+        "Lord Mayo",
+        "Lord Lytton"
+      ],
+      "correctIndex": 0,
+      "explanation": "Lord Ripon's resolution of 1882 laid the foundation for local self-government institutions, earning him this title."
+    },
+    {
+      "id": "history-9",
+      "topic": "History",
+      "question": "The Battle of Plassey (1757) was fought between the British East India Company and:",
+      "options": [
+        "Tipu Sultan",
+        "Siraj-ud-Daulah",
+        "Mir Qasim",
+        "Shuja-ud-Daulah"
+      ],
+      "correctIndex": 1,
+      "explanation": "Robert Clive defeated the Nawab of Bengal, Siraj-ud-Daulah, at Plassey, marking the beginning of British political control in India."
+    },
+    {
+      "id": "history-10",
+      "topic": "History",
+      "question": "The Poona Pact (1932) was signed between Mahatma Gandhi and:",
+      "options": [
+        "Jawaharlal Nehru",
+        "B.R. Ambedkar",
+        "Muhammad Ali Jinnah",
+        "Subhas Chandra Bose"
+      ],
+      "correctIndex": 1,
+      "explanation": "The Poona Pact ended Gandhi's fast against the Communal Award's separate electorates for Depressed Classes, replacing them with reserved seats within the general electorate, agreed with Ambedkar."
+    },
+    {
+      "id": "geo-1",
+      "topic": "Geography",
+      "question": "The Tropic of Cancer passes through how many Indian states?",
+      "options": [
+        "6",
+        "8",
+        "10",
+        "12"
+      ],
+      "correctIndex": 1,
+      "explanation": "The Tropic of Cancer (23°30' N) passes through 8 states: Gujarat, Rajasthan, MP, Chhattisgarh, Jharkhand, West Bengal, Tripura, and Mizoram."
+    },
+    {
+      "id": "geo-2",
+      "topic": "Geography",
+      "question": "Which Indian river is known as the 'Sorrow of Bihar' due to frequent flooding?",
+      "options": [
+        "Ganga",
+        "Kosi",
+        "Son",
+        "Gandak"
+      ],
+      "correctIndex": 1,
+      "explanation": "The Kosi river, originating in Nepal, frequently changes course and causes devastating floods in North Bihar, earning this name."
+    },
+    {
+      "id": "geo-3",
+      "topic": "Geography",
+      "question": "The Western Ghats are an example of which type of mountains?",
+      "options": [
+        "Fold mountains",
+        "Block mountains",
+        "Volcanic mountains",
+        "Residual mountains"
+      ],
+      "correctIndex": 1,
+      "explanation": "The Western Ghats (Sahyadri) are classified as Block Mountains, formed due to faulting during the formation of the Indian Plate."
+    },
+    {
+      "id": "geo-4",
+      "topic": "Geography",
+      "question": "Which of the following is the largest cold desert in India?",
+      "options": [
+        "Thar Desert",
+        "Ladakh",
+        "Lahaul-Spiti",
+        "Rann of Kutch"
+      ],
+      "correctIndex": 1,
+      "explanation": "Ladakh, lying in the trans-Himalayan rain-shadow region, is India's largest cold desert with very low precipitation and extreme temperatures."
+    },
+    {
+      "id": "geo-5",
+      "topic": "Geography",
+      "question": "The 'Loktak Lake', the largest freshwater lake in Northeast India, is located in:",
+      "options": [
+        "Assam",
+        "Manipur",
+        "Meghalaya",
+        "Nagaland"
+      ],
+      "correctIndex": 1,
+      "explanation": "Loktak Lake in Manipur is famous for its floating islands of vegetation called 'phumdis', and hosts Keibul Lamjao National Park."
+    },
+    {
+      "id": "geo-6",
+      "topic": "Geography",
+      "question": "Which type of soil is most suitable for cotton cultivation in India?",
+      "options": [
+        "Alluvial soil",
+        "Red soil",
+        "Black (Regur) soil",
+        "Laterite soil"
+      ],
+      "correctIndex": 2,
+      "explanation": "Black soil (Regur), derived from Deccan trap basalt, retains moisture well and is rich in iron, lime, and calcium — ideal for cotton, hence called 'black cotton soil'."
+    },
+    {
+      "id": "geo-7",
+      "topic": "Geography",
+      "question": "The 'Roaring Forties' are strong westerly winds found in which latitude belt?",
+      "options": [
+        "0°-10°",
+        "20°-30°",
+        "40°-50°",
+        "60°-70°"
+      ],
+      "correctIndex": 2,
+      "explanation": "The Roaring Forties are strong, persistent westerly winds found roughly between 40° and 50° latitude in the Southern Hemisphere, with little landmass to obstruct them."
+    },
+    {
+      "id": "geo-8",
+      "topic": "Geography",
+      "question": "Which strait separates India's Andaman and Nicobar Islands?",
+      "options": [
+        "Palk Strait",
+        "Ten Degree Channel",
+        "Bering Strait",
+        "Gulf of Mannar"
+      ],
+      "correctIndex": 1,
+      "explanation": "The Ten Degree Channel separates the Andaman group from the Nicobar group of islands, running along the 10°N latitude."
+    },
+    {
+      "id": "geo-9",
+      "topic": "Geography",
+      "question": "El Niño is associated with the warming of surface waters in which ocean?",
+      "options": [
+        "Atlantic Ocean",
+        "Indian Ocean",
+        "Pacific Ocean",
+        "Arctic Ocean"
+      ],
+      "correctIndex": 2,
+      "explanation": "El Niño refers to periodic warming of sea surface temperatures in the central and eastern equatorial Pacific Ocean, affecting global weather including the Indian monsoon."
+    },
+    {
+      "id": "geo-10",
+      "topic": "Geography",
+      "question": "Which Indian state has the longest coastline?",
+      "options": [
+        "Tamil Nadu",
+        "Andhra Pradesh",
+        "Gujarat",
+        "Kerala"
+      ],
+      "correctIndex": 2,
+      "explanation": "Gujarat has India's longest coastline among states (about 1,600 km), important for ports like Kandla and Mundra."
+    },
+    {
+      "id": "econ-1",
+      "topic": "Economy",
+      "question": "The 'Repo Rate' is the rate at which:",
+      "options": [
+        "RBI lends money to commercial banks against securities",
+        "Commercial banks lend to each other",
+        "RBI borrows from commercial banks",
+        "Banks lend to retail customers"
+      ],
+      "correctIndex": 0,
+      "explanation": "Repo (Repurchase) Rate is the rate at which RBI lends short-term funds to commercial banks against government securities. It is a key monetary policy tool."
+    },
+    {
+      "id": "econ-2",
+      "topic": "Economy",
+      "question": "Which committee recommended the establishment of the Goods and Services Tax (GST) Council?",
+      "options": [
+        "Kelkar Committee",
+        "It was a constitutional provision under the 101st Amendment",
+        "Raghuram Rajan Committee",
+        "Shome Committee"
+      ],
+      "correctIndex": 1,
+      "explanation": "The GST Council was established under Article 279A, inserted by the 101st Constitutional Amendment Act, 2016."
+    },
+    {
+      "id": "econ-3",
+      "topic": "Economy",
+      "question": "'Disguised unemployment' is most commonly associated with which sector in India?",
+      "options": [
+        "Information Technology",
+        "Agriculture",
+        "Banking",
+        "Manufacturing exports"
+      ],
+      "correctIndex": 1,
+      "explanation": "Disguised unemployment occurs when more people are employed than actually needed, common in Indian agriculture where family labor is shared on small landholdings without raising output."
+    },
+    {
+      "id": "econ-4",
+      "topic": "Economy",
+      "question": "The Base Year for India's current GDP series (as of recent revisions) is:",
+      "options": [
+        "2004-05",
+        "2011-12",
+        "2017-18",
+        "2020-21"
+      ],
+      "correctIndex": 1,
+      "explanation": "India's GDP series was revised to base year 2011-12 by the CSO (now NSO) in 2015, changing methodology to market prices and incorporating MCA-21 data."
+    },
+    {
+      "id": "econ-5",
+      "topic": "Economy",
+      "question": "'Gresham's Law' in economics relates to:",
+      "options": [
+        "Bad money driving good money out of circulation",
+        "Diminishing marginal utility",
+        "The relationship between inflation and unemployment",
+        "Demand and supply equilibrium"
+      ],
+      "correctIndex": 0,
+      "explanation": "Gresham's Law states that when both overvalued (bad) and undervalued (good) money are in circulation, the good money is hoarded and the bad money drives it out of circulation."
+    },
+    {
+      "id": "econ-6",
+      "topic": "Economy",
+      "question": "Which of these is classified as a 'Direct Tax' in India?",
+      "options": [
+        "GST",
+        "Customs Duty",
+        "Income Tax",
+        "Excise Duty"
+      ],
+      "correctIndex": 2,
+      "explanation": "Direct taxes (like Income Tax and Corporate Tax) are levied directly on income/wealth and cannot be shifted, unlike indirect taxes such as GST."
+    },
+    {
+      "id": "econ-7",
+      "topic": "Economy",
+      "question": "The 'Phillips Curve' depicts the relationship between:",
+      "options": [
+        "Inflation and unemployment",
+        "Savings and investment",
+        "Exports and imports",
+        "Fiscal deficit and GDP growth"
+      ],
+      "correctIndex": 0,
+      "explanation": "The Phillips Curve shows an inverse short-run relationship between the rate of inflation and the rate of unemployment."
+    },
+    {
+      "id": "econ-8",
+      "topic": "Economy",
+      "question": "Which organization publishes the 'World Economic Outlook' report?",
+      "options": [
+        "World Bank",
+        "WTO",
+        "International Monetary Fund (IMF)",
+        "OECD"
+      ],
+      "correctIndex": 2,
+      "explanation": "The IMF publishes the World Economic Outlook biannually, providing analysis and projections of the global economy."
+    },
+    {
+      "id": "econ-9",
+      "topic": "Economy",
+      "question": "India's Insolvency and Bankruptcy Code (IBC) was enacted in:",
+      "options": [
+        "2014",
+        "2016",
+        "2018",
+        "2020"
+      ],
+      "correctIndex": 1,
+      "explanation": "The IBC, 2016 created a unified, time-bound process for resolving insolvency for companies, partnerships, and individuals in India."
+    },
+    {
+      "id": "econ-10",
+      "topic": "Economy",
+      "question": "'Operation Twist' conducted by the RBI involves:",
+      "options": [
+        "Simultaneous sale and purchase of government securities of different maturities",
+        "Direct cash transfer to citizens",
+        "Buying foreign currency to manage exchange rates",
+        "Reducing the cash reserve ratio to zero"
+      ],
+      "correctIndex": 0,
+      "explanation": "Operation Twist involves RBI simultaneously selling short-term government securities and buying long-term ones (or vice versa) to manage the yield curve."
+    },
+    {
+      "id": "env-1",
+      "topic": "Environment",
+      "question": "The Kyoto Protocol is an international agreement linked to which convention?",
+      "options": [
+        "CBD",
+        "UNFCCC",
+        "UNCCD",
+        "Ramsar Convention"
+      ],
+      "correctIndex": 1,
+      "explanation": "The Kyoto Protocol (1997) operationalizes the UN Framework Convention on Climate Change (UNFCCC) by setting binding emission reduction targets for developed countries."
+    },
+    {
+      "id": "env-2",
+      "topic": "Environment",
+      "question": "Which gas is primarily responsible for the depletion of the ozone layer?",
+      "options": [
+        "Carbon dioxide",
+        "Methane",
+        "Chlorofluorocarbons (CFCs)",
+        "Nitrogen"
+      ],
+      "correctIndex": 2,
+      "explanation": "CFCs release chlorine atoms in the stratosphere that catalytically destroy ozone molecules, leading to ozone layer depletion — addressed by the Montreal Protocol."
+    },
+    {
+      "id": "env-3",
+      "topic": "Environment",
+      "question": "'Project Tiger' was launched in the year:",
+      "options": [
+        "1969",
+        "1973",
+        "1980",
+        "1991"
+      ],
+      "correctIndex": 1,
+      "explanation": "Project Tiger was launched in 1973 at Jim Corbett National Park to conserve the Bengal tiger population through a network of protected tiger reserves."
+    },
+    {
+      "id": "env-4",
+      "topic": "Environment",
+      "question": "Which of the following ecosystems is known as the 'kidneys of the landscape' due to its filtering function?",
+      "options": [
+        "Grasslands",
+        "Wetlands",
+        "Coral reefs",
+        "Mangroves"
+      ],
+      "correctIndex": 1,
+      "explanation": "Wetlands filter pollutants, recharge groundwater, and regulate water flow, earning the nickname 'kidneys of the landscape' under the Ramsar framework."
+    },
+    {
+      "id": "env-5",
+      "topic": "Environment",
+      "question": "The 'Nagoya Protocol' is associated with:",
+      "options": [
+        "Access and benefit-sharing of genetic resources",
+        "Trade in endangered species",
+        "Trans-boundary movement of hazardous waste",
+        "Reduction of greenhouse gases"
+      ],
+      "correctIndex": 0,
+      "explanation": "The Nagoya Protocol (2010), under the CBD, governs access to genetic resources and fair sharing of benefits arising from their use."
+    },
+    {
+      "id": "env-6",
+      "topic": "Environment",
+      "question": "Which Indian state has the highest forest cover in terms of percentage of geographical area (as per recent ISFR reports)?",
+      "options": [
+        "Madhya Pradesh",
+        "Arunachal Pradesh",
+        "Mizoram",
+        "Chhattisgarh"
+      ],
+      "correctIndex": 2,
+      "explanation": "Mizoram consistently records the highest forest cover as a percentage of its geographical area among Indian states, per India State of Forest Reports."
+    },
+    {
+      "id": "env-7",
+      "topic": "Environment",
+      "question": "Eutrophication of water bodies is primarily caused by excess:",
+      "options": [
+        "Heavy metals",
+        "Nutrients (nitrogen and phosphorus)",
+        "Plastic waste",
+        "Radioactive material"
+      ],
+      "correctIndex": 1,
+      "explanation": "Eutrophication results from excessive nutrient runoff (especially nitrates and phosphates) causing algal blooms, oxygen depletion, and aquatic ecosystem damage."
+    },
+    {
+      "id": "env-8",
+      "topic": "Environment",
+      "question": "The 'Green Climate Fund' was established under which framework?",
+      "options": [
+        "World Bank",
+        "UNFCCC",
+        "WHO",
+        "G20"
+      ],
+      "correctIndex": 1,
+      "explanation": "The Green Climate Fund (GCF) was set up within the UNFCCC framework to assist developing countries in climate mitigation and adaptation."
+    },
+    {
+      "id": "env-9",
+      "topic": "Environment",
+      "question": "Which of these is an example of an 'in-situ' conservation method?",
+      "options": [
+        "Seed banks",
+        "Botanical gardens",
+        "National Parks and Biosphere Reserves",
+        "Zoos"
+      ],
+      "correctIndex": 2,
+      "explanation": "In-situ conservation protects species within their natural habitats (e.g., National Parks, Wildlife Sanctuaries, Biosphere Reserves), unlike ex-situ methods such as zoos or seed banks."
+    },
+    {
+      "id": "env-10",
+      "topic": "Environment",
+      "question": "The Western Ghats were declared a UNESCO World Heritage Site primarily due to their:",
+      "options": [
+        "Mineral wealth",
+        "Exceptional levels of biological diversity and endemism",
+        "Tourism infrastructure",
+        "Hydroelectric potential"
+      ],
+      "correctIndex": 1,
+      "explanation": "The Western Ghats are recognized as one of the world's eight 'hottest hotspots' of biological diversity, with extraordinary levels of endemic flora and fauna."
+    },
+    {
+      "id": "sci-1",
+      "topic": "Science",
+      "question": "ISRO's Chandrayaan-3 mission successfully landed near which region of the Moon?",
+      "options": [
+        "North Pole",
+        "Equator",
+        "South Pole region",
+        "Far side (dark side)"
+      ],
+      "correctIndex": 2,
+      "explanation": "Chandrayaan-3's Vikram lander touched down near the lunar south pole in August 2023, making India the first country to land in this region."
+    },
+    {
+      "id": "sci-2",
+      "topic": "Science",
+      "question": "CRISPR-Cas9 technology is primarily used for:",
+      "options": [
+        "Gene editing",
+        "Data encryption",
+        "Nuclear fission",
+        "Satellite navigation"
+      ],
+      "correctIndex": 0,
+      "explanation": "CRISPR-Cas9 is a precise gene-editing tool that allows scientists to alter DNA sequences and modify gene function, with applications in medicine and agriculture."
+    },
+    {
+      "id": "sci-3",
+      "topic": "Science",
+      "question": "Which vitamin deficiency causes the disease 'Beriberi'?",
+      "options": [
+        "Vitamin B1 (Thiamine)",
+        "Vitamin C",
+        "Vitamin D",
+        "Vitamin K"
+      ],
+      "correctIndex": 0,
+      "explanation": "Beriberi results from a deficiency of Vitamin B1 (Thiamine), affecting the nervous and cardiovascular systems."
+    },
+    {
+      "id": "sci-4",
+      "topic": "Science",
+      "question": "The 'Higgs Boson' particle is associated with which fundamental concept?",
+      "options": [
+        "Dark matter",
+        "Mass of particles",
+        "Speed of light",
+        "Nuclear fusion"
+      ],
+      "correctIndex": 1,
+      "explanation": "The Higgs Boson, discovered at CERN's LHC in 2012, is linked to the Higgs field which gives fundamental particles their mass."
+    },
+    {
+      "id": "sci-5",
+      "topic": "Science",
+      "question": "5G technology primarily offers improvements over 4G in terms of:",
+      "options": [
+        "Higher data speed, lower latency, and greater device density",
+        "Only better call quality",
+        "Cheaper hardware only",
+        "Longer battery life only"
+      ],
+      "correctIndex": 0,
+      "explanation": "5G networks provide significantly higher data speeds, ultra-low latency, and the ability to connect a much larger number of devices simultaneously (important for IoT)."
+    },
+    {
+      "id": "sci-6",
+      "topic": "Science",
+      "question": "Which Indian satellite system is the indigenous equivalent of the US GPS?",
+      "options": [
+        "INSAT",
+        "NavIC (IRNSS)",
+        "CARTOSAT",
+        "RISAT"
+      ],
+      "correctIndex": 1,
+      "explanation": "NavIC (Navigation with Indian Constellation), developed under IRNSS, is India's indigenous satellite navigation system covering India and surrounding regions."
+    },
+    {
+      "id": "sci-7",
+      "topic": "Science",
+      "question": "Stem cells are characterized by their ability to:",
+      "options": [
+        "Differentiate into various specialized cell types",
+        "Only multiply without function",
+        "Survive without oxygen indefinitely",
+        "Convert directly into hormones"
+      ],
+      "correctIndex": 0,
+      "explanation": "Stem cells are unspecialized cells capable of self-renewal and differentiation into various specialized cell types, making them valuable for regenerative medicine."
+    },
+    {
+      "id": "sci-8",
+      "topic": "Science",
+      "question": "The 'Doppler Effect' is most commonly used in which application?",
+      "options": [
+        "Radar speed guns and weather forecasting",
+        "Photosynthesis measurement",
+        "DNA sequencing",
+        "Battery charging"
+      ],
+      "correctIndex": 0,
+      "explanation": "The Doppler Effect describes the change in frequency of a wave for an observer moving relative to the source — used in radar (speed detection) and Doppler weather radar."
+    },
+    {
+      "id": "sci-9",
+      "topic": "Science",
+      "question": "Which of the following best describes 'Quantum Computing'?",
+      "options": [
+        "Computing using qubits that can represent multiple states simultaneously",
+        "A faster version of classical binary computing using silicon only",
+        "Computing that only works at room temperature",
+        "A type of cloud storage technology"
+      ],
+      "correctIndex": 0,
+      "explanation": "Quantum computers use qubits, which leverage superposition and entanglement to represent and process multiple states simultaneously, enabling certain computations far faster than classical computers."
+    },
+    {
+      "id": "sci-10",
+      "topic": "Science",
+      "question": "Which of these diseases is caused by a prion (misfolded protein) rather than a virus or bacterium?",
+      "options": [
+        "Tuberculosis",
+        "Creutzfeldt-Jakob Disease (Mad Cow related)",
+        "Malaria",
+        "Cholera"
+      ],
+      "correctIndex": 1,
+      "explanation": "Creutzfeldt-Jakob Disease and 'Mad Cow Disease' (BSE) are caused by prions — misfolded proteins that induce abnormal folding in normal proteins, unlike pathogens with genetic material."
+    },
+    {
+      "id": "ca-1",
+      "topic": "Current Affairs",
+      "question": "The 'G20 Summit' presidency rotates annually among member countries; India hosted the summit in which year?",
+      "options": [
+        "2021",
+        "2022",
+        "2023",
+        "2024"
+      ],
+      "correctIndex": 2,
+      "explanation": "India held the G20 presidency from December 2022 to November 2023, culminating in the New Delhi Summit in September 2023."
+    },
+    {
+      "id": "ca-2",
+      "topic": "Current Affairs",
+      "question": "The 'Vishwakarma Yojana' launched by the Government of India primarily targets:",
+      "options": [
+        "Traditional artisans and craftspeople",
+        "Software engineers",
+        "Large industrial corporations",
+        "Foreign investors"
+      ],
+      "correctIndex": 0,
+      "explanation": "PM Vishwakarma Yojana provides financial support, skill training, and market linkages to traditional artisans and craftspeople across 18 trades."
+    },
+    {
+      "id": "ca-3",
+      "topic": "Current Affairs",
+      "question": "'Digital Public Infrastructure' (DPI), often highlighted in India's G20 agenda, includes which of the following?",
+      "options": [
+        "Aadhaar, UPI, and CoWIN-like platforms",
+        "Only physical roads and highways",
+        "Only defense satellites",
+        "Only private banking apps"
+      ],
+      "correctIndex": 0,
+      "explanation": "India's DPI stack (Aadhaar for identity, UPI for payments, and platforms like CoWIN/DigiLocker) has been showcased globally as a model for inclusive digital infrastructure."
+    },
+    {
+      "id": "ca-4",
+      "topic": "Current Affairs",
+      "question": "The 'Har Ghar Jal' mission aims to provide:",
+      "options": [
+        "Free electricity to every household",
+        "Functional tap water connections to rural households",
+        "Free internet access",
+        "Free LPG cylinders"
+      ],
+      "correctIndex": 1,
+      "explanation": "Under the Jal Jeevan Mission's 'Har Ghar Jal' component, the goal is to provide functional household tap connections (FHTC) to every rural home in India."
+    },
+    {
+      "id": "ca-5",
+      "topic": "Current Affairs",
+      "question": "Which Indian state recently became a focus for the implementation of the Uniform Civil Code (UCC) as of 2024?",
+      "options": [
+        "Uttarakhand",
+        "Kerala",
+        "Tamil Nadu",
+        "West Bengal"
+      ],
+      "correctIndex": 0,
+      "explanation": "Uttarakhand became the first Indian state to pass and notify a Uniform Civil Code bill in 2024, reigniting national debate on UCC implementation."
+    },
+    {
+      "id": "ca-6",
+      "topic": "Current Affairs",
+      "question": "The 'Agnipath Scheme' relates to recruitment in which sector?",
+      "options": [
+        "Indian Railways",
+        "Armed Forces (Agniveer recruitment)",
+        "Banking sector",
+        "Civil services"
+      ],
+      "correctIndex": 1,
+      "explanation": "Agnipath is a recruitment scheme for soldiers ('Agniveers') in the Indian Armed Forces for a tenure of four years, with provisions for retention of a percentage thereafter."
+    },
+    {
+      "id": "ca-7",
+      "topic": "Current Affairs",
+      "question": "India's first 'Green Hydrogen Hub' policy push is most closely linked to which mission?",
+      "options": [
+        "National Green Hydrogen Mission",
+        "Smart Cities Mission",
+        "Skill India Mission",
+        "Digital India Mission"
+      ],
+      "correctIndex": 0,
+      "explanation": "The National Green Hydrogen Mission (approved 2023) aims to make India a global hub for production, usage, and export of green hydrogen."
+    },
+    {
+      "id": "ca-8",
+      "topic": "Current Affairs",
+      "question": "The 'Nari Shakti Vandan Adhiniyam' (passed 2023) provides for:",
+      "options": [
+        "33% reservation for women in Lok Sabha and State Assemblies",
+        "Free education for girl children only",
+        "Reservation for women in private companies",
+        "Mandatory women CEOs in PSUs"
+      ],
+      "correctIndex": 0,
+      "explanation": "Also known as the Women's Reservation Bill, this 106th Constitutional Amendment provides 33% reservation for women in the Lok Sabha and State Legislative Assemblies (implementation tied to delimitation)."
+    },
+    {
+      "id": "ca-9",
+      "topic": "Current Affairs",
+      "question": "Which Indian mission successfully studied the Sun from the L1 Lagrange point?",
+      "options": [
+        "Mangalyaan",
+        "Chandrayaan-3",
+        "Aditya-L1",
+        "Astrosat"
+      ],
+      "correctIndex": 2,
+      "explanation": "Aditya-L1, launched in 2023, is India's first dedicated solar observation mission, positioned near the Sun-Earth L1 Lagrange point."
+    },
+    {
+      "id": "ca-10",
+      "topic": "Current Affairs",
+      "question": "The 'PM-SURYA GHAR: Muft Bijli Yojana' scheme primarily promotes:",
+      "options": [
+        "Rooftop solar installations for households",
+        "Free LPG connections",
+        "Electric vehicle subsidies only",
+        "Coal-based power expansion"
+      ],
+      "correctIndex": 0,
+      "explanation": "PM-Surya Ghar Yojana aims to provide free electricity to households via subsidized rooftop solar installations, targeting one crore households."
+    },
+    {
+      "id": "polity-11",
+      "topic": "Polity",
+      "year": 2020,
+      "question": "The 'Doctrine of Colourable Legislation' in Indian constitutional law means:",
+      "options": [
+        "Legislation that discriminates on the basis of colour",
+        "Legislation that appears to be on one subject but in reality deals with another",
+        "Legislation passed by changing the colour of ink",
+        "Legislation that is colourful and attractive"
+      ],
+      "correctIndex": 1,
+      "explanation": "Colourable legislation doctrine means what cannot be done directly cannot be done indirectly. A legislature cannot transgress constitutional limitations by passing a law on a subject it has no power over while disguising it as a law on a different subject."
+    },
+    {
+      "id": "polity-12",
+      "topic": "Polity",
+      "year": 2019,
+      "question": "Which Schedule of the Constitution deals with forms of Oaths and Affirmations?",
+      "options": [
+        "Second Schedule",
+        "Third Schedule",
+        "Fourth Schedule",
+        "Fifth Schedule"
+      ],
+      "correctIndex": 1,
+      "explanation": "The Third Schedule of the Indian Constitution contains forms of Oaths and Affirmations for various constitutional positions including the President, Vice-President, Union Ministers, Members of Parliament, Judges, etc."
+    },
+    {
+      "id": "polity-13",
+      "topic": "Polity",
+      "year": 2023,
+      "question": "Under Article 356 of the Constitution, President's Rule in a state can initially be imposed for:",
+      "options": [
+        "1 month",
+        "2 months",
+        "6 months",
+        "1 year"
+      ],
+      "correctIndex": 2,
+      "explanation": "President's Rule can be proclaimed under Article 356 for a period of 6 months initially. It can be extended up to 3 years with parliamentary approval every 6 months (except in certain emergency conditions)."
+    },
+    {
+      "id": "polity-14",
+      "topic": "Polity",
+      "year": 2022,
+      "question": "The Power to increase the number of judges of the Supreme Court rests with:",
+      "options": [
+        "The President",
+        "The Chief Justice of India",
+        "The Parliament",
+        "The Law Commission"
+      ],
+      "correctIndex": 2,
+      "explanation": "Parliament has the power to determine the number of judges in the Supreme Court under Article 124. Currently there are 34 judges including the Chief Justice of India."
+    },
+    {
+      "id": "history-11",
+      "topic": "History",
+      "year": 2020,
+      "question": "The Harappan site of Lothal is located in present-day:",
+      "options": [
+        "Rajasthan",
+        "Punjab",
+        "Gujarat",
+        "Haryana"
+      ],
+      "correctIndex": 2,
+      "explanation": "Lothal is a major Harappan site located in Saragwala village, Dholka taluka, Ahmedabad district, Gujarat. It had a famous dockyard and is considered one of the most important cities of the ancient Indus Valley Civilisation."
+    },
+    {
+      "id": "history-12",
+      "topic": "History",
+      "year": 2023,
+      "question": "The term 'Swaraj' was popularised by Bal Gangadhar Tilak. What did the slogan 'Swaraj is my birthright and I shall have it' convey?",
+      "options": [
+        "Demand for dominion status",
+        "Complete independence from British rule",
+        "Self-rule/autonomy for India",
+        "Right to vote for Indians"
+      ],
+      "correctIndex": 2,
+      "explanation": "Tilak's slogan 'Swaraj is my birthright and I shall have it' conveyed the demand for self-rule or Swaraj — not initially complete independence from Britain but the right of Indians to govern themselves without British interference."
+    },
+    {
+      "id": "history-13",
+      "topic": "History",
+      "year": 2021,
+      "question": "Which of the following was NOT a demand of the Prarthana Samaj?",
+      "options": [
+        "Abolition of caste system",
+        "Widow remarriage",
+        "Promotion of women's education",
+        "Cow protection movement"
+      ],
+      "correctIndex": 3,
+      "explanation": "The Prarthana Samaj (founded 1867 in Bombay by Atmaram Pandurang) focused on social reforms — abolition of caste, widow remarriage, women's education, and monotheism. Cow protection was associated with Arya Samaj and Gau Raksha Sabhas, not Prarthana Samaj."
+    },
+    {
+      "id": "geo-11",
+      "topic": "Geography",
+      "year": 2023,
+      "question": "Which of the following is NOT a tributary of the Ganga?",
+      "options": [
+        "Yamuna",
+        "Son",
+        "Chambal",
+        "Mahanadi"
+      ],
+      "correctIndex": 3,
+      "explanation": "Mahanadi is an independent river that flows into the Bay of Bengal through Odisha. It is NOT a tributary of the Ganga. Yamuna, Son and Chambal are all tributaries of the Ganga river system."
+    },
+    {
+      "id": "geo-12",
+      "topic": "Geography",
+      "year": 2020,
+      "question": "'Laterite soil' is typically found in areas with:",
+      "options": [
+        "High temperature and low rainfall",
+        "High temperature and high rainfall",
+        "Low temperature and high rainfall",
+        "Low temperature and low rainfall"
+      ],
+      "correctIndex": 1,
+      "explanation": "Laterite soils are formed under conditions of high temperature and high rainfall with alternate wet and dry seasons. Intense leaching removes silica and leaves behind iron and aluminium oxides. Found in parts of Kerala, Karnataka, Tamil Nadu, Odisha, and northeast India."
+    },
+    {
+      "id": "eco-8",
+      "topic": "Economy",
+      "year": 2023,
+      "question": "Which of the following is included in the Monetary Policy Committee (MPC) of RBI?",
+      "options": [
+        "Finance Secretary",
+        "Three RBI officials and three government nominees",
+        "Six RBI officials",
+        "Chief Economic Advisor"
+      ],
+      "correctIndex": 1,
+      "explanation": "The MPC has 6 members: 3 from RBI (Governor as Chair, Deputy Governor for monetary policy, one RBI official) and 3 external members appointed by the Central Government. The Finance Secretary and CEA are NOT members."
+    },
+    {
+      "id": "eco-9",
+      "topic": "Economy",
+      "year": 2022,
+      "question": "'Disguised unemployment' is most commonly associated with:",
+      "options": [
+        "Urban manufacturing sector",
+        "Agricultural sector",
+        "IT sector",
+        "Service sector"
+      ],
+      "correctIndex": 1,
+      "explanation": "Disguised unemployment is predominantly found in the agricultural sector. It refers to a situation where more people are employed than actually required — the marginal productivity of labour is zero. Removing these workers would not reduce output."
+    },
+    {
+      "id": "eco-10",
+      "topic": "Economy",
+      "year": 2021,
+      "question": "The 'Laffer Curve' shows the relationship between:",
+      "options": [
+        "Money supply and inflation",
+        "Tax rates and government tax revenue",
+        "Unemployment and inflation",
+        "Savings and investment"
+      ],
+      "correctIndex": 1,
+      "explanation": "The Laffer Curve illustrates the relationship between tax rates and tax revenue. It shows that both zero and 100% tax rates generate zero revenue, with maximum revenue occurring at some intermediate rate. It's used to argue for tax cuts."
+    },
+    {
+      "id": "eco-11",
+      "topic": "Economy",
+      "year": 2023,
+      "question": "Which organisation publishes the 'World Economic Outlook' report?",
+      "options": [
+        "World Bank",
+        "United Nations",
+        "International Monetary Fund (IMF)",
+        "WTO"
+      ],
+      "correctIndex": 2,
+      "explanation": "The World Economic Outlook (WEO) is a flagship publication of the International Monetary Fund (IMF), published twice a year (April and October). It surveys and analyses global economic prospects and policies."
+    },
+    {
+      "id": "eco-12",
+      "topic": "Economy",
+      "year": 2020,
+      "question": "'Gross Value Added' (GVA) differs from GDP in that:",
+      "options": [
+        "GVA does not include services",
+        "GVA = GDP + Taxes on products - Subsidies on products",
+        "GDP = GVA + Net taxes on products",
+        "GVA includes only agriculture and industry"
+      ],
+      "correctIndex": 2,
+      "explanation": "GDP = GVA + Net taxes on products (taxes minus subsidies). GVA is a measure of value generated by economic activity and is the foundation from which GDP is derived. GVA is measured at basic prices while GDP is at market prices."
+    },
+    {
+      "id": "eco-13",
+      "topic": "Economy",
+      "year": 2022,
+      "question": "'MUDRA' scheme primarily targets:",
+      "options": [
+        "Large infrastructure projects",
+        "Micro and small enterprises for loans up to ₹10 lakh",
+        "Agriculture loan waivers",
+        "Export promotion for MSMEs"
+      ],
+      "correctIndex": 1,
+      "explanation": "MUDRA (Micro Units Development and Refinance Agency) provides loans up to ₹10 lakh to micro and small enterprises. It has three products: Shishu (up to ₹50,000), Kishore (₹50,001 to ₹5 lakh) and Tarun (₹5 lakh to ₹10 lakh)."
+    },
+    {
+      "id": "env-11",
+      "topic": "Environment",
+      "year": 2023,
+      "question": "The 'Great Green Wall' initiative aims to:",
+      "options": [
+        "Build a wall of trees across the Sahel region of Africa",
+        "Create a green belt around Amazon rainforest",
+        "Plant forests along the Great Wall of China",
+        "Create urban green spaces across European cities"
+      ],
+      "correctIndex": 0,
+      "explanation": "The Great Green Wall is an African-led initiative to grow an 8,000km natural wonder across the width of Africa (Senegal to Djibouti), through the Sahel region. It aims to restore 100 million hectares of degraded land, create 10 million green jobs by 2030."
+    },
+    {
+      "id": "env-12",
+      "topic": "Environment",
+      "year": 2020,
+      "question": "The 'Ramsar Convention' is related to:",
+      "options": [
+        "Migratory birds",
+        "Wetlands",
+        "Endangered species trade",
+        "Ozone layer protection"
+      ],
+      "correctIndex": 1,
+      "explanation": "The Ramsar Convention (1971) is an international treaty for the conservation and sustainable use of wetlands. India has the highest number of Ramsar sites in South Asia. The convention defines wetlands broadly to include lakes, rivers, marshes, peatlands, and coastal areas."
+    },
+    {
+      "id": "sci-11",
+      "topic": "Science",
+      "year": 2023,
+      "question": "5G technology primarily differs from 4G in:",
+      "options": [
+        "Higher frequency bands allowing much faster data speeds and lower latency",
+        "Using satellite-based internet rather than towers",
+        "Running on FM radio frequencies",
+        "Requiring no spectrum allocation from government"
+      ],
+      "correctIndex": 0,
+      "explanation": "5G uses higher frequency millimetre wave (mmWave) bands (24-100 GHz) in addition to sub-6 GHz bands, enabling peak speeds of up to 20 Gbps and latency as low as 1ms (vs 4G's ~50ms). It supports massive IoT connectivity and enables technologies like autonomous vehicles."
+    },
+    {
+      "id": "sci-12",
+      "topic": "Science",
+      "year": 2022,
+      "question": "CRISPR-Cas9 technology is used for:",
+      "options": [
+        "Quantum computing",
+        "Gene editing — cutting and modifying DNA sequences",
+        "Manufacturing semiconductors",
+        "Space navigation"
+      ],
+      "correctIndex": 1,
+      "explanation": "CRISPR-Cas9 is a revolutionary gene editing tool that acts as molecular scissors to cut DNA at specific locations. Scientists can then add, delete, or modify genetic sequences. It has applications in treating genetic diseases, developing disease-resistant crops, and biotechnology research. Jennifer Doudna and Emmanuelle Charpentier won the 2020 Nobel Prize in Chemistry for developing it."
+    },
+    {
+      "id": "ca-11",
+      "topic": "Current Affairs",
+      "year": 2023,
+      "question": "One Nation One Election refers to:",
+      "options": [
+        "Having elections for all levels of government simultaneously",
+        "Using a single EVM machine across India",
+        "Allowing citizens to vote from any constituency",
+        "Creating a single election commission for all states"
+      ],
+      "correctIndex": 0,
+      "explanation": "'One Nation One Election' (ONOE) proposes holding elections for the Lok Sabha, all State Legislative Assemblies, and local bodies simultaneously to reduce disruption to governance and reduce electoral expenditure. The Kovind Committee (2023) recommended a phased implementation."
+    },
+    {
+      "id": "ca-12",
+      "topic": "Current Affairs",
+      "year": 2022,
+      "question": "The 'Unified Payments Interface' (UPI) was developed by:",
+      "options": [
+        "State Bank of India",
+        "Reserve Bank of India",
+        "National Payments Corporation of India (NPCI)",
+        "Ministry of Finance"
+      ],
+      "correctIndex": 2,
+      "explanation": "UPI was developed by the National Payments Corporation of India (NPCI) and launched in 2016. NPCI is an umbrella organisation for retail payment systems in India. UPI enables real-time bank-to-bank transfers using a virtual payment address (VPA), without needing to know the beneficiary's bank details."
+    },
+    {
+      "id": "polity-15",
+      "topic": "Polity",
+      "year": 2019,
+      "question": "Which of the following writs can be issued by Indian courts to free a person from illegal detention?",
+      "options": [
+        "Certiorari",
+        "Mandamus",
+        "Habeas Corpus",
+        "Quo Warranto"
+      ],
+      "correctIndex": 2,
+      "explanation": "Habeas Corpus (meaning 'you shall have the body') is issued to produce a detained person before the court to examine if the detention is legal. If not, the court orders immediate release. It is a fundamental safeguard of personal liberty against arbitrary detention."
+    },
+    {
+      "id": "polity-16",
+      "topic": "Polity",
+      "year": 2020,
+      "question": "The 'Zero Hour' in the Parliament refers to:",
+      "options": [
+        "The first hour of Parliament session",
+        "The time after Question Hour when members can raise matters of urgent public importance",
+        "Midnight session during Budget",
+        "Time for No-Confidence Motion"
+      ],
+      "correctIndex": 1,
+      "explanation": "Zero Hour is an informal device of the Indian Parliament that starts at noon (12:00 PM) just after the Question Hour ends. Members can raise matters of urgent public importance without prior notice. It is not mentioned in the Rules of Procedure — it is an Indian parliamentary innovation."
+    },
+    {
+      "id": "polity-17",
+      "topic": "Polity",
+      "year": 2021,
+      "question": "Who among the following can attend sessions of both Houses of Parliament but cannot vote?",
+      "options": [
+        "Attorney General of India",
+        "Chief Election Commissioner",
+        "Comptroller and Auditor General",
+        "Finance Secretary"
+      ],
+      "correctIndex": 0,
+      "explanation": "The Attorney General of India has the right of audience in all courts in India and has the right to attend sessions of both Houses of Parliament. However, the AG cannot vote in Parliament as they are not a member of either House."
+    },
+    {
+      "id": "eco-14",
+      "topic": "Economy",
+      "year": 2023,
+      "question": "'Viksit Bharat @2047' initiative targets India becoming a developed nation by:",
+      "options": [
+        "2030",
+        "2035",
+        "2047",
+        "2050"
+      ],
+      "correctIndex": 2,
+      "explanation": "Viksit Bharat @2047 is India's vision to become a developed nation by 2047, coinciding with the 100th anniversary of independence. It targets a $30 trillion economy, becoming a global leader in various sectors."
+    },
+    {
+      "id": "eco-15",
+      "topic": "Economy",
+      "year": 2022,
+      "question": "Which of the following best describes 'Core Inflation'?",
+      "options": [
+        "Inflation in agricultural products only",
+        "Inflation excluding food and energy prices",
+        "Inflation measured at factory level",
+        "Inflation in services sector only"
+      ],
+      "correctIndex": 1,
+      "explanation": "Core inflation is a measure of inflation that excludes volatile food and energy prices. It is considered a better indicator of underlying, persistent inflationary pressures in an economy. Central banks often target core inflation in monetary policy decisions."
+    },
+    {
+      "id": "polity-18",
+      "topic": "Polity",
+      "year": 2018,
+      "question": "Which Schedule of the Indian Constitution contains the list of States and Union Territories?",
+      "options": [
+        "First Schedule",
+        "Second Schedule",
+        "Third Schedule",
+        "Fourth Schedule"
+      ],
+      "correctIndex": 0,
+      "explanation": "The First Schedule of the Indian Constitution contains the list of States of India and the Union Territories. Currently there are 28 States and 8 Union Territories after the reorganisation of Jammu & Kashmir in 2019."
+    },
+    {
+      "id": "polity-19",
+      "topic": "Polity",
+      "year": 2017,
+      "question": "The National Commission for Backward Classes (NCBC) was given constitutional status by which constitutional amendment?",
+      "options": [
+        "101st Amendment",
+        "102nd Amendment",
+        "103rd Amendment",
+        "104th Amendment"
+      ],
+      "correctIndex": 1,
+      "explanation": "The 102nd Constitutional Amendment Act, 2018 gave constitutional status to the National Commission for Backward Classes (NCBC) under Article 338B. It also inserted Article 342A to define Socially and Educationally Backward Classes."
+    },
+    {
+      "id": "polity-20",
+      "topic": "Polity",
+      "year": 2016,
+      "question": "Under the Indian Constitution, who can declare a Financial Emergency?",
+      "options": [
+        "Prime Minister",
+        "Finance Minister",
+        "President",
+        "Parliament"
+      ],
+      "correctIndex": 2,
+      "explanation": "The President can declare a Financial Emergency under Article 360 if the financial stability or credit of India or any part thereof is threatened. During such an emergency, the President can direct reduction of salaries of government employees including judges."
+    },
+    {
+      "id": "polity-21",
+      "topic": "Polity",
+      "year": 2019,
+      "question": "Which Article of the Constitution provides for the establishment of an Independent Election Commission?",
+      "options": [
+        "Article 324",
+        "Article 326",
+        "Article 328",
+        "Article 330"
+      ],
+      "correctIndex": 0,
+      "explanation": "Article 324 of the Constitution vests the superintendence, direction and control of elections to Parliament, State Legislatures, the Office of President and Vice-President in the Election Commission of India."
+    },
+    {
+      "id": "polity-22",
+      "topic": "Polity",
+      "year": 2023,
+      "question": "The term 'Creamy Layer' is associated with:",
+      "options": [
+        "Scheduled Castes reservation",
+        "OBC reservation",
+        "Scheduled Tribes reservation",
+        "EWS reservation"
+      ],
+      "correctIndex": 1,
+      "explanation": "The 'Creamy Layer' concept applies to Other Backward Classes (OBC) reservation. The Supreme Court in Indra Sawhney case (1992) held that the more advanced sections among OBCs ('creamy layer' — those above a certain income threshold) should be excluded from reservations."
+    },
+    {
+      "id": "history-14",
+      "topic": "History",
+      "year": 2018,
+      "question": "The 'Doctrine of Lapse' was introduced by:",
+      "options": [
+        "Lord Wellesley",
+        "Lord Cornwallis",
+        "Lord Dalhousie",
+        "Lord Curzon"
+      ],
+      "correctIndex": 2,
+      "explanation": "Lord Dalhousie introduced the Doctrine of Lapse (1848-56), under which if a ruler of a princely state died without a natural heir, the state would 'lapse' (be annexed) to the British Company. States like Satara, Jhansi, Nagpur and Oudh were annexed under this doctrine."
+    },
+    {
+      "id": "history-15",
+      "topic": "History",
+      "year": 2017,
+      "question": "The 'Battle of Plassey' (1757) was fought between:",
+      "options": [
+        "Haider Ali and the British",
+        "Tipu Sultan and the British",
+        "Siraj-ud-Daulah and the British East India Company",
+        "Marathas and the British"
+      ],
+      "correctIndex": 2,
+      "explanation": "The Battle of Plassey (June 23, 1757) was fought between the British East India Company led by Robert Clive and Siraj-ud-Daulah, the Nawab of Bengal, along with his French supporters. British victory established their dominance over Bengal, laying foundation for the British Empire in India."
+    },
+    {
+      "id": "history-16",
+      "topic": "History",
+      "year": 2016,
+      "question": "The 'Lucknow Pact' of 1916 was significant because:",
+      "options": [
+        "It ended the Non-Cooperation Movement",
+        "It brought the Congress and Muslim League together for the first time",
+        "It granted dominion status to India",
+        "It established Joint Electorates"
+      ],
+      "correctIndex": 1,
+      "explanation": "The Lucknow Pact (1916) between the Indian National Congress (represented by Bal Gangadhar Tilak) and the Muslim League (represented by Muhammad Ali Jinnah) marked unprecedented Hindu-Muslim unity in the Indian freedom struggle, jointly demanding self-government from the British."
+    },
+    {
+      "id": "history-17",
+      "topic": "History",
+      "year": 2019,
+      "question": "The 'Jallianwala Bagh Massacre' occurred on:",
+      "options": [
+        "April 13, 1919",
+        "April 13, 1918",
+        "March 13, 1919",
+        "August 13, 1919"
+      ],
+      "correctIndex": 0,
+      "explanation": "The Jallianwala Bagh massacre occurred on April 13, 1919 (Baisakhi day) in Amritsar, Punjab. General Dyer ordered troops to fire on a peaceful gathering, killing hundreds (official figure ~379, unofficial estimates much higher). It dramatically changed the course of India's independence movement."
+    },
+    {
+      "id": "history-18",
+      "topic": "History",
+      "year": 2020,
+      "question": "The 'Ryotwari System' of land revenue was associated with:",
+      "options": [
+        "Permanent Settlement of Bengal",
+        "Settlement with individual cultivators directly",
+        "Mahalwari System of village communities",
+        "Zamindari System"
+      ],
+      "correctIndex": 1,
+      "explanation": "The Ryotwari System (introduced by Thomas Munro in Madras Presidency) involved direct settlement between the government and individual cultivators (ryots). The revenue was assessed on each plot of land and the ryot paid directly to the state without any intermediary."
+    },
+    {
+      "id": "geo-13",
+      "topic": "Geography",
+      "year": 2018,
+      "question": "The 'Deccan Trap' refers to:",
+      "options": [
+        "A plateau formed by sedimentary rocks",
+        "A region formed by volcanic basalt lava flows",
+        "A subsidence zone in the Bay of Bengal",
+        "An ancient coral reef system"
+      ],
+      "correctIndex": 1,
+      "explanation": "The Deccan Traps (from Dutch 'trapp' meaning stairs) is a large igneous province formed about 66 million years ago by massive volcanic eruptions that produced thick basalt lava flows covering about 500,000 km² of the Deccan Plateau. Some scientists link these eruptions to the mass extinction that killed the dinosaurs."
+    },
+    {
+      "id": "geo-14",
+      "topic": "Geography",
+      "year": 2017,
+      "question": "Which of the following pairs of ocean currents is correctly matched?",
+      "options": [
+        "Gulf Stream — Cold current in North Atlantic",
+        "Labrador Current — Warm current in North Atlantic",
+        "Kuroshio Current — Warm current in North Pacific",
+        "Humboldt Current — Warm current along South America"
+      ],
+      "correctIndex": 2,
+      "explanation": "The Kuroshio Current (also called Japan Current) is a warm ocean current flowing northward along the east coast of Japan in the North Pacific Ocean. Gulf Stream is warm (not cold). Labrador is cold. Humboldt (Peru Current) is cold."
+    },
+    {
+      "id": "geo-15",
+      "topic": "Geography",
+      "year": 2016,
+      "question": "'Tropical Cyclones' are also known as:",
+      "options": [
+        "Tornadoes in the USA",
+        "Hurricanes in the Atlantic/Typhoons in the Pacific, and Cyclones in the Indian Ocean",
+        "Blizzards in polar regions",
+        "Trade winds in the tropics"
+      ],
+      "correctIndex": 1,
+      "explanation": "Tropical cyclones are intense low-pressure systems with winds >62 kmph. They are called 'Hurricanes' in the Atlantic/eastern Pacific, 'Typhoons' in the western Pacific, and 'Cyclones' in the Indian Ocean and South Pacific."
+    },
+    {
+      "id": "geo-16",
+      "topic": "Geography",
+      "year": 2019,
+      "question": "The 'Chilika Lake' is located in:",
+      "options": [
+        "Odisha",
+        "Andhra Pradesh",
+        "West Bengal",
+        "Tamil Nadu"
+      ],
+      "correctIndex": 0,
+      "explanation": "Chilika Lake is located in Odisha, on the eastern coast of India. It is the largest coastal lagoon in India and the largest wintering ground for migratory birds in the subcontinent. It was designated India's first Ramsar site in 1981."
+    },
+    {
+      "id": "geo-17",
+      "topic": "Geography",
+      "year": 2022,
+      "question": "Which of the following correctly describes the 'Rain Shadow' effect?",
+      "options": [
+        "Rain occurring only during nighttime",
+        "Area of low rainfall on the leeward side of a mountain",
+        "Rain caused by thunderstorms",
+        "Heavy rainfall in mountainous regions"
+      ],
+      "correctIndex": 1,
+      "explanation": "Rain shadow refers to areas of reduced rainfall on the leeward (downwind) side of mountain ranges. As moist air rises over mountains (windward side), it cools and deposits rainfall. On the leeward side, the now-dry air descends and warms — creating an arid 'rain shadow' zone."
+    },
+    {
+      "id": "env-13",
+      "topic": "Environment",
+      "year": 2018,
+      "question": "'Carbon Credits' can be traded under which international mechanism?",
+      "options": [
+        "Montreal Protocol",
+        "Kyoto Protocol / Paris Agreement",
+        "Basel Convention",
+        "Cartagena Protocol"
+      ],
+      "correctIndex": 1,
+      "explanation": "Carbon credits are tradeable certificates under the carbon market mechanism established by the Kyoto Protocol (and continued under Article 6 of the Paris Agreement). One carbon credit = right to emit one tonne of CO2. Countries/companies that reduce emissions below targets can sell surplus credits to those exceeding targets."
+    },
+    {
+      "id": "env-14",
+      "topic": "Environment",
+      "year": 2017,
+      "question": "'Biosphere Reserves' in India are managed by:",
+      "options": [
+        "State Forest Departments",
+        "UNESCO directly",
+        "Ministry of Environment, Forest and Climate Change",
+        "IUCN"
+      ],
+      "correctIndex": 2,
+      "explanation": "Biosphere Reserves in India are designated and managed by the Ministry of Environment, Forest and Climate Change (MoEF&CC). India has 18 Biosphere Reserves, of which 12 have been recognised by UNESCO's Man and the Biosphere (MAB) Programme."
+    },
+    {
+      "id": "env-15",
+      "topic": "Environment",
+      "year": 2016,
+      "question": "The 'CAMPA' fund is related to:",
+      "options": [
+        "Chemical weapons disposal",
+        "Compensatory Afforestation for forest diversion",
+        "Carbon trading mechanism",
+        "Marine pollution compensation"
+      ],
+      "correctIndex": 1,
+      "explanation": "CAMPA (Compensatory Afforestation Fund Management and Planning Authority) manages funds collected when forest land is diverted for non-forest purposes. These funds are used for afforestation, reforestation, and forest conservation activities to compensate for the loss of forest cover."
+    },
+    {
+      "id": "env-16",
+      "topic": "Environment",
+      "year": 2021,
+      "question": "'Project Elephant' in India was launched in:",
+      "options": [
+        "1991",
+        "1992",
+        "1993",
+        "2000"
+      ],
+      "correctIndex": 1,
+      "explanation": "Project Elephant was launched by the Government of India in 1992 to provide financial and technical support to major elephant-bearing States for protection of elephants, their habitats and corridors. India has the largest population of wild Asian elephants."
+    },
+    {
+      "id": "sci-13",
+      "topic": "Science",
+      "year": 2018,
+      "question": "The 'dark matter' in the universe is:",
+      "options": [
+        "Matter found in black holes",
+        "Hypothetical matter that does not emit or absorb light but exerts gravitational effects",
+        "Matter in very dark regions of space",
+        "Matter composed of dark-coloured atoms"
+      ],
+      "correctIndex": 1,
+      "explanation": "Dark matter is hypothetical matter that does not interact with the electromagnetic field (doesn't emit, absorb or reflect light) but has mass and therefore exerts gravitational effects on visible matter. It is inferred from its gravitational effects on galaxies. It is estimated to constitute about 27% of the total mass-energy of the universe."
+    },
+    {
+      "id": "sci-14",
+      "topic": "Science",
+      "year": 2019,
+      "question": "'Somatic Cell Nuclear Transfer (SCNT)' is a technique used in:",
+      "options": [
+        "Radiotherapy",
+        "Reproductive and therapeutic cloning",
+        "Gene therapy",
+        "Vaccine development"
+      ],
+      "correctIndex": 1,
+      "explanation": "Somatic Cell Nuclear Transfer (SCNT) is the technique used for cloning. The nucleus from a somatic (body) cell is transferred into an enucleated egg cell. This was the technique used to create Dolly the sheep, the first cloned mammal (1996)."
+    },
+    {
+      "id": "sci-15",
+      "topic": "Science",
+      "year": 2020,
+      "question": "'Geosynchronous orbit' means a satellite orbits Earth:",
+      "options": [
+        "At exactly 100 km altitude",
+        "With the same period as Earth's rotation (24 hours), staying over the same point",
+        "At the speed of light",
+        "Passing over both poles"
+      ],
+      "correctIndex": 1,
+      "explanation": "A geosynchronous orbit (specifically geostationary orbit) is at ~35,786 km above the equator, with an orbital period of 24 hours matching Earth's rotation. The satellite appears stationary over the same point on Earth — ideal for communication and weather satellites."
+    },
+    {
+      "id": "sci-16",
+      "topic": "Science",
+      "year": 2023,
+      "question": "'Semiconductor chips' are primarily made from:",
+      "options": [
+        "Copper",
+        "Silicon",
+        "Carbon",
+        "Aluminium"
+      ],
+      "correctIndex": 1,
+      "explanation": "Semiconductor chips are primarily made from silicon (Si), which is a semiconductor — it conducts electricity under certain conditions. Silicon is the second most abundant element in Earth's crust (after oxygen). Modern chips use silicon wafers, with transistors made by doping silicon with phosphorus (N-type) or boron (P-type)."
+    },
+    {
+      "id": "sci-17",
+      "topic": "Science",
+      "year": 2022,
+      "question": "The 'James Webb Space Telescope' (JWST) is different from Hubble mainly because it:",
+      "options": [
+        "Orbits much closer to Earth",
+        "Observes primarily in infrared light and is much farther from Earth",
+        "Uses X-ray astronomy",
+        "Orbits the Moon"
+      ],
+      "correctIndex": 1,
+      "explanation": "JWST observes primarily in infrared (unlike Hubble which observes in visible/UV/near-infrared). This allows it to see farther back in time (to the first stars/galaxies ~100-250 million years after Big Bang) and peer through dust clouds. It orbits at the L2 Lagrange point, 1.5 million km from Earth."
+    },
+    {
+      "id": "ca-13",
+      "topic": "Current Affairs",
+      "year": 2023,
+      "question": "India's 'National Quantum Mission' has allocated funds for:",
+      "options": [
+        "₹2,000 crore",
+        "₹6,003 crore",
+        "₹10,000 crore",
+        "₹500 crore"
+      ],
+      "correctIndex": 1,
+      "explanation": "The National Quantum Mission (NQM) was approved in April 2023 with a budget of ₹6,003 crore for 8 years (2023-2031). It aims to develop intermediate-scale quantum computers with 50-1000 physical qubits, satellite-based quantum communication, quantum cryptography and quantum sensing."
+    },
+    {
+      "id": "ca-14",
+      "topic": "Current Affairs",
+      "year": 2023,
+      "question": "The 'Aditya-L1' mission by ISRO is India's:",
+      "options": [
+        "First mission to Mars",
+        "First solar observation mission",
+        "Second lunar mission",
+        "First mission to Venus"
+      ],
+      "correctIndex": 1,
+      "explanation": "Aditya-L1 is India's first solar observation mission, launched on September 2, 2023. It is placed at the Lagrange Point 1 (L1) between the Earth and the Sun, approximately 1.5 million km from Earth. It studies the solar corona, solar wind, and solar flares."
+    },
+    {
+      "id": "ca-15",
+      "topic": "Current Affairs",
+      "year": 2022,
+      "question": "'Global Biofuel Alliance' was launched at:",
+      "options": [
+        "COP28",
+        "G20 New Delhi Summit 2023",
+        "World Economic Forum 2023",
+        "BRICS Summit 2023"
+      ],
+      "correctIndex": 1,
+      "explanation": "The Global Biofuel Alliance (GBA) was launched at the G20 Summit in New Delhi in September 2023 under India's G20 presidency. It aims to accelerate adoption of sustainable biofuels globally. The USA and Brazil were key co-founding members."
+    },
+    {
+      "id": "polity-23",
+      "topic": "Polity",
+      "year": 2015,
+      "question": "The Constitution of India was adopted by the Constituent Assembly on:",
+      "options": [
+        "26 January 1950",
+        "26 November 1949",
+        "15 August 1947",
+        "26 January 1948"
+      ],
+      "correctIndex": 1,
+      "explanation": "The Constitution of India was adopted by the Constituent Assembly on 26 November 1949. It came into force on 26 January 1950, which is celebrated as Republic Day. The drafting committee was chaired by Dr. B.R. Ambedkar."
+    },
+    {
+      "id": "polity-24",
+      "topic": "Polity",
+      "year": 2014,
+      "question": "Money Bills in India can be introduced only in:",
+      "options": [
+        "Rajya Sabha",
+        "Lok Sabha",
+        "Either House",
+        "Joint session"
+      ],
+      "correctIndex": 1,
+      "explanation": "A Money Bill can only be introduced in the Lok Sabha (Article 110). Once passed by Lok Sabha, it is sent to Rajya Sabha which can only recommend amendments (not reject) within 14 days. The Speaker of Lok Sabha certifies a bill as a Money Bill."
+    },
+    {
+      "id": "polity-25",
+      "topic": "Polity",
+      "year": 2016,
+      "question": "Right to Education (RTE) Act, 2009 provides free and compulsory education to children in the age group of:",
+      "options": [
+        "0-6 years",
+        "6-14 years",
+        "6-18 years",
+        "5-15 years"
+      ],
+      "correctIndex": 1,
+      "explanation": "The Right to Education Act, 2009 (RTE Act) provides for free and compulsory education to all children between 6 to 14 years of age. Article 21A of the Constitution (inserted by 86th Amendment, 2002) makes education a Fundamental Right for this age group."
+    },
+    {
+      "id": "polity-26",
+      "topic": "Polity",
+      "year": 2015,
+      "question": "NITI Aayog replaced which body?",
+      "options": [
+        "Finance Commission",
+        "National Development Council",
+        "Planning Commission",
+        "Inter-State Council"
+      ],
+      "correctIndex": 2,
+      "explanation": "NITI Aayog (National Institution for Transforming India) replaced the Planning Commission in January 2015. Unlike the Planning Commission, NITI Aayog is an advisory body with no power to allocate funds. It serves as a think tank and policy forum."
+    },
+    {
+      "id": "history-19",
+      "topic": "History",
+      "year": 2015,
+      "question": "The 'Cabinet Mission Plan' of 1946 proposed:",
+      "options": [
+        "Partition of India into two nations",
+        "A federal union with a limited central government and grouping of provinces",
+        "Direct elections for a new Constituent Assembly",
+        "Immediate independence with Dominion Status"
+      ],
+      "correctIndex": 1,
+      "explanation": "The Cabinet Mission (1946) proposed a federal union of India with a three-tier structure: All-India Union handling defence/foreign affairs/communications, groups of provinces, and individual provinces. Congress accepted it initially but later rejected the grouping provision, leading to its failure."
+    },
+    {
+      "id": "history-20",
+      "topic": "History",
+      "year": 2014,
+      "question": "The 'Morley-Minto Reforms' of 1909 were significant because they:",
+      "options": [
+        "Granted full independence to India",
+        "Introduced separate electorates for Muslims for the first time",
+        "Established the Indian National Congress",
+        "Divided Bengal into two provinces"
+      ],
+      "correctIndex": 1,
+      "explanation": "The Morley-Minto Reforms (Indian Councils Act 1909) were significant for introducing the communal (separate) electorate for Muslims — whereby Muslim voters could only vote for Muslim candidates for reserved Muslim seats. This was the beginning of communal representation in India."
+    },
+    {
+      "id": "history-21",
+      "topic": "History",
+      "year": 2013,
+      "question": "The 'Ajanta Caves' primarily contain Buddhist art from which period?",
+      "options": [
+        "Mauryan period",
+        "Gupta and post-Gupta period",
+        "Satavahana and Vakataka period",
+        "Kushan period"
+      ],
+      "correctIndex": 2,
+      "explanation": "The Ajanta Caves were created in two phases: Satavahana period (1st century BCE - 1st century CE) and Vakataka period (5th-6th century CE). The later Vakataka phase produced the most magnificent paintings. They were rediscovered by British officer John Smith in 1819."
+    },
+    {
+      "id": "geo-18",
+      "topic": "Geography",
+      "year": 2015,
+      "question": "The 'International Date Line' is located at:",
+      "options": [
+        "0° longitude (Prime Meridian)",
+        "90° East longitude",
+        "180° longitude (approximately)",
+        "23.5° North latitude"
+      ],
+      "correctIndex": 2,
+      "explanation": "The International Date Line is an imaginary line on Earth's surface at approximately 180° longitude in the Pacific Ocean. Crossing it going eastward subtracts a day; crossing it westward adds a day. The actual line deviates to avoid dividing land areas."
+    },
+    {
+      "id": "geo-19",
+      "topic": "Geography",
+      "year": 2014,
+      "question": "'Sundarbans' is famous for which biosphere?",
+      "options": [
+        "Tiger Reserve and Mangrove forest",
+        "Tropical rainforest",
+        "Cold desert ecosystem",
+        "Coral reef ecosystem"
+      ],
+      "correctIndex": 0,
+      "explanation": "The Sundarbans is the world's largest mangrove delta, located in the Bay of Bengal across India (West Bengal) and Bangladesh. It is a UNESCO World Heritage Site, a Tiger Reserve (Project Tiger), and a Ramsar Wetland. It is home to the Royal Bengal Tiger that swims between islands."
+    },
+    {
+      "id": "geo-20",
+      "topic": "Geography",
+      "year": 2016,
+      "question": "The 'Palk Strait' separates:",
+      "options": [
+        "India and Sri Lanka",
+        "India and Maldives",
+        "Sri Lanka and Maldives",
+        "India and Pakistan"
+      ],
+      "correctIndex": 0,
+      "explanation": "The Palk Strait is a body of water separating the Mannar district of Northern Province, Sri Lanka, from the Ramanathapuram district of Tamil Nadu, India. The Ram Setu (Adam's Bridge) — a chain of limestone shoals — connects Pamban Island (India) to Mannar Island (Sri Lanka) in this strait."
+    },
+    {
+      "id": "eco-16",
+      "topic": "Economy",
+      "year": 2015,
+      "question": "The 'Goods and Services Tax (GST)' replaced:",
+      "options": [
+        "Income Tax",
+        "Service Tax, Central Excise and State VAT (among others)",
+        "Corporate Tax",
+        "Customs Duty"
+      ],
+      "correctIndex": 1,
+      "explanation": "GST (implemented July 1, 2017) subsumed multiple indirect taxes including Central Excise Duty, Service Tax, Additional Customs Duty, State VAT, Central Sales Tax, Octroi, Entry Tax, Luxury Tax, and Entertainment Tax. It is a destination-based, multi-stage, comprehensive indirect tax."
+    },
+    {
+      "id": "eco-17",
+      "topic": "Economy",
+      "year": 2016,
+      "question": "'Human Development Index' is published by:",
+      "options": [
+        "World Bank",
+        "IMF",
+        "UNDP",
+        "WEF"
+      ],
+      "correctIndex": 2,
+      "explanation": "The Human Development Index (HDI) is published annually by the United Nations Development Programme (UNDP) in the Human Development Report. It measures development based on three dimensions: health (life expectancy), education (mean and expected years of schooling), and income (GNI per capita)."
+    },
+    {
+      "id": "eco-18",
+      "topic": "Economy",
+      "year": 2017,
+      "question": "The 'Fiscal Responsibility and Budget Management (FRBM) Act' aims at:",
+      "options": [
+        "Increasing government spending on welfare",
+        "Maintaining fiscal deficit within prescribed limits to ensure macroeconomic stability",
+        "Regulating foreign direct investment",
+        "Setting minimum wage standards"
+      ],
+      "correctIndex": 1,
+      "explanation": "The FRBM Act (2003) was enacted to institutionalise fiscal discipline and reduce fiscal deficit to manageable levels. It mandated that the central government reduce fiscal deficit to 3% of GDP and eliminate revenue deficit. The N.K. Singh Committee (2017) reviewed and modified targets."
+    },
+    {
+      "id": "env-17",
+      "topic": "Environment",
+      "year": 2015,
+      "question": "The 'Wetlands International' organisation publishes the:",
+      "options": [
+        "Red List of Threatened Species",
+        "Global Wetland Outlook",
+        "Living Planet Report",
+        "State of the World's Birds"
+      ],
+      "correctIndex": 1,
+      "explanation": "Wetlands International publishes the 'Global Wetland Outlook,' which provides an assessment of the state, trends, and outlook for wetlands and the services they provide. The IUCN Red List covers threatened species. WWF publishes the Living Planet Report."
+    },
+    {
+      "id": "env-18",
+      "topic": "Environment",
+      "year": 2014,
+      "question": "'Bioremediation' refers to:",
+      "options": [
+        "Breeding endangered species in captivity",
+        "Using microorganisms or plants to clean up polluted environments",
+        "Forest conservation through biotechnology",
+        "Gene modification to create disease-resistant crops"
+      ],
+      "correctIndex": 1,
+      "explanation": "Bioremediation is the use of living organisms (bacteria, fungi, plants) to degrade or neutralize pollutants in contaminated environments. It is used to clean oil spills, heavy metal contamination, and sewage. Phytoremediation is a specific type using plants."
+    },
+    {
+      "id": "sci-18",
+      "topic": "Science",
+      "year": 2015,
+      "question": "'Higgs Boson' particle is important because:",
+      "options": [
+        "It is the fastest particle known",
+        "It is the particle that gives mass to other fundamental particles",
+        "It forms the nucleus of atoms",
+        "It carries the electromagnetic force"
+      ],
+      "correctIndex": 1,
+      "explanation": "The Higgs Boson (discovered at CERN's LHC in 2012) is a fundamental particle associated with the Higgs field, which permeates space. Interaction with the Higgs field gives mass to other fundamental particles. Peter Higgs and François Englert won the 2013 Nobel Prize in Physics."
+    },
+    {
+      "id": "sci-19",
+      "topic": "Science",
+      "year": 2016,
+      "question": "'ISRO' launched the Mars Orbiter Mission (Mangalyaan) in:",
+      "options": [
+        "2012",
+        "2013",
+        "2014",
+        "2015"
+      ],
+      "correctIndex": 1,
+      "explanation": "ISRO launched the Mars Orbiter Mission (Mangalyaan) on November 5, 2013. It entered Mars orbit on September 24, 2014, making India the first Asian nation to reach Martian orbit and the first in the world to do so in its first attempt. It cost approximately ₹450 crore — less than the Hollywood film 'Gravity'."
+    },
+    {
+      "id": "ca-16",
+      "topic": "Current Affairs",
+      "year": 2022,
+      "question": "'Har Ghar Tiranga' campaign was part of:",
+      "options": [
+        "Republic Day celebrations",
+        "Azadi Ka Amrit Mahotsav (75 years of Independence)",
+        "World Environment Day",
+        "National Science Day"
+      ],
+      "correctIndex": 1,
+      "explanation": "'Har Ghar Tiranga' (Tricolour in Every Home) was a campaign under Azadi Ka Amrit Mahotsav — India's celebration of 75 years of independence from British rule. Citizens were encouraged to hoist/display the national flag at their homes from August 13-15, 2022 and 2023."
+    },
+    {
+      "id": "ca-17",
+      "topic": "Current Affairs",
+      "year": 2023,
+      "question": "The 'Semiconductor Mission' of India aims to make India a global semiconductor hub. Which ministry oversees it?",
+      "options": [
+        "Ministry of Electronics and IT (MeitY)",
+        "Ministry of Heavy Industries",
+        "Ministry of Science and Technology",
+        "Ministry of Commerce"
+      ],
+      "correctIndex": 0,
+      "explanation": "The India Semiconductor Mission (ISM) is a specialised body under the Ministry of Electronics and Information Technology (MeitY), established in 2022. The government has committed ₹76,000 crore incentive package for semiconductor and display fab ecosystems."
+    },
+    {
+      "id": "polity-27",
+      "topic": "Polity",
+      "year": 2013,
+      "question": "The 'Preamble' to the Indian Constitution begins with:",
+      "options": [
+        "'We, the Parliament of India...'",
+        "'We, the People of India...'",
+        "'We, the Citizens of India...'",
+        "'We, the Government of India...'"
+      ],
+      "correctIndex": 1,
+      "explanation": "The Preamble begins with 'We, the People of India' — emphasising that sovereignty vests in the people. The 42nd Constitutional Amendment (1976) added the words 'Socialist', 'Secular', and 'Integrity' to the Preamble. The Preamble is not justiciable but is used to interpret constitutional provisions."
+    }
+  ]
+}

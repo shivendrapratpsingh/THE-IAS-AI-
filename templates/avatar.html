@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Choose Avatar — BASS 50</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <style>
+    .av-page { min-height:100vh; background:#fff; }
+    .av-header {
+      background: linear-gradient(135deg, #F4621F 0%, #C94E18 100%);
+      padding: 48px 24px 28px; color:#fff;
+    }
+    .av-header h1 { font-size:26px; font-weight:900; }
+    .av-header p  { font-size:13px; color:rgba(255,255,255,.75); margin-top:4px; }
+    .av-body { padding:20px 20px 100px; }
+
+    /* Avatar grid */
+    .av-grid {
+      display: grid; grid-template-columns: repeat(3,1fr);
+      gap: 12px; margin-bottom: 24px;
+    }
+    .av-card {
+      border: 2px solid #E5E7EB; border-radius:16px;
+      padding: 12px 8px; text-align:center;
+      cursor:pointer; transition: all .2s;
+      background:#fff;
+    }
+    .av-card:hover { border-color:#F4621F; background:#FFF0E8; transform:scale(1.03); }
+    .av-card.selected { border-color:#F4621F; background:#FFF0E8; box-shadow:0 0 0 3px rgba(244,98,31,.2); }
+    .av-svg-wrap { width:70px; height:70px; margin:0 auto 8px; }
+    .av-svg-wrap svg { width:100%; height:100%; }
+    .av-name { font-size:11px; font-weight:700; color:#1A1A1A; }
+    .av-sub  { font-size:10px; color:#6B7280; margin-top:2px; }
+
+    /* Color picker */
+    .color-section {
+      background:#F9FAFB; border:1px solid #E5E7EB;
+      border-radius:16px; padding:16px; margin-bottom:20px;
+      display:none;
+    }
+    .color-section.show { display:block; }
+    .color-section-title { font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.6px; color:#6B7280; margin-bottom:12px; }
+    .color-swatches { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:12px; }
+    .swatch {
+      width:32px; height:32px; border-radius:50%;
+      cursor:pointer; border:3px solid transparent;
+      transition:all .15s;
+    }
+    .swatch.active { border-color:#1A1A1A; transform:scale(1.15); }
+    .custom-color-row { display:flex; align-items:center; gap:10px; }
+    .custom-color-row label { font-size:12px; color:#6B7280; font-weight:600; }
+    .custom-color-row input[type=color] {
+      width:40px; height:32px; border:none; border-radius:8px;
+      cursor:pointer; padding:2px;
+    }
+
+    /* Preview */
+    .av-preview {
+      text-align:center; padding:16px;
+      background: linear-gradient(135deg,#FFF0E8,#EAF9F0);
+      border-radius:20px; margin-bottom:20px;
+    }
+    .av-preview-svg { width:100px; height:100px; margin:0 auto; }
+    .av-preview-name { font-size:15px; font-weight:800; color:#1A1A1A; margin-top:8px; }
+
+    /* Buttons */
+    .av-btn-row { display:flex; gap:10px; }
+    .av-btn-skip {
+      flex:1; padding:15px;
+      background:#F3F4F6; color:#6B7280;
+      border:none; border-radius:50px;
+      font-size:14px; font-weight:700;
+      font-family:'Poppins',sans-serif; cursor:pointer;
+    }
+    .av-btn-save {
+      flex:2; padding:15px;
+      background:linear-gradient(135deg,#F4621F 0%,#C94E18 100%);
+      color:#fff; border:none; border-radius:50px;
+      font-size:14px; font-weight:800;
+      font-family:'Poppins',sans-serif; cursor:pointer;
+      box-shadow:0 4px 14px rgba(244,98,31,.3);
+    }
+  </style>
+</head>
+<body>
+<div class="phone-shell">
+<div class="av-page">
+
+  <div class="av-header">
+    <h1>🎭 Choose Your Avatar</h1>
+    <p>Pick a character that represents you</p>
+  </div>
+
+  <div class="av-body">
+
+    <!-- Preview -->
+    <div class="av-preview">
+      <div class="av-preview-svg" id="previewSvg"></div>
+      <div class="av-preview-name" id="previewName">Pick an avatar below</div>
+    </div>
+
+    <!-- Avatar grid -->
+    <div class="av-grid" id="avGrid"></div>
+
+    <!-- Color picker (shows after selection) -->
+    <div class="color-section" id="colorSection">
+      <div class="color-section-title">🎨 Outfit Color</div>
+      <div class="color-swatches" id="swatches"></div>
+      <div class="custom-color-row">
+        <label>Custom:</label>
+        <input type="color" id="customColor" value="#F4621F" oninput="applyColor(this.value)">
+      </div>
+    </div>
+
+    <!-- Save form -->
+    <form method="POST" action="{{ url_for('save_avatar') }}" id="avForm">
+      <input type="hidden" name="avatar_id"    id="hidAvId"    value="">
+      <input type="hidden" name="avatar_color"  id="hidAvColor" value="#F4621F">
+      <div class="av-btn-row">
+        <button type="button" class="av-btn-skip" onclick="skipAvatar()">Skip →</button>
+        <button type="submit" class="av-btn-save" id="saveBtn" disabled>Save Avatar</button>
+      </div>
+    </form>
+
+  </div>
+</div>
+</div>
+
+<script>
+// ── Avatar definitions ──────────────────────────────────────────────────────
+const AVATARS = [
+  {
+    id:'ias', name:'IAS Officer', sub:'Civil Services',
+    svg: (c) => `<svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="40" cy="40" r="38" fill="#FFF0E8" stroke="${c}" stroke-width="3"/>
+      <!-- body -->
+      <rect x="22" y="48" width="36" height="24" rx="8" fill="${c}"/>
+      <!-- shirt collar -->
+      <polygon points="40,48 33,56 40,54 47,56" fill="#fff" opacity=".7"/>
+      <!-- head -->
+      <ellipse cx="40" cy="32" rx="14" ry="16" fill="#FDBF8A"/>
+      <!-- hair -->
+      <ellipse cx="40" cy="18" rx="14" ry="8" fill="#3D2B1F"/>
+      <!-- badge -->
+      <circle cx="40" cy="57" r="4" fill="#FFD700" stroke="#C94E18" stroke-width="1.5"/>
+      <!-- eyes -->
+      <circle cx="35" cy="32" r="2" fill="#3D2B1F"/>
+      <circle cx="45" cy="32" r="2" fill="#3D2B1F"/>
+      <!-- smile -->
+      <path d="M35 39 Q40 43 45 39" stroke="#3D2B1F" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    </svg>`
+  },
+  {
+    id:'police', name:'Police Officer', sub:'Law & Order',
+    svg: (c) => `<svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="40" cy="40" r="38" fill="#EAF9F0" stroke="${c}" stroke-width="3"/>
+      <rect x="22" y="48" width="36" height="24" rx="8" fill="${c}"/>
+      <!-- hat -->
+      <rect x="26" y="14" width="28" height="6" rx="3" fill="${c}"/>
+      <rect x="22" y="18" width="36" height="4" rx="2" fill="${c}"/>
+      <!-- badge on hat -->
+      <polygon points="40,15 42,19 46,19 43,22 44,26 40,24 36,26 37,22 34,19 38,19" fill="#FFD700" transform="scale(.55) translate(33,5)"/>
+      <ellipse cx="40" cy="34" rx="14" ry="16" fill="#FDBF8A"/>
+      <circle cx="35" cy="32" r="2" fill="#3D2B1F"/>
+      <circle cx="45" cy="32" r="2" fill="#3D2B1F"/>
+      <path d="M35 40 Q40 44 45 40" stroke="#3D2B1F" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <polygon points="40,48 33,56 40,54 47,56" fill="#fff" opacity=".7"/>
+    </svg>`
+  },
+  {
+    id:'teacher', name:'Teacher', sub:'Education',
+    svg: (c) => `<svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="40" cy="40" r="38" fill="#FFF0E8" stroke="${c}" stroke-width="3"/>
+      <rect x="22" y="48" width="36" height="24" rx="8" fill="${c}"/>
+      <ellipse cx="40" cy="32" rx="14" ry="16" fill="#FDBF8A"/>
+      <ellipse cx="40" cy="18" rx="12" ry="6" fill="#5D3A1A"/>
+      <!-- glasses -->
+      <rect x="31" y="30" width="8" height="6" rx="3" fill="none" stroke="#3D2B1F" stroke-width="1.5"/>
+      <rect x="41" y="30" width="8" height="6" rx="3" fill="none" stroke="#3D2B1F" stroke-width="1.5"/>
+      <line x1="39" y1="33" x2="41" y2="33" stroke="#3D2B1F" stroke-width="1.5"/>
+      <circle cx="35" cy="33" r="1.5" fill="#3D2B1F"/>
+      <circle cx="45" cy="33" r="1.5" fill="#3D2B1F"/>
+      <path d="M35 40 Q40 44 45 40" stroke="#3D2B1F" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <!-- book -->
+      <rect x="53" y="54" width="10" height="14" rx="2" fill="#fff" stroke="${c}" stroke-width="1.5"/>
+    </svg>`
+  },
+  {
+    id:'doctor', name:'Doctor', sub:'Medical',
+    svg: (c) => `<svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="40" cy="40" r="38" fill="#EAF9F0" stroke="${c}" stroke-width="3"/>
+      <!-- white coat -->
+      <rect x="22" y="48" width="36" height="24" rx="8" fill="#fff" stroke="${c}" stroke-width="2"/>
+      <!-- stethoscope -->
+      <path d="M31 58 Q28 65 35 68" stroke="${c}" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <circle cx="35" cy="69" r="3" fill="${c}"/>
+      <ellipse cx="40" cy="32" rx="14" ry="16" fill="#FDBF8A"/>
+      <ellipse cx="40" cy="18" rx="13" ry="7" fill="#3D2B1F"/>
+      <circle cx="35" cy="32" r="2" fill="#3D2B1F"/>
+      <circle cx="45" cy="32" r="2" fill="#3D2B1F"/>
+      <path d="M35 39 Q40 43 45 39" stroke="#3D2B1F" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <!-- cross -->
+      <rect x="37" y="51" width="6" height="2" rx="1" fill="${c}"/>
+      <rect x="39" y="49" width="2" height="6" rx="1" fill="${c}"/>
+    </svg>`
+  },
+  {
+    id:'scientist', name:'Scientist', sub:'Research',
+    svg: (c) => `<svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="40" cy="40" r="38" fill="#FFF0E8" stroke="${c}" stroke-width="3"/>
+      <rect x="22" y="48" width="36" height="24" rx="8" fill="#fff" stroke="${c}" stroke-width="2"/>
+      <ellipse cx="40" cy="32" rx="14" ry="16" fill="#FDBF8A"/>
+      <ellipse cx="40" cy="18" rx="11" ry="5" fill="#F4621F"/>
+      <!-- lab goggles -->
+      <rect x="30" y="28" width="10" height="8" rx="4" fill="none" stroke="${c}" stroke-width="2"/>
+      <rect x="40" y="28" width="10" height="8" rx="4" fill="none" stroke="${c}" stroke-width="2"/>
+      <line x1="40" y1="32" x2="40" y2="32" stroke="${c}" stroke-width="2"/>
+      <circle cx="35" cy="32" r="1.5" fill="#3D2B1F"/>
+      <circle cx="45" cy="32" r="1.5" fill="#3D2B1F"/>
+      <path d="M35 40 Q40 44 45 40" stroke="#3D2B1F" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <!-- flask -->
+      <path d="M52 54 L55 68 L65 68 L68 54 Z" fill="${c}" opacity=".6" stroke="${c}" stroke-width="1.5" stroke-linejoin="round"/>
+      <circle cx="60" cy="60" r="3" fill="#fff" opacity=".8"/>
+    </svg>`
+  },
+  {
+    id:'lawyer', name:'Lawyer', sub:'Judiciary',
+    svg: (c) => `<svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="40" cy="40" r="38" fill="#EAF9F0" stroke="${c}" stroke-width="3"/>
+      <!-- black coat -->
+      <rect x="22" y="48" width="36" height="24" rx="8" fill="#1A1A1A"/>
+      <polygon points="40,48 33,58 40,56 47,58" fill="#fff" opacity=".9"/>
+      <!-- white collar/tie -->
+      <rect x="38" y="56" width="4" height="10" rx="2" fill="${c}"/>
+      <ellipse cx="40" cy="32" rx="14" ry="16" fill="#FDBF8A"/>
+      <ellipse cx="40" cy="18" rx="13" ry="7" fill="#2C1A0E"/>
+      <circle cx="35" cy="32" r="2" fill="#3D2B1F"/>
+      <circle cx="45" cy="32" r="2" fill="#3D2B1F"/>
+      <path d="M35 39 Q40 43 45 39" stroke="#3D2B1F" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <!-- scale icon -->
+      <line x1="57" y1="54" x2="57" y2="68" stroke="${c}" stroke-width="2"/>
+      <line x1="52" y1="58" x2="62" y2="58" stroke="${c}" stroke-width="2"/>
+      <circle cx="52" cy="61" r="3" fill="none" stroke="${c}" stroke-width="1.5"/>
+      <circle cx="62" cy="61" r="3" fill="none" stroke="${c}" stroke-width="1.5"/>
+    </svg>`
+  }
+];
+
+const OUTFIT_COLORS = [
+  '#F4621F','#27AE60','#1A1A2E','#2471A3','#8E44AD',
+  '#C0392B','#D4AC0D','#1ABC9C','#2C3E50','#E67E22'
+];
+
+let selectedId    = '';
+let selectedColor = '#F4621F';
+
+// Build swatches
+const swatchWrap = document.getElementById('swatches');
+OUTFIT_COLORS.forEach(c => {
+  const d = document.createElement('div');
+  d.className = 'swatch' + (c === selectedColor ? ' active' : '');
+  d.style.background = c;
+  d.onclick = () => { applyColor(c); document.getElementById('customColor').value = c; };
+  swatchWrap.appendChild(d);
+});
+
+// Build avatar grid
+const grid = document.getElementById('avGrid');
+AVATARS.forEach(av => {
+  const card = document.createElement('div');
+  card.className = 'av-card';
+  card.id = 'card-' + av.id;
+  card.innerHTML = `
+    <div class="av-svg-wrap">${av.svg(selectedColor)}</div>
+    <div class="av-name">${av.name}</div>
+    <div class="av-sub">${av.sub}</div>
+  `;
+  card.onclick = () => selectAvatar(av.id);
+  grid.appendChild(card);
+});
+
+function selectAvatar(id) {
+  selectedId = id;
+  // Highlight card
+  document.querySelectorAll('.av-card').forEach(c => c.classList.remove('selected'));
+  document.getElementById('card-' + id).classList.add('selected');
+  // Show preview
+  renderPreview();
+  // Show color picker
+  document.getElementById('colorSection').classList.add('show');
+  // Enable save
+  document.getElementById('saveBtn').disabled = false;
+  document.getElementById('hidAvId').value = id;
+}
+
+function applyColor(color) {
+  selectedColor = color;
+  // Update swatches active state
+  document.querySelectorAll('.swatch').forEach((s,i) => {
+    s.classList.toggle('active', OUTFIT_COLORS[i] === color);
+  });
+  // Re-render all cards
+  AVATARS.forEach(av => {
+    const wrap = document.querySelector(`#card-${av.id} .av-svg-wrap`);
+    if (wrap) wrap.innerHTML = av.svg(selectedColor);
+  });
+  renderPreview();
+  document.getElementById('hidAvColor').value = color;
+}
+
+function renderPreview() {
+  if (!selectedId) return;
+  const av = AVATARS.find(a => a.id === selectedId);
+  document.getElementById('previewSvg').innerHTML  = av.svg(selectedColor);
+  document.getElementById('previewName').textContent = av.name;
+}
+
+function skipAvatar() {
+  // Save default and move on
+  document.getElementById('hidAvId').value = 'ias';
+  document.getElementById('hidAvColor').value = '#F4621F';
+  document.getElementById('avForm').submit();
+}
+</script>
+</body>
+</html>

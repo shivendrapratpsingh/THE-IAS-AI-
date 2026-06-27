@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+{% block title %}Home — BASS 50{% endblock %}
+
+{% block content %}
+
+{# Greeting #}
+<div class="dash-greeting">
+  <h2>Hey {{ profile.name.split()[0] }} 👋</h2>
+  <p>{{ streak.current_streak or 0 }}-day streak · Let's crush today's prep!</p>
+</div>
+
+{# Streak banner #}
+{% if streak.current_streak %}
+<div class="streak-banner">
+  <div class="streak-flame">🔥</div>
+  <div class="streak-text">
+    <h3>{{ streak.current_streak }} Day Streak!</h3>
+    <p>Keep going — consistency is everything</p>
+  </div>
+</div>
+{% endif %}
+
+{# Stats row #}
+<div class="stat-row">
+  <div class="stat-card">
+    <div class="stat-val">{{ overall_accuracy or '—' }}{% if overall_accuracy %}%{% endif %}</div>
+    <div class="stat-lbl">MCQ Accuracy</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-val">{{ progress_pct }}%</div>
+    <div class="stat-lbl">Plan Progress</div>
+    <div class="progress-bar" style="margin-top:8px;">
+      <div class="progress-fill" style="width:{{ progress_pct }}%;"></div>
+    </div>
+  </div>
+</div>
+
+{# Today's score if done #}
+{% if mcq_done_today and mcq_score_today %}
+<div class="section-pad" style="margin-top:4px;">
+  <div class="section-head">Today's Result</div>
+  <div class="score-mini">
+    <div class="score-mini-num">{{ mcq_score_today.correct }}/{{ mcq_score_today.total }}</div>
+    <div class="score-mini-info">Today's MCQ score<br><span style="color:var(--orange);">Practice more to improve!</span></div>
+  </div>
+</div>
+{% endif %}
+
+{# Quick Actions #}
+<div class="section-pad">
+  <div class="section-head">Today's Tasks</div>
+  <div class="menu-list">
+
+    <a href="{{ url_for('mcq') }}" class="menu-item">
+      <div class="menu-icon">🧠</div>
+      <div class="menu-text">
+        <div class="menu-name">MCQ Practice</div>
+        <div class="menu-desc">{{ '✅ Done today' if mcq_done_today else '10 questions from real UPSC papers' }}</div>
+      </div>
+      {% if not mcq_done_today %}<span class="menu-badge">GO</span>{% endif %}
+      <span class="menu-arrow">›</span>
+    </a>
+
+    <a href="{{ url_for('answers') }}" class="menu-item">
+      <div class="menu-icon">✍️</div>
+      <div class="menu-text">
+        <div class="menu-name">Answer Writing</div>
+        <div class="menu-desc">{{ '✅ Done today' if answer_done_today else 'Daily Mains answer prompt' }}</div>
+      </div>
+      {% if not answer_done_today %}<span class="menu-badge">GO</span>{% endif %}
+      <span class="menu-arrow">›</span>
+    </a>
+
+    <a href="{{ url_for('current_affairs') }}" class="menu-item">
+      <div class="menu-icon">📰</div>
+      <div class="menu-text">
+        <div class="menu-name">Current Affairs</div>
+        <div class="menu-desc">{{ current_affairs_count }} articles this week</div>
+      </div>
+      <span class="menu-arrow">›</span>
+    </a>
+
+    <a href="{{ url_for('study_plan_view') }}" class="menu-item">
+      <div class="menu-icon">📅</div>
+      <div class="menu-text">
+        <div class="menu-name">Study Plan</div>
+        <div class="menu-desc">{{ completed_count }}/{{ total_tasks }} tasks done</div>
+      </div>
+      <span class="menu-arrow">›</span>
+    </a>
+
+  </div>
+</div>
+
+{# Legal Question of the day #}
+{% if legal_q %}
+<div class="section-pad">
+  <div class="section-head">Legal Concept</div>
+  <div class="legal-card">
+    <div class="legal-label">{{ legal_q.source }}</div>
+    <div class="legal-q">{{ legal_q.question }}</div>
+
+    <form method="post" action="{{ url_for('legal_question') }}">
+      <div class="legal-opts {{ 'disabled' if legal_answered_today }}">
+        {% for opt in legal_q.options %}
+        {% set i = loop.index0 %}
+        <button type="submit" name="answer" value="{{ i }}"
+          class="legal-opt
+            {{ 'selected-correct' if legal_answered_today and legal_selected|int == i and i == legal_q.correctIndex }}
+            {{ 'selected-wrong'   if legal_answered_today and legal_selected|int == i and i != legal_q.correctIndex }}
+            {{ 'show-correct'     if legal_answered_today and i == legal_q.correctIndex and legal_selected|int != i }}
+            {{ 'disabled'         if legal_answered_today }}"
+          {{ 'disabled' if legal_answered_today }}>
+          <span>{{ ['A','B','C','D'][i] }}.</span> {{ opt }}
+        </button>
+        {% endfor %}
+      </div>
+    </form>
+
+    {% if legal_answered_today %}
+    <div class="bubble-explain" style="margin:10px 0 0;">
+      <strong>Explanation:</strong> {{ legal_q.explanation }}
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endif %}
+
+{% endblock %}

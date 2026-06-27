@@ -1,0 +1,35 @@
+[
+  {
+    "question": "Under the Indian Constitution, which Article empowers the President to issue ordinances when Parliament is not in session?",
+    "options": [
+      "Article 123",
+      "Article 124",
+      "Article 352",
+      "Article 356"
+    ],
+    "correct_answer": "A",
+    "explanation": "Article 123 grants the President power to promulgate ordinances during recess of Parliament, having the same force as an Act, but must be approved within 6 weeks of reassembly."
+  },
+  {
+    "question": "The 'basic structure' doctrine of the Indian Constitution was propounded in which landmark case?",
+    "options": [
+      "Golaknath v. State of Punjab",
+      "Kesavananda Bharati v. State of Kerala",
+      "Maneka Gandhi v. Union of India",
+      "Minerva Mills v. Union of India"
+    ],
+    "correct_answer": "B",
+    "explanation": "In Kesavananda Bharati v. State of Kerala (1973), the Supreme Court held that Parliament's power to amend the Constitution under Article 368 does not extend to altering its 'basic structure'."
+  },
+  {
+    "question": "Which schedule of the Constitution deals with the disqualification of members on grounds of defection?",
+    "options": [
+      "Eighth Schedule",
+      "Ninth Schedule",
+      "Tenth Schedule",
+      "Eleventh Schedule"
+    ],
+    "correct_answer": "C",
+    "explanation": "The Tenth Schedule, added by the 52nd Amendment Act (1985), contains provisions for disqualification of MPs/MLAs on grounds of defection."
+  }
+]

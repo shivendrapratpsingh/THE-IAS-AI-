@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>BASS 50 — Login</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<div class="phone-shell">
+<div class="login-page">
+
+  <!-- Top branding -->
+  <div class="login-top">
+    <div class="login-logo">BASS 50</div>
+    <div class="login-tagline">Your IAS Prep Companion</div>
+  </div>
+
+  <!-- Bottom sheet -->
+  <div class="login-sheet">
+    <h2>Welcome! 👋</h2>
+    <p>Choose how you want to practice today</p>
+
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}{% for msg in messages %}<div class="flash">{{ msg }}</div>{% endfor %}{% endif %}
+    {% endwith %}
+
+    <!-- Step 1: Mode selection -->
+    <div id="step-mode">
+      <div class="mode-cards">
+        <div class="mode-card" id="card-upsc" onclick="selectMode('upsc')">
+          <div class="mode-card-icon">🎯</div>
+          <div class="mode-card-title">UPSC Prep</div>
+          <div class="mode-card-sub">50 questions · Full tracking</div>
+        </div>
+        <div class="mode-card" id="card-general" onclick="selectMode('general')">
+          <div class="mode-card-icon">📚</div>
+          <div class="mode-card-title">General</div>
+          <div class="mode-card-sub">10 questions · Quick play</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 2a: UPSC — phone number -->
+    <div id="step-upsc" class="login-step">
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:16px; cursor:pointer;" onclick="backToMode()">
+        <span style="font-size:18px;">←</span>
+        <span style="font-size:13px; font-weight:700; color:var(--orange);">UPSC Prep</span>
+      </div>
+      <form method="POST" action="{{ url_for('login') }}" onsubmit="setMode('upsc')">
+        <input type="hidden" name="user_mode" value="upsc">
+        <div class="field-label">Phone Number</div>
+        <div class="phone-wrap" style="margin-bottom:0">
+          <select class="country-code" name="country_code">
+            <option value="+91">🇮🇳 +91</option>
+            <option value="+1">🇺🇸 +1</option>
+            <option value="+44">🇬🇧 +44</option>
+            <option value="+971">🇦🇪 +971</option>
+            <option value="+61">🇦🇺 +61</option>
+          </select>
+          <input class="field-input" type="tel" name="phone" maxlength="10"
+                 inputmode="numeric" placeholder="10-digit number"
+                 oninput="this.value=this.value.replace(/\D/g,'')">
+        </div>
+        <button type="submit" class="btn-primary">Continue →</button>
+      </form>
+    </div>
+
+    <!-- Step 2b: General — name only -->
+    <div id="step-general" class="login-step">
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:16px; cursor:pointer;" onclick="backToMode()">
+        <span style="font-size:18px;">←</span>
+        <span style="font-size:13px; font-weight:700; color:var(--green);">General Practice</span>
+      </div>
+      <form method="POST" action="{{ url_for('guest_login') }}">
+        <div class="field-label">Your Name</div>
+        <input class="field-input" type="text" name="name" placeholder="Enter your name"
+               maxlength="40" required style="margin-bottom:0">
+        <button type="submit" class="btn-primary btn-green">Start Quiz →</button>
+      </form>
+    </div>
+
+  </div>
+</div>
+</div>
+
+<script>
+function selectMode(mode) {
+  document.getElementById('step-mode').style.display = 'none';
+  if (mode === 'upsc') {
+    document.getElementById('step-upsc').classList.add('active');
+    document.getElementById('card-upsc').classList.add('selected');
+  } else {
+    document.getElementById('step-general').classList.add('active');
+    document.getElementById('card-general').classList.add('selected-green');
+  }
+}
+function backToMode() {
+  document.getElementById('step-mode').style.display = 'block';
+  document.getElementById('step-upsc').classList.remove('active');
+  document.getElementById('step-general').classList.remove('active');
+}
+</script>
+</body>
+</html>

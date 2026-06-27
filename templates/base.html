@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>{% block title %}BASS 50{% endblock %}</title>
+
+  <!-- ── PWA: Manifest + Icons ── -->
+  <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+  <link rel="icon" type="image/png" sizes="192x192" href="{{ url_for('static', filename='icons/icon-192.png') }}">
+  <link rel="icon" type="image/png" sizes="512x512" href="{{ url_for('static', filename='icons/icon-512.png') }}">
+
+  <!-- ── PWA: iOS specific ── -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="BASS 50">
+  <link rel="apple-touch-icon" href="{{ url_for('static', filename='icons/icon-192.png') }}">
+  <link rel="apple-touch-startup-image" href="{{ url_for('static', filename='icons/icon-512.png') }}">
+
+  <!-- ── PWA: Android Chrome theme ── -->
+  <meta name="theme-color" content="#F4621F">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="BASS 50">
+
+  <!-- ── SEO / Share preview ── -->
+  <meta name="description" content="Daily UPSC & General quiz prep with current affairs and AI assistant">
+  <meta property="og:title" content="BASS 50 — IAS Prep App">
+  <meta property="og:description" content="50 daily UPSC questions, current affairs, AI assistant. Free forever.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="{{ url_for('static', filename='icons/icon-512.png') }}">
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<div class="phone-shell">
+
+  {% block full_page %}
+
+  <!-- Google Translate (hidden widget, triggered by button) -->
+  <div id="google_translate_element" style="display:none;"></div>
+
+  <!-- Top Nav -->
+  {% block show_nav %}
+  <header class="top-nav">
+    <button class="nav-hamburger" onclick="toggleDrawer()" aria-label="Menu">☰</button>
+    <div class="nav-title"><span class="nav-brand">BASS 50</span></div>
+    <div class="nav-actions">
+      <button class="nav-icon-btn" onclick="toggleLangPanel()" aria-label="Language" title="Change language" style="background:rgba(255,255,255,0.15); border:none; cursor:pointer; font-size:16px;">🌐</button>
+      <a href="{{ url_for('current_affairs') }}" class="nav-icon-btn" aria-label="News">📰</a>
+      {% if profile %}
+      <a href="{{ url_for('profile') }}" class="nav-avatar" style="padding:0; overflow:hidden; background:transparent; border:2px solid rgba(255,255,255,0.5);">
+        {% if profile.avatar_id %}
+          <img src="{{ url_for('avatar_svg_route', avatar_id=profile.avatar_id) }}?color={{ profile.avatar_color|urlencode }}"
+               width="36" height="36" alt="{{ profile.name }}" style="display:block;">
+        {% else %}
+          {{ profile.name[0]|upper if profile.name else 'A' }}
+        {% endif %}
+      </a>
+      {% endif %}
+    </div>
+  </header>
+
+  <!-- Language panel (slides down) -->
+  <div id="langPanel" style="display:none; background:#1A1A1A; padding:12px 16px;">
+    <div style="font-size:11px; font-weight:700; text-transform:uppercase; color:rgba(255,255,255,.5); letter-spacing:.6px; margin-bottom:10px;">Choose Language</div>
+    <div style="display:flex; flex-wrap:wrap; gap:8px;">
+      <button onclick="setLang('en')"   class="lang-pill" data-lang="en">🇬🇧 English</button>
+      <button onclick="setLang('hi')"   class="lang-pill" data-lang="hi">🇮🇳 Hindi</button>
+      <button onclick="setLang('');"    class="lang-pill" data-lang="hl">🔤 Hinglish</button>
+      <button onclick="setLang('pa')"   class="lang-pill" data-lang="pa">🇮🇳 Punjabi</button>
+      <button onclick="setLang('ta')"   class="lang-pill" data-lang="ta">🇮🇳 Tamil</button>
+      <button onclick="setLang('te')"   class="lang-pill" data-lang="te">🇮🇳 Telugu</button>
+      <button onclick="setLang('mr')"   class="lang-pill" data-lang="mr">🇮🇳 Marathi</button>
+      <button onclick="setLang('bn')"   class="lang-pill" data-lang="bn">🇧🇩 Bengali</button>
+    </div>
+  </div>
+
+  <style>
+  .lang-pill {
+    padding: 7px 14px; border-radius: 99px;
+    background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+    color: #fff; font-size: 12px; font-weight: 600; cursor: pointer;
+    font-family: 'Poppins', sans-serif; transition: background .15s;
+  }
+  .lang-pill:hover, .lang-pill.active { background: #F4621F; border-color: #F4621F; }
+  /* Hide Google Translate's default top bar */
+  .goog-te-banner-frame, .skiptranslate { display:none !important; }
+  body { top: 0 !important; }
+  </style>
+  {% endblock %}
+
+  <!-- Flash messages -->
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      {% for msg in messages %}
+        <div class="flash">{{ msg }}</div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <!-- Page content -->
+  <main class="main-scroll">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- 3-tab bottom nav -->
+  {% block show_tabs %}
+  <nav class="bottom-tabs">
+    <a href="{{ url_for('home') }}"
+       class="tab-btn {{ 'active' if request.endpoint == 'home' }}">
+      <span class="tab-icon">🏠</span>
+      <span>Home</span>
+      {% if request.endpoint == 'home' %}<div class="tab-dot"></div>{% endif %}
+    </a>
+    <a href="{{ url_for('mcq') }}"
+       class="tab-btn {{ 'active' if request.endpoint == 'mcq' }}">
+      <span class="tab-icon">🧠</span>
+      <span>Quiz</span>
+      {% if request.endpoint == 'mcq' %}<div class="tab-dot"></div>{% endif %}
+    </a>
+    <a href="{{ url_for('current_affairs') }}"
+       class="tab-btn {{ 'active' if request.endpoint == 'current_affairs' }}">
+      <span class="tab-icon">📰</span>
+      <span>News</span>
+      {% if request.endpoint == 'current_affairs' %}<div class="tab-dot"></div>{% endif %}
+    </a>
+  </nav>
+  {% endblock %}
+
+  {% endblock %}
+
+</div>
+
+<!-- Slide-out drawer -->
+<div class="drawer-overlay" id="drawerOverlay" onclick="toggleDrawer()"></div>
+<nav class="drawer" id="drawer">
+  <div class="drawer-head">
+    <div class="drawer-avatar" style="{% if profile and profile.avatar_id %}padding:0; overflow:hidden; background:transparent;{% endif %}">
+      {% if profile and profile.avatar_id %}
+        <img src="{{ url_for('avatar_svg_route', avatar_id=profile.avatar_id) }}?color={{ profile.avatar_color|urlencode }}"
+             width="56" height="56" alt="{{ profile.name }}" style="display:block; border-radius:50%;">
+      {% else %}
+        {{ profile.name[0]|upper if profile and profile.name else 'A' }}
+      {% endif %}
+    </div>
+    <div class="drawer-name">{{ profile.name if profile and profile.name else 'Aspirant' }}</div>
+    <div class="drawer-stage">
+      {{ profile.stage|capitalize if profile and profile.stage else 'IAS Aspirant' }}
+      · 📱 {{ phone[-4:] if phone else '—' }}
+    </div>
+  </div>
+  <div class="drawer-links">
+    <a href="{{ url_for('home') }}" class="drawer-link {{ 'active' if request.endpoint == 'home' }}">
+      <span class="drawer-link-icon">🏠</span> Home
+    </a>
+    <a href="{{ url_for('mcq') }}" class="drawer-link {{ 'active' if request.endpoint == 'mcq' }}">
+      <span class="drawer-link-icon">🧠</span> Quiz Practice
+    </a>
+    <a href="{{ url_for('current_affairs') }}" class="drawer-link {{ 'active' if request.endpoint == 'current_affairs' }}">
+      <span class="drawer-link-icon">📰</span> Current Affairs
+    </a>
+    <a href="{{ url_for('answers') }}" class="drawer-link {{ 'active' if request.endpoint == 'answers' }}">
+      <span class="drawer-link-icon">✍️</span> Answer Writing
+    </a>
+    <a href="{{ url_for('study_plan_view') }}" class="drawer-link {{ 'active' if request.endpoint == 'study_plan_view' }}">
+      <span class="drawer-link-icon">📅</span> Study Plan
+    </a>
+    <a href="{{ url_for('profile') }}" class="drawer-link {{ 'active' if request.endpoint == 'profile' }}">
+      <span class="drawer-link-icon">👤</span> My Profile
+    </a>
+    <a href="{{ url_for('avatar_select') }}" class="drawer-link {{ 'active' if request.endpoint == 'avatar_select' }}">
+      <span class="drawer-link-icon">🎭</span> Change Avatar
+    </a>
+  </div>
+  <div class="drawer-footer">
+    <a href="{{ url_for('logout') }}" class="drawer-logout">
+      🚪 Log Out (switch number)
+    </a>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     AI ASSISTANT CHAT PANEL
+     ═══════════════════════════════════════════════════════════════ -->
+{% if profile and profile.avatar_id %}
+<style>
+  /* Floating button */
+  #aiBubble {
+    position: fixed; bottom: 84px; right: 16px;
+    width: 56px; height: 56px; border-radius: 50%;
+    overflow: hidden; cursor: pointer; z-index: 300;
+    box-shadow: 0 4px 20px rgba(244,98,31,0.45);
+    border: 3px solid #fff;
+    transition: transform .2s;
+  }
+  #aiBubble:hover { transform: scale(1.1); }
+  #aiBubble img { width:100%; height:100%; display:block; }
+
+  /* Chat panel */
+  #aiPanel {
+    position: fixed; bottom: 152px; right: 12px;
+    width: min(360px, calc(100vw - 24px));
+    max-height: 70vh;
+    background: #fff; border-radius: 20px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.18);
+    display: none; flex-direction: column;
+    z-index: 299; overflow: hidden;
+    border: 1px solid #E5E7EB;
+  }
+  #aiPanel.open { display: flex; }
+
+  /* Panel header */
+  .ai-head {
+    background: linear-gradient(135deg, #F4621F, #C94E18);
+    padding: 12px 16px; display: flex; align-items: center; gap: 10px;
+    flex-shrink: 0;
+  }
+  .ai-head-av {
+    width: 36px; height: 36px; border-radius: 50%;
+    overflow: hidden; border: 2px solid rgba(255,255,255,0.5);
+    flex-shrink: 0;
+  }
+  .ai-head-av img { width:100%; height:100%; display:block; }
+  .ai-head-name { color:#fff; font-size:14px; font-weight:800; flex:1; }
+  .ai-head-sub  { color:rgba(255,255,255,.7); font-size:11px; font-weight:500; }
+  .ai-close {
+    background: rgba(255,255,255,.2); border:none; color:#fff;
+    width:28px; height:28px; border-radius:50%; cursor:pointer;
+    font-size:14px; display:flex; align-items:center; justify-content:center;
+  }
+
+  /* Messages */
+  #aiMessages {
+    flex: 1; overflow-y: auto; padding: 14px 12px;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .ai-msg {
+    max-width: 85%; padding: 10px 13px;
+    border-radius: 16px; font-size: 13px; line-height: 1.55;
+    word-break: break-word; white-space: pre-wrap;
+  }
+  .ai-msg.bot {
+    background: #F9FAFB; border: 1px solid #E5E7EB;
+    align-self: flex-start; border-bottom-left-radius: 4px;
+  }
+  .ai-msg.user {
+    background: linear-gradient(135deg,#F4621F,#C94E18);
+    color: #fff; align-self: flex-end;
+    border-bottom-right-radius: 4px;
+  }
+  .ai-msg b { font-weight: 800; }
+
+  /* Typing dots */
+  .typing-dots { display:flex; gap:4px; padding:4px 0; }
+  .typing-dots span {
+    width:7px; height:7px; border-radius:50%; background:#9CA3AF;
+    animation: typeBounce .9s infinite;
+  }
+  .typing-dots span:nth-child(2) { animation-delay:.15s; }
+  .typing-dots span:nth-child(3) { animation-delay:.3s; }
+  @keyframes typeBounce {
+    0%,80%,100% { transform:translateY(0); opacity:.5; }
+    40%         { transform:translateY(-6px); opacity:1; }
+  }
+
+  /* Quick suggestions */
+  .ai-suggestions {
+    padding: 0 12px 8px; display:flex; flex-wrap:wrap; gap:6px;
+  }
+  .ai-sug {
+    background:#FFF0E8; border:1px solid #FFD4B0; border-radius:99px;
+    padding:5px 12px; font-size:11px; font-weight:600; color:#C94E18;
+    cursor:pointer; white-space:nowrap;
+  }
+  .ai-sug:hover { background:#FFD4B0; }
+
+  /* Input row */
+  .ai-input-row {
+    padding: 10px 12px; border-top: 1px solid #E5E7EB;
+    display: flex; gap: 8px; flex-shrink: 0;
+  }
+  #aiInput {
+    flex:1; padding:10px 14px; border:2px solid #E5E7EB;
+    border-radius:50px; font-size:13px; font-family:'Poppins',sans-serif;
+    outline:none; color:#1A1A1A;
+  }
+  #aiInput:focus { border-color:#F4621F; }
+  #aiSend {
+    width:40px; height:40px; border-radius:50%;
+    background:linear-gradient(135deg,#F4621F,#C94E18);
+    border:none; color:#fff; font-size:16px; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    flex-shrink:0;
+  }
+</style>
+
+<!-- Floating avatar bubble -->
+<div id="aiBubble" onclick="toggleChat()" title="Ask your AI Assistant">
+  <img src="{{ url_for('avatar_svg_route', avatar_id=profile.avatar_id) }}?color={{ profile.avatar_color|urlencode }}"
+       alt="AI Assistant">
+</div>
+
+<!-- Chat panel -->
+<div id="aiPanel">
+  <!-- Header -->
+  <div class="ai-head">
+    <div class="ai-head-av">
+      <img src="{{ url_for('avatar_svg_route', avatar_id=profile.avatar_id) }}?color={{ profile.avatar_color|urlencode }}"
+           alt="AI">
+    </div>
+    <div>
+      <div class="ai-head-name">BASS 50 Assistant</div>
+      <div class="ai-head-sub">Ask me anything about the app ✨</div>
+    </div>
+    <button class="ai-close" onclick="toggleChat()">✕</button>
+  </div>
+
+  <!-- Messages -->
+  <div id="aiMessages">
+    <div class="ai-msg bot">Hi {{ profile.name.split()[0] }}! 👋 I'm your BASS 50 assistant. Ask me how anything works, or just say <b>"open quiz"</b> to jump there!</div>
+  </div>
+
+  <!-- Quick suggestions -->
+  <div class="ai-suggestions">
+    <span class="ai-sug" onclick="sendSug('How does the quiz work?')">🧠 How quiz works?</span>
+    <span class="ai-sug" onclick="sendSug('My stats')">📊 My stats</span>
+    <span class="ai-sug" onclick="sendSug('Open current affairs')">📰 Open news</span>
+    <span class="ai-sug" onclick="sendSug('What topics are covered?')">📚 Topics</span>
+    <span class="ai-sug" onclick="sendSug('My streak')">🔥 My streak</span>
+  </div>
+
+  <!-- Input -->
+  <div class="ai-input-row">
+    <input id="aiInput" type="text" placeholder="Ask something or give a command…"
+           onkeydown="if(event.key==='Enter') sendChat()">
+    <button id="aiSend" onclick="sendChat()">➤</button>
+  </div>
+</div>
+
+<script>
+let chatOpen = false;
+
+function toggleChat() {
+  chatOpen = !chatOpen;
+  document.getElementById('aiPanel').classList.toggle('open', chatOpen);
+  if (chatOpen) document.getElementById('aiInput').focus();
+}
+
+function sendSug(text) {
+  document.getElementById('aiInput').value = text;
+  sendChat();
+}
+
+function sendChat() {
+  const input = document.getElementById('aiInput');
+  const msg   = input.value.trim();
+  if (!msg) return;
+  input.value = '';
+
+  appendMsg(msg, 'user');
+  showTyping();
+
+  fetch('/assistant/chat', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({message: msg})
+  })
+  .then(r => r.json())
+  .then(data => {
+    removeTyping();
+    appendMsg(data.text, 'bot');
+    // Handle navigation action
+    if (data.action && data.action.type === 'navigate') {
+      setTimeout(() => { window.location.href = data.action.url; }, 900);
+    }
+  })
+  .catch(() => {
+    removeTyping();
+    appendMsg("Oops, something went wrong. Please try again! 🔄", 'bot');
+  });
+}
+
+function appendMsg(text, role) {
+  const wrap = document.getElementById('aiMessages');
+  const div  = document.createElement('div');
+  div.className = 'ai-msg ' + role;
+  // Format **bold** and bullet points
+  div.innerHTML = text
+    .replace(/\*\*(.*?)\*\*/g, '<b>$1</b>')
+    .replace(/^[•\-]\s/gm, '• ')
+    .replace(/\n/g, '<br>');
+  wrap.appendChild(div);
+  wrap.scrollTop = wrap.scrollHeight;
+}
+
+function showTyping() {
+  const wrap = document.getElementById('aiMessages');
+  const d = document.createElement('div');
+  d.className = 'ai-msg bot'; d.id = 'typingDots';
+  d.innerHTML = '<div class="typing-dots"><span></span><span></span><span></span></div>';
+  wrap.appendChild(d);
+  wrap.scrollTop = wrap.scrollHeight;
+}
+
+function removeTyping() {
+  const d = document.getElementById('typingDots');
+  if (d) d.remove();
+}
+</script>
+{% endif %}
+
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+<script>
+function toggleDrawer() {
+  document.getElementById('drawer').classList.toggle('open');
+  document.getElementById('drawerOverlay').classList.toggle('open');
+}
+
+// ── Language panel ────────────────────────────────────────────────────────
+function toggleLangPanel() {
+  const p = document.getElementById('langPanel');
+  p.style.display = p.style.display === 'none' ? 'block' : 'none';
+}
+
+function setLang(langCode) {
+  // Mark active
+  document.querySelectorAll('.lang-pill').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+
+  if (!langCode || langCode === 'en') {
+    // Reset to English
+    const sel = document.querySelector('.goog-te-combo');
+    if (sel) { sel.value = 'en'; sel.dispatchEvent(new Event('change')); }
+    localStorage.setItem('bass50_lang', 'en');
+    return;
+  }
+  // Use Google Translate combo
+  const waitForGT = setInterval(() => {
+    const sel = document.querySelector('.goog-te-combo');
+    if (sel) {
+      clearInterval(waitForGT);
+      sel.value = langCode;
+      sel.dispatchEvent(new Event('change'));
+      localStorage.setItem('bass50_lang', langCode);
+    }
+  }, 200);
+  // Close panel after 600ms
+  setTimeout(() => { document.getElementById('langPanel').style.display='none'; }, 600);
+}
+
+// Auto-restore saved language on page load
+window.addEventListener('load', () => {
+  const saved = localStorage.getItem('bass50_lang');
+  if (saved && saved !== 'en') {
+    setTimeout(() => setLang(saved), 1500);
+  }
+});
+</script>
+
+<!-- Google Translate Widget (loads only when internet available) -->
+<script>
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({
+    pageLanguage: 'en',
+    includedLanguages: 'hi,pa,ta,te,mr,bn,gu,kn,ml,ur,en',
+    autoDisplay: false
+  }, 'google_translate_element');
+}
+</script>
+<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" onerror="console.log('Translate offline')"></script>
+
+{% block extra_js %}{% endblock %}
+
+<!-- ══════════════════════════════════════════════════
+     PWA: Service Worker Registration
+     ══════════════════════════════════════════════════ -->
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/static/sw.js', { scope: '/' })
+      .then(() => console.log('BASS 50 SW registered'))
+      .catch(e => console.log('SW error:', e));
+  });
+}
+
+// ── Install prompt (Android Chrome) ──────────────────
+let deferredPrompt = null;
+const installBanner = document.getElementById('installBanner');
+
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredPrompt = e;
+  if (installBanner) {
+    installBanner.style.display = 'flex';
+    // Auto-hide after 12 seconds
+    setTimeout(() => { installBanner.style.display = 'none'; }, 12000);
+  }
+});
+
+function installApp() {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(() => {
+      deferredPrompt = null;
+      if (installBanner) installBanner.style.display = 'none';
+    });
+  }
+}
+
+window.addEventListener('appinstalled', () => {
+  if (installBanner) installBanner.style.display = 'none';
+});
+</script>
+
+<!-- ── Install Banner HTML ───────────────────────────── -->
+<div id="installBanner" style="display:none; position:fixed; bottom:76px; left:50%; transform:translateX(-50%);
+  width:calc(100% - 32px); max-width:398px; background:#1A1A1A; border-radius:16px;
+  padding:12px 16px; z-index:500; align-items:center; gap:12px;
+  box-shadow:0 8px 32px rgba(0,0,0,0.35);">
+  <img src="{{ url_for('static', filename='icons/icon-72.png') }}" width="40" height="40"
+       style="border-radius:10px; flex-shrink:0;">
+  <div style="flex:1;">
+    <div style="color:#fff; font-weight:700; font-size:13px;">Install BASS 50</div>
+    <div style="color:#9CA3AF; font-size:11px;">Add to home screen for quick access</div>
+  </div>
+  <button onclick="installApp()"
+    style="background:#F4621F; color:#fff; border:none; border-radius:10px;
+           padding:8px 16px; font-weight:700; font-size:13px; cursor:pointer; flex-shrink:0;">
+    Install
+  </button>
+  <button onclick="document.getElementById('installBanner').style.display='none'"
+    style="background:none; border:none; color:#9CA3AF; font-size:18px; cursor:pointer; padding:0 4px; flex-shrink:0;">
+    ✕
+  </button>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,62 @@
+{
+  "name": "BASS 50 — IAS Prep",
+  "short_name": "BASS 50",
+  "description": "Daily UPSC & General quiz prep with current affairs and AI assistant",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#F4621F",
+  "theme_color": "#F4621F",
+  "lang": "en",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "/static/icons/icon-72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/static/icons/icon-96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/static/icons/icon-128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/static/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/static/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Daily Quiz",
+      "short_name": "Quiz",
+      "description": "Jump to today's quiz",
+      "url": "/mcq",
+      "icons": [{"src": "/static/icons/icon-96.png", "sizes": "96x96"}]
+    },
+    {
+      "name": "Current Affairs",
+      "short_name": "News",
+      "description": "Read today's current affairs",
+      "url": "/current-affairs",
+      "icons": [{"src": "/static/icons/icon-96.png", "sizes": "96x96"}]
+    }
+  ],
+  "categories": ["education", "productivity"],
+  "prefer_related_applications": false
+}
