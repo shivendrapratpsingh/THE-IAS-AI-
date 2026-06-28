@@ -5,7 +5,7 @@ User data is stored in Neon (free PostgreSQL) as JSONB — one row per user.
 Static content (MCQ bank, prompts, etc.) still loads from local JSON files.
 
 Schema (auto-created on first run):
-    CREATE TABLE users (
+    CREATE TABLE users_v2 (
         phone TEXT PRIMARY KEY,
         data  JSONB NOT NULL DEFAULT '{}'
     );
@@ -91,37 +91,17 @@ def _get_conn():
 
 
 def _ensure_table():
-    """Ensure users table has the exact schema we need. Recreates if wrong."""
+    """Ensure users_v2 table exists with correct schema."""
     conn = _get_conn()
     conn.autocommit = True
     try:
         with conn.cursor() as cur:
-            # Check existing columns
             cur.execute("""
-                SELECT column_name FROM information_schema.columns
-                WHERE table_name = 'users' AND table_schema = 'public'
-                ORDER BY ordinal_position
+                CREATE TABLE IF NOT EXISTS users_v2 (
+                    phone TEXT PRIMARY KEY,
+                    data  JSONB NOT NULL DEFAULT '{}'
+                )
             """)
-            existing = [row[0] for row in cur.fetchall()]
-
-            # Correct schema: exactly {phone, data}
-            needs_rebuild = (
-                not existing or
-                'phone' not in existing or
-                'data' not in existing or
-                'identifier' in existing  # old wrong schema
-            )
-
-            if needs_rebuild:
-                print(f"[storage] Rebuilding users table. Current cols: {existing}")
-                cur.execute("DROP TABLE IF EXISTS users")
-                cur.execute("""
-                    CREATE TABLE users (
-                        phone TEXT PRIMARY KEY,
-                        data  JSONB NOT NULL DEFAULT '{}'
-                    )
-                """)
-                print("[storage] users table recreated with correct schema")
     finally:
         conn.close()
 
@@ -147,7 +127,7 @@ def load_all_users() -> dict:
             conn = _get_conn()
             conn.autocommit = True
             with conn.cursor() as cur:
-                cur.execute("SELECT phone, data FROM users")
+                cur.execute("SELECT phone, data FROM users_v2")
                 return {row[0]: row[1] for row in cur.fetchall()}
         except Exception as e:
             print(f"[storage] load_all_users DB error: {e}")
@@ -174,7 +154,7 @@ def save_all_users(users: dict):
                 with conn.cursor() as cur:
                     for phone, data in users.items():
                         cur.execute("""
-                            INSERT INTO users (phone, data)
+                            INSERT INTO users_v2 (phone, data)
                             VALUES (%s, %s::jsonb)
                             ON CONFLICT (phone) DO UPDATE SET data = EXCLUDED.data
                         """, (phone, json.dumps(data)))
@@ -195,7 +175,7 @@ def load_user(phone: str) -> dict:
             conn = _get_conn()
             conn.autocommit = True
             with conn.cursor() as cur:
-                cur.execute("SELECT data FROM users WHERE phone = %s", (phone,))
+                cur.execute("SELECT data FROM users_v2 WHERE phone = %s", (phone,))
                 row = cur.fetchone()
                 data = row[0] if row else {}
                 return _fill_defaults(data)
@@ -219,7 +199,7 @@ def save_user(phone: str, data: dict):
             conn.autocommit = True          # bypass transaction context manager issues
             with conn.cursor() as cur:
                 cur.execute("""
-                    INSERT INTO users (phone, data)
+                    INSERT INTO users_v2 (phone, data)
                     VALUES (%s, %s::jsonb)
                     ON CONFLICT (phone) DO UPDATE SET data = EXCLUDED.data
                 """, (phone, json.dumps(data)))
@@ -249,7 +229,7 @@ def user_exists(phone: str) -> bool:
             conn = _get_conn()
             conn.autocommit = True
             with conn.cursor() as cur:
-                cur.execute("SELECT 1 FROM users WHERE phone = %s", (phone,))
+                cur.execute("SELECT 1 FROM users_v2 WHERE phone = %s", (phone,))
                 return cur.fetchone() is not None
         except Exception as e:
             print(f"[storage] user_exists DB error: {e}")

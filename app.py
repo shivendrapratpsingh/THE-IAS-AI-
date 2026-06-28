@@ -1016,7 +1016,7 @@ def ping():
         conn = _pg2.connect(storage.DATABASE_URL, connect_timeout=30)
         conn.autocommit = True
         with conn.cursor() as cur:
-            cur.execute("SELECT COUNT(*) FROM users")
+            cur.execute("SELECT COUNT(*) FROM users_v2")
             count = cur.fetchone()[0]
         conn.close()
         read_ok = True
