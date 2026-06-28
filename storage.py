@@ -92,21 +92,22 @@ def _get_conn():
 
 def _ensure_table():
     """Create users table if it doesn't exist, and add missing columns if schema is old."""
-    with _get_conn() as conn:
+    conn = _get_conn()
+    conn.autocommit = True
+    try:
         with conn.cursor() as cur:
-            # Create table with correct schema
             cur.execute("""
                 CREATE TABLE IF NOT EXISTS users (
                     phone TEXT PRIMARY KEY,
                     data  JSONB NOT NULL DEFAULT '{}'
                 )
             """)
-            # If table existed with wrong schema, add the data column safely
             cur.execute("""
                 ALTER TABLE users
                 ADD COLUMN IF NOT EXISTS data JSONB NOT NULL DEFAULT '{}'
             """)
-        conn.commit()
+    finally:
+        conn.close()
 
 
 # Auto-create table when module loads (only if DB is configured)
@@ -125,14 +126,20 @@ def _use_db() -> bool:
 
 def load_all_users() -> dict:
     if _use_db():
+        conn = None
         try:
-            with _get_conn() as conn:
-                with conn.cursor() as cur:
-                    cur.execute("SELECT phone, data FROM users")
-                    return {row[0]: row[1] for row in cur.fetchall()}
+            conn = _get_conn()
+            conn.autocommit = True
+            with conn.cursor() as cur:
+                cur.execute("SELECT phone, data FROM users")
+                return {row[0]: row[1] for row in cur.fetchall()}
         except Exception as e:
             print(f"[storage] load_all_users DB error: {e}")
             return {}
+        finally:
+            if conn:
+                try: conn.close()
+                except: pass
     # ── fallback: local JSON ──
     if not os.path.exists(USERS_FILE):
         return {}
@@ -167,16 +174,22 @@ def save_all_users(users: dict):
 
 def load_user(phone: str) -> dict:
     if _use_db():
+        conn = None
         try:
-            with _get_conn() as conn:
-                with conn.cursor() as cur:
-                    cur.execute("SELECT data FROM users WHERE phone = %s", (phone,))
-                    row = cur.fetchone()
-                    data = row[0] if row else {}
-                    return _fill_defaults(data)
+            conn = _get_conn()
+            conn.autocommit = True
+            with conn.cursor() as cur:
+                cur.execute("SELECT data FROM users WHERE phone = %s", (phone,))
+                row = cur.fetchone()
+                data = row[0] if row else {}
+                return _fill_defaults(data)
         except Exception as e:
             print(f"[storage] load_user DB error: {e}")
             return _fill_defaults({})
+        finally:
+            if conn:
+                try: conn.close()
+                except: pass
     # ── fallback ──
     users = load_all_users()
     return _fill_defaults(users.get(phone, {}))
@@ -215,14 +228,20 @@ def save_user(phone: str, data: dict):
 
 def user_exists(phone: str) -> bool:
     if _use_db():
+        conn = None
         try:
-            with _get_conn() as conn:
-                with conn.cursor() as cur:
-                    cur.execute("SELECT 1 FROM users WHERE phone = %s", (phone,))
-                    return cur.fetchone() is not None
+            conn = _get_conn()
+            conn.autocommit = True
+            with conn.cursor() as cur:
+                cur.execute("SELECT 1 FROM users WHERE phone = %s", (phone,))
+                return cur.fetchone() is not None
         except Exception as e:
             print(f"[storage] user_exists DB error: {e}")
             return False
+        finally:
+            if conn:
+                try: conn.close()
+                except: pass
     return phone in load_all_users()
 
 
@@ -593,10 +612,10 @@ def get_daily_answer_prompt(for_date=None):
     return ANSWER_PROMPTS[day_index % len(ANSWER_PROMPTS)]
 
 
-def get_daily_legal_question(for_date=None):
-    d = for_date or date.today()
-    day_index = (d - date(1970, 1, 1)).days
-    return LEGAL_QUESTIONS[day_index % len(LEGAL_QUESTIONS)]
+def get_weekly_current_affairs(count=14):
+    items = sorted(CURRENT_AFFAIRS, key=lambda x: x["date"], reverse=True)
+    return items[:count]
+STIONS[day_index % len(LEGAL_QUESTIONS)]
 
 
 

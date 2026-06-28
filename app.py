@@ -1001,31 +1001,53 @@ def avatar_svg_route(avatar_id):
 
 @app.route("/ping")
 def ping():
-    """DB connectivity + write test."""
+    """DB connectivity + write test — exposes exact errors."""
     from flask import jsonify
-    import traceback
+    import traceback, json as _json, psycopg2 as _pg2
+    prefix = storage.DATABASE_URL[:30] if storage.DATABASE_URL else "NOT SET"
+    if not storage.DATABASE_URL:
+        return jsonify(db=False, reason="DATABASE_URL not set")
+
+    read_ok = False; write_ok = False; count = 0
+    read_err = ""; write_err = ""; write_trace = ""
+
+    # READ TEST
     try:
-        db_url_set = bool(storage.DATABASE_URL)
-        prefix = storage.DATABASE_URL[:30] if storage.DATABASE_URL else "NOT SET"
-        if not db_url_set:
-            return jsonify(db=False, reason="DATABASE_URL not set", prefix=prefix)
-        conn = storage._get_conn()
+        conn = _pg2.connect(storage.DATABASE_URL, connect_timeout=30)
+        conn.autocommit = True
         with conn.cursor() as cur:
             cur.execute("SELECT COUNT(*) FROM users")
             count = cur.fetchone()[0]
         conn.close()
-        storage.save_user("__ping__", {"onboarded": True, "test": True})
-        loaded = storage.load_user("__ping__")
-        write_ok = loaded.get("test") is True
-        return jsonify(db=True, users=count, write_ok=write_ok, prefix=prefix)
+        read_ok = True
     except Exception as e:
-        return jsonify(
-            db=False,
-            error=str(e),
-            trace=traceback.format_exc()[-600:],
-            prefix=storage.DATABASE_URL[:30] if storage.DATABASE_URL else "NOT SET"
-        )
+        read_err = str(e)
+
+    # WRITE TEST (direct, no save_user wrapper)
+    try:
+        conn2 = _pg2.connect(storage.DATABASE_URL, connect_timeout=30)
+        conn2.autocommit = True
+        with conn2.cursor() as cur:
+            import datetime as _dt
+            cur.execute(
+                "INSERT INTO users (phone, data) VALUES (%s, %s::jsonb) "
+                "ON CONFLICT (phone) DO UPDATE SET data = EXCLUDED.data",
+                ("__ping__", _json.dumps({"onboarded": True, "test": True, "ts": str(_dt.datetime.utcnow())}))
+            )
+        conn2.close()
+        write_ok = True
+    except Exception as e:
+        write_err = str(e)
+        write_trace = traceback.format_exc()[-800:]
+
+    return jsonify(
+        prefix=prefix,
+        read_ok=read_ok, read_err=read_err,
+        write_ok=write_ok, write_err=write_err,
+        write_trace=write_trace,
+        users=count
+    )
 
 
 if __name__ == "__main__":
-    app.run(debug=os.environ.get("FLASK_DEBUG", "false").lower() == "true")
+    app.run(debug=True)
