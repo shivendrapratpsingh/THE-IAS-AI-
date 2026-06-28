@@ -83,12 +83,11 @@ def _fill_defaults(data):
 # ── Database connection ────────────────────────────────────────────────────────
 
 def _get_conn():
-    """Return a psycopg2 connection to Neon. Raises if DATABASE_URL not set."""
+    """Return a psycopg2 connection to Neon."""
     import psycopg2
-    # Strip query params psycopg2 doesn't support (channel_binding etc.)
-    base_url = DATABASE_URL.split("?")[0] if "?" in DATABASE_URL else DATABASE_URL
-    # connect_timeout=30 handles Neon cold-start (compute sleeps on free tier)
-    return psycopg2.connect(base_url, sslmode="require", connect_timeout=30)
+    # psycopg2-binary>=2.9 supports channel_binding, so pass the full URL unchanged.
+    # Only add connect_timeout (not in URL) to handle Neon cold-start wakeup (~10s).
+    return psycopg2.connect(DATABASE_URL, connect_timeout=30)
 
 
 def _ensure_table():
@@ -598,6 +597,7 @@ def get_daily_legal_question(for_date=None):
     d = for_date or date.today()
     day_index = (d - date(1970, 1, 1)).days
     return LEGAL_QUESTIONS[day_index % len(LEGAL_QUESTIONS)]
+
 
 
 def get_weekly_current_affairs(count=14):
