@@ -91,7 +91,7 @@ def _get_conn():
 
 
 def _ensure_table():
-    """Create users table if it doesn't exist; fix schema if columns/constraints are missing."""
+    """Ensure users table has the exact schema we need. Recreates if wrong."""
     conn = _get_conn()
     conn.autocommit = True
     try:
@@ -100,42 +100,28 @@ def _ensure_table():
             cur.execute("""
                 SELECT column_name FROM information_schema.columns
                 WHERE table_name = 'users' AND table_schema = 'public'
+                ORDER BY ordinal_position
             """)
-            existing = {row[0] for row in cur.fetchall()}
+            existing = [row[0] for row in cur.fetchall()]
 
-            if not existing:
-                # Fresh create with correct schema
+            # Correct schema: exactly {phone, data}
+            needs_rebuild = (
+                not existing or
+                'phone' not in existing or
+                'data' not in existing or
+                'identifier' in existing  # old wrong schema
+            )
+
+            if needs_rebuild:
+                print(f"[storage] Rebuilding users table. Current cols: {existing}")
+                cur.execute("DROP TABLE IF EXISTS users")
                 cur.execute("""
-                    CREATE TABLE IF NOT EXISTS users (
+                    CREATE TABLE users (
                         phone TEXT PRIMARY KEY,
                         data  JSONB NOT NULL DEFAULT '{}'
                     )
                 """)
-            else:
-                # Table exists — ensure correct columns and constraints
-                if 'data' not in existing:
-                    cur.execute("ALTER TABLE users ADD COLUMN data JSONB NOT NULL DEFAULT '{}'")
-                if 'phone' not in existing:
-                    cur.execute("ALTER TABLE users ADD COLUMN phone TEXT")
-
-                # Ensure phone has a unique/primary key constraint
-                cur.execute("""
-                    SELECT COUNT(*) FROM information_schema.table_constraints tc
-                    JOIN information_schema.constraint_column_usage ccu
-                      ON tc.constraint_name = ccu.constraint_name
-                    WHERE tc.table_name = 'users'
-                      AND ccu.column_name = 'phone'
-                      AND tc.constraint_type IN ('PRIMARY KEY','UNIQUE')
-                """)
-                if cur.fetchone()[0] == 0:
-                    # No unique constraint on phone — add one (deduplicate first)
-                    cur.execute("""
-                        DELETE FROM users a USING users b
-                        WHERE a.ctid < b.ctid AND a.phone = b.phone
-                    """)
-                    cur.execute("""
-                        ALTER TABLE users ADD CONSTRAINT users_phone_unique UNIQUE (phone)
-                    """)
+                print("[storage] users table recreated with correct schema")
     finally:
         conn.close()
 
