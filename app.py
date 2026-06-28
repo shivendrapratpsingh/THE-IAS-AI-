@@ -157,7 +157,6 @@ def login():
         # Admin auto-redirect → password gate
         if full_phone == ADMIN_PHONE:
             session["user_mode"] = "upsc"
-            session["admin_phone_verified"] = True   # phone OK; password still needed
             return redirect(url_for("admin_auth"))
 
         # First time? Redirect to onboarding (mode set during onboarding)
@@ -853,8 +852,7 @@ def _require_admin():
 
 @app.route("/admin-auth", methods=["GET", "POST"])
 def admin_auth():
-    if not session.get("admin_phone_verified"):
-        return redirect(url_for("login"))
+    # Already authenticated → go straight to console
     if session.get("is_admin"):
         return redirect(url_for("admin"))
     error = None
@@ -862,6 +860,7 @@ def admin_auth():
         pw = request.form.get("password", "")
         if pw == ADMIN_PASSWORD:
             session["is_admin"] = True
+            session.permanent = True
             session.pop("admin_phone_verified", None)
             return redirect(url_for("admin"))
         error = "Wrong password. Try again."
@@ -876,14 +875,12 @@ def admin():
     users        = storage.get_all_user_summaries()
     topic_counts = Counter(q["topic"] for q in storage.MCQ_BANK)
     metrics      = storage.get_startup_metrics()
-    all_raw      = storage.load_all_users()
     return render_template(
         "admin.html",
         users=users,
         mcq_total=len(storage.MCQ_BANK),
         topic_counts=dict(topic_counts),
         metrics=metrics,
-        all_raw=all_raw,
     )
 
 

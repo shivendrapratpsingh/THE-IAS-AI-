@@ -267,6 +267,8 @@ def get_all_user_summaries() -> list:
             "days_active_30":    days_active_30,
             "regularity":        compute_regularity(data),
             "seen_questions":    len(data.get("seen_question_ids", [])),
+            "exilars":           data.get("exilars", 0),
+            "medals_seen":       data.get("medals_seen", []),
         })
     return sorted(result, key=lambda x: x["name"])
 

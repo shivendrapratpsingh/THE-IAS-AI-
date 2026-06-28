@@ -370,7 +370,7 @@
             <div class="u-phone">📱 {{ u.phone }}</div>
           </div>
           <div style="text-align:right;">
-            <div style="font-size:20px;font-weight:900;color:#FCD34D;">{{ all_raw.get(u.phone,{}).get('exilars',0) }}</div>
+            <div style="font-size:20px;font-weight:900;color:#FCD34D;">{{ u.exilars }}</div>
             <div style="font-size:9px;color:rgba(255,255,255,0.35);font-weight:700;">EXILARS</div>
           </div>
         </div>
@@ -453,8 +453,8 @@
 
             <div style="font-size:10px;color:rgba(255,255,255,0.35);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">Exilars &amp; Medals Seen (comma-separated: 5,10,20)</div>
             <div class="adm-form-row">
-              <input type="number" name="exilars" value="{{ all_raw.get(u.phone,{}).get('exilars',0) }}" min="0" max="999" placeholder="Exilars">
-              <input type="text" name="medals_seen" value="{{ all_raw.get(u.phone,{}).get('medals_seen',[])|join(',') }}" placeholder="e.g. 5,10">
+              <input type="number" name="exilars" value="{{ u.exilars }}" min="0" max="999" placeholder="Exilars">
+              <input type="text" name="medals_seen" value="{{ u.medals_seen|join(',') }}" placeholder="e.g. 5,10">
             </div>
             <button type="submit" class="adm-btn adm-btn-green adm-btn-full">💾 Save Profile</button>
           </form>
