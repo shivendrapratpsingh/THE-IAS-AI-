@@ -91,20 +91,20 @@ def _get_conn():
 
 
 def _ensure_table():
-    """Create users table if it doesn't exist; migrate schema if columns are missing."""
+    """Create users table if it doesn't exist; fix schema if columns/constraints are missing."""
     conn = _get_conn()
     conn.autocommit = True
     try:
         with conn.cursor() as cur:
-            # Get existing columns
+            # Check existing columns
             cur.execute("""
                 SELECT column_name FROM information_schema.columns
-                WHERE table_name = 'users'
+                WHERE table_name = 'users' AND table_schema = 'public'
             """)
             existing = {row[0] for row in cur.fetchall()}
 
             if not existing:
-                # Table doesn't exist at all — create fresh
+                # Fresh create with correct schema
                 cur.execute("""
                     CREATE TABLE IF NOT EXISTS users (
                         phone TEXT PRIMARY KEY,
@@ -112,11 +112,30 @@ def _ensure_table():
                     )
                 """)
             else:
-                # Table exists — add any missing columns
-                if 'phone' not in existing:
-                    cur.execute("ALTER TABLE users ADD COLUMN phone TEXT")
+                # Table exists — ensure correct columns and constraints
                 if 'data' not in existing:
                     cur.execute("ALTER TABLE users ADD COLUMN data JSONB NOT NULL DEFAULT '{}'")
+                if 'phone' not in existing:
+                    cur.execute("ALTER TABLE users ADD COLUMN phone TEXT")
+
+                # Ensure phone has a unique/primary key constraint
+                cur.execute("""
+                    SELECT COUNT(*) FROM information_schema.table_constraints tc
+                    JOIN information_schema.constraint_column_usage ccu
+                      ON tc.constraint_name = ccu.constraint_name
+                    WHERE tc.table_name = 'users'
+                      AND ccu.column_name = 'phone'
+                      AND tc.constraint_type IN ('PRIMARY KEY','UNIQUE')
+                """)
+                if cur.fetchone()[0] == 0:
+                    # No unique constraint on phone — add one (deduplicate first)
+                    cur.execute("""
+                        DELETE FROM users a USING users b
+                        WHERE a.ctid < b.ctid AND a.phone = b.phone
+                    """)
+                    cur.execute("""
+                        ALTER TABLE users ADD CONSTRAINT users_phone_unique UNIQUE (phone)
+                    """)
     finally:
         conn.close()
 
