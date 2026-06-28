@@ -999,6 +999,33 @@ def avatar_svg_route(avatar_id):
     return Response(svg, mimetype="image/svg+xml",
                     headers={"Cache-Control": "public, max-age=3600"})
 
+@app.route("/ping")
+def ping():
+    """DB connectivity + write test."""
+    from flask import jsonify
+    import traceback
+    try:
+        db_url_set = bool(storage.DATABASE_URL)
+        prefix = storage.DATABASE_URL[:30] if storage.DATABASE_URL else "NOT SET"
+        if not db_url_set:
+            return jsonify(db=False, reason="DATABASE_URL not set", prefix=prefix)
+        conn = storage._get_conn()
+        with conn.cursor() as cur:
+            cur.execute("SELECT COUNT(*) FROM users")
+            count = cur.fetchone()[0]
+        conn.close()
+        storage.save_user("__ping__", {"onboarded": True, "test": True})
+        loaded = storage.load_user("__ping__")
+        write_ok = loaded.get("test") is True
+        return jsonify(db=True, users=count, write_ok=write_ok, prefix=prefix)
+    except Exception as e:
+        return jsonify(
+            db=False,
+            error=str(e),
+            trace=traceback.format_exc()[-600:],
+            prefix=storage.DATABASE_URL[:30] if storage.DATABASE_URL else "NOT SET"
+        )
+
 
 if __name__ == "__main__":
     app.run(debug=os.environ.get("FLASK_DEBUG", "false").lower() == "true")

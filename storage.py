@@ -85,10 +85,10 @@ def _fill_defaults(data):
 def _get_conn():
     """Return a psycopg2 connection to Neon. Raises if DATABASE_URL not set."""
     import psycopg2
-    # Strip query params (sslmode, channel_binding) from URL to avoid
-    # psycopg2 conflicts, then enforce SSL via keyword arg instead.
+    # Strip query params psycopg2 doesn't support (channel_binding etc.)
     base_url = DATABASE_URL.split("?")[0] if "?" in DATABASE_URL else DATABASE_URL
-    return psycopg2.connect(base_url, sslmode="require")
+    # connect_timeout=30 handles Neon cold-start (compute sleeps on free tier)
+    return psycopg2.connect(base_url, sslmode="require", connect_timeout=30)
 
 
 def _ensure_table():
@@ -185,18 +185,24 @@ def load_user(phone: str) -> dict:
 
 def save_user(phone: str, data: dict):
     if _use_db():
+        conn = None
         try:
-            with _get_conn() as conn:
-                with conn.cursor() as cur:
-                    cur.execute("""
-                        INSERT INTO users (phone, data)
-                        VALUES (%s, %s::jsonb)
-                        ON CONFLICT (phone) DO UPDATE SET data = EXCLUDED.data
-                    """, (phone, json.dumps(data)))
-                conn.commit()
+            conn = _get_conn()
+            conn.autocommit = True          # bypass transaction context manager issues
+            with conn.cursor() as cur:
+                cur.execute("""
+                    INSERT INTO users (phone, data)
+                    VALUES (%s, %s::jsonb)
+                    ON CONFLICT (phone) DO UPDATE SET data = EXCLUDED.data
+                """, (phone, json.dumps(data)))
+            print(f"[storage] save_user OK: {phone}")
             return
         except Exception as e:
             print(f"[storage] save_user DB error: {e}")
+        finally:
+            if conn:
+                try: conn.close()
+                except: pass
     # ── fallback: local JSON (read-only filesystems like Vercel will skip silently) ──
     try:
         users = load_all_users()
