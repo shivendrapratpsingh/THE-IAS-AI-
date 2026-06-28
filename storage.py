@@ -615,10 +615,10 @@ def get_daily_answer_prompt(for_date=None):
 def get_weekly_current_affairs(count=14):
     items = sorted(CURRENT_AFFAIRS, key=lambda x: x["date"], reverse=True)
     return items[:count]
-STIONS[day_index % len(LEGAL_QUESTIONS)]
 
 
+def get_daily_legal_question(for_date=None):
+    d = for_date or date.today()
+    day_index = (d - date(1970, 1, 1)).days
+    return LEGAL_QUESTIONS[day_index % len(LEGAL_QUESTIONS)]
 
-def get_weekly_current_affairs(count=14):
-    items = sorted(CURRENT_AFFAIRS, key=lambda x: x["date"], reverse=True)
-    return items[:count]
