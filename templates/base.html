@@ -219,7 +219,7 @@
     </div>
     <div class="drawer-name">{{ profile.name if profile and profile.name else 'Aspirant' }}</div>
     <div class="drawer-stage">
-      {{ profile.stage|capitalize if profile and profile.stage else 'IAS Aspirant' }}
+      {{ "Try Once!!" if (profile and profile.stage in ("beginner", "Try Once!!")) else (profile.stage|capitalize if profile and profile.stage else "IAS Aspirant") }}
       · 📱 {{ phone[-4:] if phone else '—' }}
     </div>
   </div>
@@ -612,3 +612,4 @@ window.addEventListener('appinstalled', () => {
 
 </body>
 </html>
+                                                                                                                      

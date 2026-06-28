@@ -12,48 +12,28 @@
     .ob-shell {
       max-width: 430px; margin: 0 auto;
       min-height: 100vh; display: flex; flex-direction: column;
-      position: relative;
     }
 
-    /* ── Progress bar ── */
-    .ob-progress {
-      padding: 16px 24px 0;
-      display: flex; gap: 8px;
-    }
-    .ob-prog-seg {
-      flex: 1; height: 4px; border-radius: 99px;
-      background: rgba(255,255,255,0.12);
-      transition: background .4s;
-    }
-    .ob-prog-seg.done { background: #F4621F; }
-
-    /* ── Hero area ── */
     .ob-hero {
-      padding: 28px 24px 24px;
+      padding: 36px 24px 28px;
       flex-shrink: 0;
     }
-    .ob-step-label {
-      font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.4);
-      text-transform: uppercase; letter-spacing: .8px; margin-bottom: 10px;
-    }
     .ob-title {
-      font-size: 30px; font-weight: 900; color: #fff;
+      font-size: 32px; font-weight: 900; color: #fff;
       line-height: 1.2; margin-bottom: 8px;
     }
     .ob-sub {
       font-size: 13px; color: rgba(255,255,255,0.45); line-height: 1.6;
     }
 
-    /* ── Sheet ── */
     .ob-sheet {
       flex: 1;
       background: #1C1C1E;
       border-radius: 28px 28px 0 0;
-      padding: 28px 20px 48px;
+      padding: 28px 20px 56px;
       overflow-y: auto;
     }
 
-    /* ── Field ── */
     .ob-field { margin-bottom: 20px; }
     .ob-label {
       font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.4);
@@ -70,19 +50,7 @@
     }
     .ob-input:focus { border-color: #F4621F; }
     .ob-input::placeholder { color: rgba(255,255,255,0.25); font-weight: 500; }
-    .ob-select {
-      width: 100%; background: rgba(255,255,255,0.06);
-      border: 1.5px solid rgba(255,255,255,0.12);
-      border-radius: 16px; padding: 16px 14px;
-      font-size: 15px; font-weight: 600; color: #fff;
-      font-family: 'Poppins', sans-serif; outline: none;
-      -webkit-appearance: none; appearance: none; cursor: pointer;
-      box-sizing: border-box;
-    }
-    .ob-select:focus { border-color: #F4621F; }
-    .ob-select option { background: #1C1C1E; }
 
-    /* ── Phone row ── */
     .phone-row { display: flex; gap: 8px; }
     .ob-cc {
       background: rgba(255,255,255,0.06);
@@ -95,7 +63,6 @@
     .ob-cc:focus { border-color: #F4621F; }
     .ob-cc option { background: #1C1C1E; }
 
-    /* ── Mode pills ── */
     .mode-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
     .mode-pill input { display: none; }
     .mode-pill label {
@@ -109,31 +76,9 @@
     .mode-pill label .mp-icon { font-size: 28px; margin-bottom: 6px; }
     .mode-pill label .mp-title { font-size: 13px; font-weight: 800; color: rgba(255,255,255,0.7); }
     .mode-pill label .mp-sub { font-size: 10px; color: rgba(255,255,255,0.35); margin-top: 3px; font-weight: 600; }
-    .mode-pill input:checked + label {
-      border-color: #F4621F;
-      background: rgba(244,98,31,0.12);
-    }
+    .mode-pill input:checked + label { border-color: #F4621F; background: rgba(244,98,31,0.12); }
     .mode-pill input:checked + label .mp-title { color: #FDA87A; }
 
-    /* ── Stage pills (4 grid) ── */
-    .stage-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .stage-pill input { display: none; }
-    .stage-pill label {
-      display: flex; flex-direction: column; align-items: center;
-      padding: 16px 8px;
-      border: 2px solid rgba(255,255,255,0.1);
-      border-radius: 16px; cursor: pointer;
-      background: rgba(255,255,255,0.04);
-      transition: all .15s;
-    }
-    .stage-pill label .sp-icon { font-size: 24px; margin-bottom: 5px; }
-    .stage-pill label .sp-text { font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.55); }
-    .stage-pill input:checked + label {
-      border-color: #F4621F; background: rgba(244,98,31,0.12);
-    }
-    .stage-pill input:checked + label .sp-text { color: #FDA87A; }
-
-    /* ── Buttons ── */
     .ob-btn {
       width: 100%; padding: 19px;
       background: linear-gradient(135deg, #F4621F 0%, #C94E18 100%);
@@ -144,40 +89,20 @@
       transition: transform .15s; margin-top: 8px;
     }
     .ob-btn:active { transform: scale(0.98); }
-    .ob-btn-back {
-      width: 100%; padding: 16px;
-      background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.5);
-      border: 1px solid rgba(255,255,255,0.1); border-radius: 14px;
-      font-size: 14px; font-weight: 700; font-family: 'Poppins', sans-serif;
-      cursor: pointer; margin-top: 10px;
-    }
 
     .ob-hint { font-size: 11px; color: rgba(255,255,255,0.25); text-align: center; margin-top: 12px; }
     .ob-confirm-green { font-size: 11px; color: #4ADE80; margin-top: 6px; font-weight: 600; }
-
-    /* Step visibility */
-    .ob-step { display: none; }
-    .ob-step.active { display: block; }
   </style>
 </head>
 <body>
 <div class="phone-shell">
 <div class="ob-shell">
 
-  <!-- Progress bar -->
-  <div class="ob-progress">
-    <div class="ob-prog-seg done" id="prog1"></div>
-    <div class="ob-prog-seg" id="prog2"></div>
-  </div>
-
-  <!-- Hero (changes per step) -->
   <div class="ob-hero">
-    <div class="ob-step-label" id="stepLabel">Step 1 of 2</div>
-    <div class="ob-title" id="stepTitle">Who are you,<br>Aspirant? 👋</div>
-    <div class="ob-sub" id="stepSub">Tell us about yourself. Takes 20 seconds.</div>
+    <div class="ob-title">Who are you,<br>Aspirant? 👋</div>
+    <div class="ob-sub">Takes 20 seconds. You can update this later.</div>
   </div>
 
-  <!-- Sheet -->
   <div class="ob-sheet">
 
     {% with messages = get_flashed_messages() %}
@@ -186,156 +111,73 @@
       {% endfor %}{% endif %}
     {% endwith %}
 
-    <form method="POST" action="{{ url_for('onboarding') }}" id="obForm">
+    <form method="POST" action="{{ url_for('onboarding') }}">
 
-      <!-- ─── STEP 1 ─── -->
-      <div class="ob-step active" id="step1">
-
-        <!-- Mode -->
-        <div class="ob-field">
-          <label class="ob-label">I am preparing for</label>
-          <div class="mode-grid">
-            <div class="mode-pill">
-              <input type="radio" name="user_mode" id="m-upsc" value="upsc" checked>
-              <label for="m-upsc">
-                <span class="mp-icon">🎯</span>
-                <span class="mp-title">UPSC / IAS</span>
-                <span class="mp-sub">Full civil services prep</span>
-              </label>
-            </div>
-            <div class="mode-pill">
-              <input type="radio" name="user_mode" id="m-general" value="general">
-              <label for="m-general">
-                <span class="mp-icon">📚</span>
-                <span class="mp-title">General</span>
-                <span class="mp-sub">Quick daily practice</span>
-              </label>
-            </div>
+      <!-- Mode -->
+      <div class="ob-field">
+        <label class="ob-label">I am preparing for</label>
+        <div class="mode-grid">
+          <div class="mode-pill">
+            <input type="radio" name="user_mode" id="m-upsc" value="upsc" checked>
+            <label for="m-upsc">
+              <span class="mp-icon">🎯</span>
+              <span class="mp-title">UPSC / IAS</span>
+              <span class="mp-sub">Full civil services prep</span>
+            </label>
+          </div>
+          <div class="mode-pill">
+            <input type="radio" name="user_mode" id="m-general" value="general">
+            <label for="m-general">
+              <span class="mp-icon">📚</span>
+              <span class="mp-title">General</span>
+              <span class="mp-sub">Quick daily practice</span>
+            </label>
           </div>
         </div>
-
-        <!-- Name -->
-        <div class="ob-field">
-          <label class="ob-label" for="ob-name">Your Name</label>
-          <input class="ob-input" id="ob-name" type="text" name="name"
-                 placeholder="e.g. Priya Sharma"
-                 value="{{ profile.name if profile and profile.name else '' }}"
-                 maxlength="60" autocomplete="name">
-        </div>
-
-        <!-- Phone -->
-        <div class="ob-field">
-          <label class="ob-label">Mobile Number</label>
-          <div class="phone-row">
-            <select class="ob-cc" name="country_code">
-              <option value="+91">🇮🇳 +91</option>
-              <option value="+1">🇺🇸 +1</option>
-              <option value="+44">🇬🇧 +44</option>
-              <option value="+971">🇦🇪 +971</option>
-              <option value="+61">🇦🇺 +61</option>
-            </select>
-            <input class="ob-input" type="tel" name="phone"
-                   placeholder="10-digit number"
-                   inputmode="numeric" maxlength="10"
-                   oninput="this.value=this.value.replace(/\D/g,'')"
-                   value="{{ phone_digits }}"
-                   style="flex:1;">
-          </div>
-          {% if phone_digits %}
-          <div class="ob-confirm-green">✓ Confirmed from login: {{ phone }}</div>
-          {% else %}
-          <div class="ob-hint" style="text-align:left;margin-top:6px;">Tracks your progress across devices</div>
-          {% endif %}
-        </div>
-
-        <button type="button" class="ob-btn" onclick="goStep2()">Next →</button>
-        <div class="ob-hint">You can update all of this later</div>
       </div>
 
-      <!-- ─── STEP 2 ─── -->
-      <div class="ob-step" id="step2">
-
-        <!-- Stage -->
-        <div class="ob-field">
-          <label class="ob-label">Where are you right now?</label>
-          <div class="stage-grid">
-            <div class="stage-pill">
-              <input type="radio" name="stage" id="s-beg" value="beginner" checked>
-              <label for="s-beg"><span class="sp-icon">🌱</span><span class="sp-text">Beginner</span></label>
-            </div>
-            <div class="stage-pill">
-              <input type="radio" name="stage" id="s-int" value="intermediate">
-              <label for="s-int"><span class="sp-icon">📖</span><span class="sp-text">Preparing</span></label>
-            </div>
-            <div class="stage-pill">
-              <input type="radio" name="stage" id="s-adv" value="advanced">
-              <label for="s-adv"><span class="sp-icon">🔥</span><span class="sp-text">Advanced</span></label>
-            </div>
-            <div class="stage-pill">
-              <input type="radio" name="stage" id="s-rev" value="revision">
-              <label for="s-rev"><span class="sp-icon">⚡</span><span class="sp-text">Revision</span></label>
-            </div>
-          </div>
-        </div>
-
-        <!-- Target year -->
-        <div class="ob-field">
-          <label class="ob-label">Target Exam Year</label>
-          <select class="ob-select" name="target_year">
-            {% for y in range(2025, 2031) %}
-            <option value="{{ y }}">UPSC CSE {{ y }}</option>
-            {% endfor %}
-          </select>
-        </div>
-
-        <!-- Daily hours -->
-        <div class="ob-field">
-          <label class="ob-label">Daily Study Hours</label>
-          <select class="ob-select" name="daily_hours">
-            {% for h in [1,2,3,4,5,6,8,10,12] %}
-            <option value="{{ h }}" {{ 'selected' if h == 4 }}>{{ h }} hour{{ 's' if h != 1 }}</option>
-            {% endfor %}
-          </select>
-        </div>
-
-        <button type="submit" class="ob-btn">Get Started 🚀</button>
-        <button type="button" class="ob-btn-back" onclick="goStep1()">← Back</button>
+      <!-- Name -->
+      <div class="ob-field">
+        <label class="ob-label" for="ob-name">Your Name</label>
+        <input class="ob-input" id="ob-name" type="text" name="name"
+               placeholder="e.g. Priya Sharma"
+               value="{{ profile.name if profile and profile.name else '' }}"
+               maxlength="60" autocomplete="name" required>
       </div>
 
+      <!-- Phone -->
+      <div class="ob-field">
+        <label class="ob-label">Mobile Number</label>
+        <div class="phone-row">
+          <select class="ob-cc" name="country_code">
+            <option value="+91">🇮🇳 +91</option>
+            <option value="+1">🇺🇸 +1</option>
+            <option value="+44">🇬🇧 +44</option>
+            <option value="+971">🇦🇪 +971</option>
+            <option value="+61">🇦🇺 +61</option>
+          </select>
+          <input class="ob-input" type="tel" name="phone"
+                 placeholder="10-digit number"
+                 inputmode="numeric" maxlength="10"
+                 oninput="this.value=this.value.replace(/\D/g,'')"
+                 value="{{ phone_digits }}"
+                 style="flex:1;">
+        </div>
+        {% if phone_digits %}
+        <div class="ob-confirm-green">✓ Confirmed: {{ phone }}</div>
+        {% endif %}
+      </div>
+
+      <!-- Hidden defaults for removed step 2 -->
+      <input type="hidden" name="stage" value="Try Once!!">
+      <input type="hidden" name="target_year" value="2026">
+      <input type="hidden" name="daily_hours" value="4">
+
+      <button type="submit" class="ob-btn">Get Started 🚀</button>
+      <div class="ob-hint">You can update all of this in your profile</div>
     </form>
   </div>
 </div>
 </div>
-
-<script>
-const stepMeta = [
-  { label: 'Step 1 of 2', title: 'Who are you,<br>Aspirant? 👋', sub: 'Tell us about yourself. Takes 20 seconds.' },
-  { label: 'Step 2 of 2', title: 'How do you<br>like to study? 📚', sub: 'Personalise your daily quiz experience.' }
-];
-
-function setHero(idx) {
-  document.getElementById('stepLabel').textContent = stepMeta[idx].label;
-  document.getElementById('stepTitle').innerHTML   = stepMeta[idx].title;
-  document.getElementById('stepSub').textContent   = stepMeta[idx].sub;
-  document.getElementById('prog1').classList.toggle('done', idx >= 0);
-  document.getElementById('prog2').classList.toggle('done', idx >= 1);
-}
-
-function goStep2() {
-  const name = document.getElementById('ob-name').value.trim();
-  if (!name) { document.getElementById('ob-name').focus(); return; }
-  document.getElementById('step1').classList.remove('active');
-  document.getElementById('step2').classList.add('active');
-  setHero(1);
-  window.scrollTo(0, 0);
-}
-
-function goStep1() {
-  document.getElementById('step2').classList.remove('active');
-  document.getElementById('step1').classList.add('active');
-  setHero(0);
-  window.scrollTo(0, 0);
-}
-</script>
 </body>
 </html>
