@@ -3,298 +3,303 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Welcome — BASS 50</title>
+  <title>Setup — BASS 50</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
   <style>
-    .ob-page {
-      min-height: 100vh;
-      background: linear-gradient(160deg, #F4621F 0%, #C94E18 45%, #8B2500 100%);
-      display: flex; flex-direction: column;
+    body { background: #0A0A0A; margin: 0; min-height: 100vh; }
+
+    .ob-shell {
+      max-width: 430px; margin: 0 auto;
+      min-height: 100vh; display: flex; flex-direction: column;
+      position: relative;
     }
-    .ob-top {
-      padding: 56px 28px 32px;
-      flex: 1;
-      display: flex; flex-direction: column; justify-content: center;
+
+    /* ── Progress bar ── */
+    .ob-progress {
+      padding: 16px 24px 0;
+      display: flex; gap: 8px;
     }
-    .ob-step-badge {
-      display: inline-flex; align-items: center; gap: 6px;
-      background: rgba(255,255,255,0.18);
-      color: #fff; font-size: 12px; font-weight: 700;
-      padding: 5px 14px; border-radius: 99px;
-      letter-spacing: .5px; margin-bottom: 20px;
+    .ob-prog-seg {
+      flex: 1; height: 4px; border-radius: 99px;
+      background: rgba(255,255,255,0.12);
+      transition: background .4s;
     }
-    .ob-headline {
-      font-size: 34px; font-weight: 900;
-      color: #fff; line-height: 1.2;
-      margin-bottom: 10px;
+    .ob-prog-seg.done { background: #F4621F; }
+
+    /* ── Hero area ── */
+    .ob-hero {
+      padding: 28px 24px 24px;
+      flex-shrink: 0;
+    }
+    .ob-step-label {
+      font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.4);
+      text-transform: uppercase; letter-spacing: .8px; margin-bottom: 10px;
+    }
+    .ob-title {
+      font-size: 30px; font-weight: 900; color: #fff;
+      line-height: 1.2; margin-bottom: 8px;
     }
     .ob-sub {
-      font-size: 14px; color: rgba(255,255,255,0.72);
-      line-height: 1.6;
+      font-size: 13px; color: rgba(255,255,255,0.45); line-height: 1.6;
     }
+
+    /* ── Sheet ── */
     .ob-sheet {
-      background: #fff;
-      border-radius: 32px 32px 0 0;
-      padding: 32px 24px 48px;
-      box-shadow: 0 -8px 40px rgba(0,0,0,0.15);
+      flex: 1;
+      background: #1C1C1E;
+      border-radius: 28px 28px 0 0;
+      padding: 28px 20px 48px;
+      overflow-y: auto;
     }
-    .ob-field-wrap { margin-bottom: 20px; }
+
+    /* ── Field ── */
+    .ob-field { margin-bottom: 20px; }
     .ob-label {
-      font-size: 12px; font-weight: 700;
-      text-transform: uppercase; letter-spacing: .7px;
-      color: #6B7280; margin-bottom: 8px; display: block;
+      font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.4);
+      text-transform: uppercase; letter-spacing: .6px;
+      margin-bottom: 8px; display: block;
     }
     .ob-input {
-      width: 100%; padding: 16px 18px;
-      border: 2px solid #E5E7EB;
-      border-radius: 16px;
-      font-size: 16px; font-family: 'Poppins', sans-serif;
-      color: #1A1A1A; outline: none;
-      transition: border-color .2s, box-shadow .2s;
-      background: #FAFAFA;
+      width: 100%; background: rgba(255,255,255,0.06);
+      border: 1.5px solid rgba(255,255,255,0.12);
+      border-radius: 16px; padding: 17px 16px;
+      font-size: 16px; font-weight: 600; color: #fff;
+      font-family: 'Poppins', sans-serif; outline: none;
+      transition: border-color .2s; box-sizing: border-box;
     }
-    .ob-input:focus {
-      border-color: #F4621F;
-      box-shadow: 0 0 0 4px rgba(244,98,31,0.12);
-      background: #fff;
-    }
+    .ob-input:focus { border-color: #F4621F; }
+    .ob-input::placeholder { color: rgba(255,255,255,0.25); font-weight: 500; }
     .ob-select {
-      width: 100%; padding: 14px 18px;
-      border: 2px solid #E5E7EB;
-      border-radius: 16px;
-      font-size: 15px; font-family: 'Poppins', sans-serif;
-      color: #1A1A1A; outline: none;
-      background: #FAFAFA;
-      appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236B7280' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 16px center;
+      width: 100%; background: rgba(255,255,255,0.06);
+      border: 1.5px solid rgba(255,255,255,0.12);
+      border-radius: 16px; padding: 16px 14px;
+      font-size: 15px; font-weight: 600; color: #fff;
+      font-family: 'Poppins', sans-serif; outline: none;
+      -webkit-appearance: none; appearance: none; cursor: pointer;
+      box-sizing: border-box;
     }
     .ob-select:focus { border-color: #F4621F; }
-    .stage-pills {
-      display: grid; grid-template-columns: 1fr 1fr;
-      gap: 10px;
+    .ob-select option { background: #1C1C1E; }
+
+    /* ── Phone row ── */
+    .phone-row { display: flex; gap: 8px; }
+    .ob-cc {
+      background: rgba(255,255,255,0.06);
+      border: 1.5px solid rgba(255,255,255,0.12);
+      border-radius: 16px; padding: 16px 10px;
+      font-size: 13px; font-weight: 700; color: #fff;
+      font-family: 'Poppins', sans-serif; outline: none;
+      -webkit-appearance: none; appearance: none; min-width: 88px; cursor: pointer;
     }
+    .ob-cc:focus { border-color: #F4621F; }
+    .ob-cc option { background: #1C1C1E; }
+
+    /* ── Mode pills ── */
+    .mode-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .mode-pill input { display: none; }
+    .mode-pill label {
+      display: flex; flex-direction: column; align-items: center;
+      padding: 18px 10px;
+      border: 2px solid rgba(255,255,255,0.1);
+      border-radius: 18px; cursor: pointer;
+      background: rgba(255,255,255,0.04);
+      transition: all .15s;
+    }
+    .mode-pill label .mp-icon { font-size: 28px; margin-bottom: 6px; }
+    .mode-pill label .mp-title { font-size: 13px; font-weight: 800; color: rgba(255,255,255,0.7); }
+    .mode-pill label .mp-sub { font-size: 10px; color: rgba(255,255,255,0.35); margin-top: 3px; font-weight: 600; }
+    .mode-pill input:checked + label {
+      border-color: #F4621F;
+      background: rgba(244,98,31,0.12);
+    }
+    .mode-pill input:checked + label .mp-title { color: #FDA87A; }
+
+    /* ── Stage pills (4 grid) ── */
+    .stage-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
     .stage-pill input { display: none; }
     .stage-pill label {
       display: flex; flex-direction: column; align-items: center;
-      padding: 14px 8px;
-      border: 2px solid #E5E7EB;
-      border-radius: 14px;
-      cursor: pointer; transition: all .15s;
-      background: #FAFAFA;
+      padding: 16px 8px;
+      border: 2px solid rgba(255,255,255,0.1);
+      border-radius: 16px; cursor: pointer;
+      background: rgba(255,255,255,0.04);
+      transition: all .15s;
     }
-    .stage-pill label .pill-icon { font-size: 24px; margin-bottom: 4px; }
-    .stage-pill label .pill-text { font-size: 12px; font-weight: 700; color: #6B7280; }
+    .stage-pill label .sp-icon { font-size: 24px; margin-bottom: 5px; }
+    .stage-pill label .sp-text { font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.55); }
     .stage-pill input:checked + label {
-      border-color: #F4621F;
-      background: #FFF0E8;
+      border-color: #F4621F; background: rgba(244,98,31,0.12);
     }
-    .stage-pill input:checked + label .pill-text { color: #C94E18; }
-    .ob-hint {
-      font-size: 12px; color: #9CA3AF;
-      margin-top: 8px; text-align: center;
-    }
-    .ob-submit {
-      width: 100%; padding: 18px;
+    .stage-pill input:checked + label .sp-text { color: #FDA87A; }
+
+    /* ── Buttons ── */
+    .ob-btn {
+      width: 100%; padding: 19px;
       background: linear-gradient(135deg, #F4621F 0%, #C94E18 100%);
-      color: #fff; border: none; border-radius: 50px;
-      font-size: 16px; font-weight: 800;
-      font-family: 'Poppins', sans-serif;
-      cursor: pointer; margin-top: 8px;
-      box-shadow: 0 6px 20px rgba(244,98,31,0.35);
-      letter-spacing: .3px;
+      color: #fff; border: none; border-radius: 16px;
+      font-size: 16px; font-weight: 800; font-family: 'Poppins', sans-serif;
+      cursor: pointer; letter-spacing: .3px;
+      box-shadow: 0 8px 28px rgba(244,98,31,0.4);
+      transition: transform .15s; margin-top: 8px;
     }
-    .ob-submit:active { transform: scale(0.98); }
-    .flash-ob {
-      margin-bottom: 16px; padding: 12px 16px;
-      background: #FEF2F2; border-left: 4px solid #E53935;
-      border-radius: 10px; font-size: 13px; color: #E53935;
+    .ob-btn:active { transform: scale(0.98); }
+    .ob-btn-back {
+      width: 100%; padding: 16px;
+      background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.5);
+      border: 1px solid rgba(255,255,255,0.1); border-radius: 14px;
+      font-size: 14px; font-weight: 700; font-family: 'Poppins', sans-serif;
+      cursor: pointer; margin-top: 10px;
     }
+
+    .ob-hint { font-size: 11px; color: rgba(255,255,255,0.25); text-align: center; margin-top: 12px; }
+    .ob-confirm-green { font-size: 11px; color: #4ADE80; margin-top: 6px; font-weight: 600; }
+
+    /* Step visibility */
+    .ob-step { display: none; }
+    .ob-step.active { display: block; }
   </style>
 </head>
 <body>
-<div id="ambientCanvas" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden;"></div>
-<style>
-@keyframes particleDrift{0%{transform:translateY(-40px) rotate(0deg);opacity:0}10%{opacity:var(--p-opacity)}90%{opacity:var(--p-opacity)}100%{transform:translateY(110vh) rotate(var(--p-rot));opacity:0}}
-.amb-particle{position:absolute;top:0;font-size:var(--p-size);left:var(--p-x);animation:particleDrift var(--p-dur) linear var(--p-delay) infinite;--p-opacity:0.1;}
-</style>
-<script>
-(function(){const icons=['✏️','📚','📖','🖊️','📝','🎯'];const wrap=document.getElementById('ambientCanvas');for(let i=0;i<14;i++){const el=document.createElement('span');el.className='amb-particle';const size=10+Math.random()*13,x=Math.random()*96,dur=12+Math.random()*14,delay=-(Math.random()*dur),rot=(Math.random()-.5)*180+'deg';el.textContent=icons[Math.floor(Math.random()*icons.length)];el.style.cssText=`--p-size:${size}px;--p-x:${x}%;--p-dur:${dur}s;--p-delay:${delay}s;--p-rot:${rot};--p-opacity:${0.07+Math.random()*0.09};`;wrap.appendChild(el);}})();
-</script>
 <div class="phone-shell">
-<div class="ob-page">
+<div class="ob-shell">
 
-  <!-- Language bar -->
-  <div style="display:flex; justify-content:flex-end; padding:12px 16px 0; position:relative; z-index:10;">
-    <button onclick="document.getElementById('ob-lang-panel').classList.toggle('show')"
-      style="background:rgba(255,255,255,0.2); border:1px solid rgba(255,255,255,0.35);
-             border-radius:99px; padding:6px 14px; color:#fff; font-size:12px;
-             font-weight:700; font-family:'Poppins',sans-serif; cursor:pointer; letter-spacing:.3px;">
-      🌐 Language
-    </button>
-    <div id="ob-lang-panel" style="display:none; position:absolute; top:44px; right:16px;
-      background:#1A1A1A; border-radius:14px; padding:12px 14px; z-index:100;
-      box-shadow:0 8px 24px rgba(0,0,0,0.3); min-width:200px;">
-      <div style="font-size:10px; font-weight:700; text-transform:uppercase; color:rgba(255,255,255,.5); letter-spacing:.6px; margin-bottom:10px;">Choose Language</div>
-      <div style="display:flex; flex-wrap:wrap; gap:7px;">
-        <button onclick="setObLang('en')"   class="ob-lang-pill">🇬🇧 English</button>
-        <button onclick="setObLang('hi')"   class="ob-lang-pill">🇮🇳 हिंदी</button>
-        <button onclick="setObLang('pa')"   class="ob-lang-pill">🇮🇳 ਪੰਜਾਬੀ</button>
-        <button onclick="setObLang('ta')"   class="ob-lang-pill">🇮🇳 தமிழ்</button>
-        <button onclick="setObLang('te')"   class="ob-lang-pill">🇮🇳 తెలుగు</button>
-        <button onclick="setObLang('mr')"   class="ob-lang-pill">🇮🇳 मराठी</button>
-        <button onclick="setObLang('bn')"   class="ob-lang-pill">🇧🇩 বাংলা</button>
-      </div>
-    </div>
-  </div>
-  <style>
-    #ob-lang-panel.show { display:block !important; }
-    .ob-lang-pill {
-      padding:6px 12px; border-radius:99px;
-      background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2);
-      color:#fff; font-size:11px; font-weight:600; cursor:pointer;
-      font-family:'Poppins',sans-serif;
-    }
-    .ob-lang-pill:hover { background:#F4621F; border-color:#F4621F; }
-  </style>
-  <!-- Google Translate (hidden) -->
-  <div id="google_translate_element" style="display:none;"></div>
-  <style>.goog-te-banner-frame,.skiptranslate{display:none!important}body{top:0!important}</style>
-
-  <div class="ob-top">
-    <div class="ob-step-badge">🚀 Quick Setup</div>
-    <div class="ob-headline">Let's set up<br>your profile</div>
-    <div class="ob-sub">Takes 30 seconds. Your data stays only on this device.</div>
+  <!-- Progress bar -->
+  <div class="ob-progress">
+    <div class="ob-prog-seg done" id="prog1"></div>
+    <div class="ob-prog-seg" id="prog2"></div>
   </div>
 
+  <!-- Hero (changes per step) -->
+  <div class="ob-hero">
+    <div class="ob-step-label" id="stepLabel">Step 1 of 2</div>
+    <div class="ob-title" id="stepTitle">Who are you,<br>Aspirant? 👋</div>
+    <div class="ob-sub" id="stepSub">Tell us about yourself. Takes 20 seconds.</div>
+  </div>
+
+  <!-- Sheet -->
   <div class="ob-sheet">
+
     {% with messages = get_flashed_messages() %}
-      {% if messages %}{% for msg in messages %}<div class="flash-ob">{{ msg }}</div>{% endfor %}{% endif %}
+      {% if messages %}{% for msg in messages %}
+        <div style="background:rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.2);border-radius:12px;padding:12px 16px;margin-bottom:16px;font-size:13px;color:#F87171;font-weight:600;">{{ msg }}</div>
+      {% endfor %}{% endif %}
     {% endwith %}
 
-    <form method="POST" action="{{ url_for('onboarding') }}">
+    <form method="POST" action="{{ url_for('onboarding') }}" id="obForm">
 
-      <!-- Mode Selection -->
-      <div class="ob-field-wrap">
-        <label class="ob-label">I am preparing for</label>
-        <div class="stage-pills">
-          <div class="stage-pill">
-            <input type="radio" name="user_mode" id="mode-upsc" value="upsc" checked>
-            <label for="mode-upsc">
-              <span class="pill-icon">🎯</span>
-              <span class="pill-text">UPSC / Civil Services</span>
-            </label>
-          </div>
-          <div class="stage-pill">
-            <input type="radio" name="user_mode" id="mode-general" value="general">
-            <label for="mode-general">
-              <span class="pill-icon">📚</span>
-              <span class="pill-text">General Practice</span>
-            </label>
+      <!-- ─── STEP 1 ─── -->
+      <div class="ob-step active" id="step1">
+
+        <!-- Mode -->
+        <div class="ob-field">
+          <label class="ob-label">I am preparing for</label>
+          <div class="mode-grid">
+            <div class="mode-pill">
+              <input type="radio" name="user_mode" id="m-upsc" value="upsc" checked>
+              <label for="m-upsc">
+                <span class="mp-icon">🎯</span>
+                <span class="mp-title">UPSC / IAS</span>
+                <span class="mp-sub">Full civil services prep</span>
+              </label>
+            </div>
+            <div class="mode-pill">
+              <input type="radio" name="user_mode" id="m-general" value="general">
+              <label for="m-general">
+                <span class="mp-icon">📚</span>
+                <span class="mp-title">General</span>
+                <span class="mp-sub">Quick daily practice</span>
+              </label>
+            </div>
           </div>
         </div>
+
+        <!-- Name -->
+        <div class="ob-field">
+          <label class="ob-label" for="ob-name">Your Name</label>
+          <input class="ob-input" id="ob-name" type="text" name="name"
+                 placeholder="e.g. Priya Sharma"
+                 value="{{ profile.name if profile and profile.name else '' }}"
+                 maxlength="60" autocomplete="name">
+        </div>
+
+        <!-- Phone -->
+        <div class="ob-field">
+          <label class="ob-label">Mobile Number</label>
+          <div class="phone-row">
+            <select class="ob-cc" name="country_code">
+              <option value="+91">🇮🇳 +91</option>
+              <option value="+1">🇺🇸 +1</option>
+              <option value="+44">🇬🇧 +44</option>
+              <option value="+971">🇦🇪 +971</option>
+              <option value="+61">🇦🇺 +61</option>
+            </select>
+            <input class="ob-input" type="tel" name="phone"
+                   placeholder="10-digit number"
+                   inputmode="numeric" maxlength="10"
+                   oninput="this.value=this.value.replace(/\D/g,'')"
+                   value="{{ phone_digits }}"
+                   style="flex:1;">
+          </div>
+          {% if phone_digits %}
+          <div class="ob-confirm-green">✓ Confirmed from login: {{ phone }}</div>
+          {% else %}
+          <div class="ob-hint" style="text-align:left;margin-top:6px;">Tracks your progress across devices</div>
+          {% endif %}
+        </div>
+
+        <button type="button" class="ob-btn" onclick="goStep2()">Next →</button>
+        <div class="ob-hint">You can update all of this later</div>
       </div>
 
-      <!-- Name -->
-      <div class="ob-field-wrap">
-        <label class="ob-label" for="ob-name">Your Name</label>
-        <input class="ob-input" id="ob-name" type="text" name="name"
-               placeholder="e.g. Priya Sharma"
-               value="{{ profile.name if profile and profile.name else '' }}"
-               required maxlength="60" autocomplete="name">
-      </div>
+      <!-- ─── STEP 2 ─── -->
+      <div class="ob-step" id="step2">
 
-      <!-- Phone Number — always visible; pre-filled for UPSC users -->
-      <div class="ob-field-wrap">
-        <label class="ob-label">Mobile Number</label>
-        <div style="display:flex; gap:8px;">
-          <select name="country_code" style="
-            width:90px; padding:14px 10px;
-            border:2px solid #E5E7EB; border-radius:16px;
-            font-size:13px; font-family:'Poppins',sans-serif;
-            color:#1A1A1A; background:#FAFAFA; appearance:none;
-            background-image:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%236B7280' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E\");
-            background-repeat:no-repeat; background-position:right 8px center; flex-shrink:0;">
-            <option value="+91">🇮🇳 +91</option>
-            <option value="+1">🇺🇸 +1</option>
-            <option value="+44">🇬🇧 +44</option>
-            <option value="+971">🇦🇪 +971</option>
-            <option value="+61">🇦🇺 +61</option>
+        <!-- Stage -->
+        <div class="ob-field">
+          <label class="ob-label">Where are you right now?</label>
+          <div class="stage-grid">
+            <div class="stage-pill">
+              <input type="radio" name="stage" id="s-beg" value="beginner" checked>
+              <label for="s-beg"><span class="sp-icon">🌱</span><span class="sp-text">Beginner</span></label>
+            </div>
+            <div class="stage-pill">
+              <input type="radio" name="stage" id="s-int" value="intermediate">
+              <label for="s-int"><span class="sp-icon">📖</span><span class="sp-text">Preparing</span></label>
+            </div>
+            <div class="stage-pill">
+              <input type="radio" name="stage" id="s-adv" value="advanced">
+              <label for="s-adv"><span class="sp-icon">🔥</span><span class="sp-text">Advanced</span></label>
+            </div>
+            <div class="stage-pill">
+              <input type="radio" name="stage" id="s-rev" value="revision">
+              <label for="s-rev"><span class="sp-icon">⚡</span><span class="sp-text">Revision</span></label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Target year -->
+        <div class="ob-field">
+          <label class="ob-label">Target Exam Year</label>
+          <select class="ob-select" name="target_year">
+            {% for y in range(2025, 2031) %}
+            <option value="{{ y }}">UPSC CSE {{ y }}</option>
+            {% endfor %}
           </select>
-          <input class="ob-input" type="tel" name="phone"
-                 placeholder="10-digit number"
-                 inputmode="numeric" maxlength="10"
-                 oninput="this.value=this.value.replace(/\D/g,'')"
-                 value="{{ phone_digits }}"
-                 style="flex:1; margin-bottom:0;">
         </div>
-        {% if phone_digits %}
-        <div style="font-size:11px; color:#27AE60; margin-top:6px; font-weight:600;">✓ Confirmed: {{ phone }}</div>
-        {% else %}
-        <div style="font-size:11px; color:#9CA3AF; margin-top:6px;">Used to track your progress across devices</div>
-        {% endif %}
-      </div>
 
-      <!-- Prep stage pills -->
-      <div class="ob-field-wrap">
-        <label class="ob-label">I am a</label>
-        <div class="stage-pills">
-          <div class="stage-pill">
-            <input type="radio" name="stage" id="s-beginner" value="beginner"
-                   {% if not profile or profile.stage == 'beginner' %}checked{% endif %}>
-            <label for="s-beginner">
-              <span class="pill-icon">🌱</span>
-              <span class="pill-text">Beginner</span>
-            </label>
-          </div>
-          <div class="stage-pill">
-            <input type="radio" name="stage" id="s-inter" value="intermediate"
-                   {% if profile and profile.stage == 'intermediate' %}checked{% endif %}>
-            <label for="s-inter">
-              <span class="pill-icon">📖</span>
-              <span class="pill-text">Preparing</span>
-            </label>
-          </div>
-          <div class="stage-pill">
-            <input type="radio" name="stage" id="s-adv" value="advanced"
-                   {% if profile and profile.stage == 'advanced' %}checked{% endif %}>
-            <label for="s-adv">
-              <span class="pill-icon">🔥</span>
-              <span class="pill-text">Advanced</span>
-            </label>
-          </div>
-          <div class="stage-pill">
-            <input type="radio" name="stage" id="s-rev" value="revision"
-                   {% if profile and profile.stage == 'revision' %}checked{% endif %}>
-            <label for="s-rev">
-              <span class="pill-icon">⚡</span>
-              <span class="pill-text">Revision</span>
-            </label>
-          </div>
+        <!-- Daily hours -->
+        <div class="ob-field">
+          <label class="ob-label">Daily Study Hours</label>
+          <select class="ob-select" name="daily_hours">
+            {% for h in [1,2,3,4,5,6,8,10,12] %}
+            <option value="{{ h }}" {{ 'selected' if h == 4 }}>{{ h }} hour{{ 's' if h != 1 }}</option>
+            {% endfor %}
+          </select>
         </div>
+
+        <button type="submit" class="ob-btn">Get Started 🚀</button>
+        <button type="button" class="ob-btn-back" onclick="goStep1()">← Back</button>
       </div>
-
-      <!-- Target year -->
-      <div class="ob-field-wrap">
-        <label class="ob-label" for="ob-year">Target Exam Year</label>
-        <select class="ob-select" id="ob-year" name="target_year">
-          {% for y in range(2025, 2031) %}
-          <option value="{{ y }}"
-            {% if profile and profile.target_year|string == y|string %}selected{% endif %}>
-            UPSC CSE {{ y }}
-          </option>
-          {% endfor %}
-        </select>
-      </div>
-
-      <!-- Hidden defaults for removed fields -->
-      <input type="hidden" name="daily_hours" value="4">
-
-      <button type="submit" class="ob-submit">
-        Continue to Avatar →
-      </button>
-      <div class="ob-hint">You can change all this later in your profile</div>
 
     </form>
   </div>
@@ -302,39 +307,34 @@
 </div>
 
 <script>
-function googleTranslateElementInit() {
-  new google.translate.TranslateElement({
-    pageLanguage: 'en',
-    includedLanguages: 'hi,pa,ta,te,mr,bn,gu,kn,ml,ur,en',
-    autoDisplay: false
-  }, 'google_translate_element');
+const stepMeta = [
+  { label: 'Step 1 of 2', title: 'Who are you,<br>Aspirant? 👋', sub: 'Tell us about yourself. Takes 20 seconds.' },
+  { label: 'Step 2 of 2', title: 'How do you<br>like to study? 📚', sub: 'Personalise your daily quiz experience.' }
+];
+
+function setHero(idx) {
+  document.getElementById('stepLabel').textContent = stepMeta[idx].label;
+  document.getElementById('stepTitle').innerHTML   = stepMeta[idx].title;
+  document.getElementById('stepSub').textContent   = stepMeta[idx].sub;
+  document.getElementById('prog1').classList.toggle('done', idx >= 0);
+  document.getElementById('prog2').classList.toggle('done', idx >= 1);
 }
 
-function setObLang(langCode) {
-  document.getElementById('ob-lang-panel').classList.remove('show');
-  if (!langCode || langCode === 'en') {
-    const sel = document.querySelector('.goog-te-combo');
-    if (sel) { sel.value = 'en'; sel.dispatchEvent(new Event('change')); }
-    return;
-  }
-  const waitForGT = setInterval(() => {
-    const sel = document.querySelector('.goog-te-combo');
-    if (sel) {
-      clearInterval(waitForGT);
-      sel.value = langCode;
-      sel.dispatchEvent(new Event('change'));
-    }
-  }, 200);
+function goStep2() {
+  const name = document.getElementById('ob-name').value.trim();
+  if (!name) { document.getElementById('ob-name').focus(); return; }
+  document.getElementById('step1').classList.remove('active');
+  document.getElementById('step2').classList.add('active');
+  setHero(1);
+  window.scrollTo(0, 0);
 }
 
-// Close language panel when clicking outside
-document.addEventListener('click', function(e) {
-  const panel = document.getElementById('ob-lang-panel');
-  if (!e.target.closest('#ob-lang-panel') && !e.target.closest('button[onclick*="ob-lang-panel"]')) {
-    panel.classList.remove('show');
-  }
-});
+function goStep1() {
+  document.getElementById('step2').classList.remove('active');
+  document.getElementById('step1').classList.add('active');
+  setHero(0);
+  window.scrollTo(0, 0);
+}
 </script>
-<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" onerror="console.log('Translate offline')"></script>
 </body>
 </html>

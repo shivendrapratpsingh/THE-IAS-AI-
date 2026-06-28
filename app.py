@@ -263,24 +263,12 @@ def onboarding():
 
 @app.route("/avatar")
 def avatar_select():
-    redir = _require_login()
-    if redir:
-        return redir
-    return render_template("avatar.html")
+    return redirect(url_for("profile"))
 
 
 @app.route("/avatar/save", methods=["POST"])
 def save_avatar():
-    redir = _require_login()
-    if redir:
-        return redir
-    key, data = _get_current_user()
-    data["profile"]["avatar_id"]    = request.form.get("avatar_id", "ias")
-    data["profile"]["avatar_color"] = request.form.get("avatar_color", "#F4621F")
-    data["onboarded"] = True   # ensure this is always set regardless of DB state
-    _save_current_user(key, data)
-    flash("Avatar saved! 🎭")
-    return redirect(url_for("home"))
+    return redirect(url_for("profile"))
 
 
 # ─────────────────────────────────────────────────────────────────────────────

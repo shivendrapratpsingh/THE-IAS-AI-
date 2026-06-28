@@ -247,9 +247,6 @@
     <a href="{{ url_for('profile') }}" class="drawer-link {{ 'active' if request.endpoint == 'profile' }}">
       <span class="drawer-link-icon">👤</span> My Profile
     </a>
-    <a href="{{ url_for('avatar_select') }}" class="drawer-link {{ 'active' if request.endpoint == 'avatar_select' }}">
-      <span class="drawer-link-icon">🎭</span> Change Avatar
-    </a>
   </div>
   <div class="drawer-footer">
     <a href="{{ url_for('logout') }}" class="drawer-logout">
