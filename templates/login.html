@@ -6,13 +6,12 @@
   <title>BASS 50 — Login</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
   <style>
-    body {
-      background: #0A0A0A;
+    html, body {
+      background: #0A0A0A !important;
       display: flex; align-items: center; justify-content: center;
       min-height: 100vh;
     }
 
-    /* Floating particles */
     @keyframes particleDrift {
       0%   { transform: translateY(-40px) rotate(0deg); opacity: 0; }
       10%  { opacity: var(--p-opacity); }
@@ -27,14 +26,12 @@
 
     .login-shell {
       width: 100%; max-width: 400px;
-      padding: 0 24px;
+      padding: 0 20px;
       position: relative; z-index: 1;
     }
 
-    /* Branding */
     .login-brand {
-      text-align: center;
-      margin-bottom: 48px;
+      text-align: center; margin-bottom: 36px;
     }
     .login-brand-icon {
       font-size: 52px; display: block; margin-bottom: 12px;
@@ -49,37 +46,60 @@
       font-weight: 600; margin-top: 8px;
     }
 
-    /* Card */
+    /* Two-option cards */
+    .intent-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+      margin-bottom: 24px;
+    }
+    .intent-card {
+      background: #1C1C1E;
+      border: 2px solid rgba(255,255,255,0.1);
+      border-radius: 20px; padding: 22px 12px;
+      text-align: center; cursor: pointer;
+      transition: all .2s;
+    }
+    .intent-card.selected {
+      border-color: #F4621F;
+      background: rgba(244,98,31,0.12);
+    }
+    .intent-card-icon { font-size: 30px; margin-bottom: 8px; }
+    .intent-card-title {
+      font-size: 13px; font-weight: 800; color: rgba(255,255,255,0.65);
+      line-height: 1.3;
+    }
+    .intent-card.selected .intent-card-title { color: #FDA87A; }
+    .intent-card-sub {
+      font-size: 10px; color: rgba(255,255,255,0.3); font-weight: 600;
+      margin-top: 4px; line-height: 1.4;
+    }
+
+    /* Phone form */
     .login-card {
       background: #1C1C1E;
       border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 28px;
-      padding: 32px 24px;
+      border-radius: 24px; padding: 26px 20px;
+      display: none;
     }
+    .login-card.active { display: block; }
     .login-card-title {
-      font-size: 22px; font-weight: 900; color: #fff;
-      margin-bottom: 6px;
+      font-size: 18px; font-weight: 900; color: #fff; margin-bottom: 4px;
     }
     .login-card-sub {
-      font-size: 13px; color: rgba(255,255,255,0.4);
-      font-weight: 500; margin-bottom: 28px; line-height: 1.5;
+      font-size: 12px; color: rgba(255,255,255,0.4);
+      font-weight: 500; margin-bottom: 22px; line-height: 1.5;
     }
-
     .field-label {
-      font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.45);
+      font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.4);
       text-transform: uppercase; letter-spacing: .6px; margin-bottom: 8px;
     }
-    .phone-wrap {
-      display: flex; gap: 8px; margin-bottom: 20px;
-    }
+    .phone-wrap { display: flex; gap: 8px; margin-bottom: 16px; }
     .country-code {
       background: rgba(255,255,255,0.06);
       border: 1.5px solid rgba(255,255,255,0.12);
       border-radius: 14px; padding: 16px 10px;
       font-size: 14px; font-weight: 700; color: #fff;
       font-family: 'Poppins', sans-serif; outline: none;
-      -webkit-appearance: none; appearance: none; cursor: pointer;
-      min-width: 88px;
+      -webkit-appearance: none; appearance: none; cursor: pointer; min-width: 88px;
     }
     .country-code:focus { border-color: #F4621F; }
     .country-code option { background: #1C1C1E; }
@@ -88,22 +108,25 @@
       border: 1.5px solid rgba(255,255,255,0.12);
       border-radius: 14px; padding: 16px 14px;
       font-size: 18px; font-weight: 700; color: #fff;
-      font-family: 'Poppins', sans-serif; outline: none;
-      letter-spacing: 1px;
+      font-family: 'Poppins', sans-serif; outline: none; letter-spacing: 1px;
     }
     .phone-input:focus { border-color: #F4621F; }
-    .phone-input::placeholder { color: rgba(255,255,255,0.2); font-size: 15px; letter-spacing: 0; font-weight: 500; }
+    .phone-input::placeholder { color: rgba(255,255,255,0.2); font-size: 14px; letter-spacing: 0; font-weight: 500; }
 
     .submit-btn {
-      width: 100%; padding: 19px;
+      width: 100%; padding: 18px;
       background: linear-gradient(135deg, #F4621F 0%, #C94E18 100%);
-      color: #fff; border: none; border-radius: 16px;
-      font-size: 16px; font-weight: 800; font-family: 'Poppins', sans-serif;
+      color: #fff; border: none; border-radius: 14px;
+      font-size: 15px; font-weight: 800; font-family: 'Poppins', sans-serif;
       cursor: pointer; letter-spacing: .3px;
       box-shadow: 0 8px 28px rgba(244,98,31,0.4);
       transition: transform .15s;
     }
     .submit-btn:active { transform: scale(0.98); }
+    .submit-btn.new-btn {
+      background: linear-gradient(135deg, #7C3AED, #5B21B6);
+      box-shadow: 0 8px 28px rgba(124,58,237,0.35);
+    }
 
     .flash-err {
       background: rgba(248,113,113,0.1);
@@ -112,17 +135,14 @@
       font-size: 13px; color: #F87171; font-weight: 600;
     }
 
-    /* Guest link */
     .guest-link {
       display: block; text-align: center; margin-top: 20px;
       color: rgba(255,255,255,0.3); font-size: 13px; font-weight: 600;
       cursor: pointer; transition: color .2s;
     }
-    .guest-link:hover { color: rgba(255,255,255,0.6); }
-
-    /* Guest form (hidden by default) */
+    .guest-link:hover { color: rgba(255,255,255,0.55); }
     .guest-form {
-      display: none; margin-top: 20px;
+      display: none; margin-top: 14px;
       background: #1C1C1E; border: 1px solid rgba(255,255,255,0.1);
       border-radius: 20px; padding: 20px;
     }
@@ -132,19 +152,19 @@
       border: 1.5px solid rgba(255,255,255,0.12); border-radius: 12px;
       padding: 15px 14px; font-size: 15px; font-weight: 600; color: #fff;
       font-family: 'Poppins', sans-serif; outline: none; margin-bottom: 12px;
+      box-sizing: border-box;
     }
     .guest-input:focus { border-color: #8B5CF6; }
     .guest-btn {
-      width: 100%; padding: 16px;
+      width: 100%; padding: 15px;
       background: linear-gradient(135deg, #7C3AED, #5B21B6);
       color: #fff; border: none; border-radius: 12px;
-      font-size: 15px; font-weight: 800; font-family: 'Poppins', sans-serif; cursor: pointer;
+      font-size: 14px; font-weight: 800; font-family: 'Poppins', sans-serif; cursor: pointer;
     }
   </style>
 </head>
 <body>
 
-<!-- Ambient particles -->
 <div id="ambientCanvas"></div>
 <script>
 (function(){
@@ -165,25 +185,38 @@
 
 <div class="login-shell">
 
-  <!-- Branding -->
   <div class="login-brand">
     <span class="login-brand-icon">🎯</span>
     <div class="login-brand-name">BASS 50</div>
     <div class="login-brand-tag">Your IAS Prep Companion</div>
   </div>
 
-  <!-- Main card -->
-  <div class="login-card">
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}{% for msg in messages %}
+      <div class="flash-err">{{ msg }}</div>
+    {% endfor %}{% endif %}
+  {% endwith %}
+
+  <!-- Intent selector -->
+  <div class="intent-grid">
+    <div class="intent-card" id="cardReturn" onclick="selectIntent('returning')">
+      <div class="intent-card-icon">🔓</div>
+      <div class="intent-card-title">I have an account</div>
+      <div class="intent-card-sub">Sign in with my number</div>
+    </div>
+    <div class="intent-card" id="cardNew" onclick="selectIntent('new')">
+      <div class="intent-card-icon">✨</div>
+      <div class="intent-card-title">I'm new here</div>
+      <div class="intent-card-sub">Create my account</div>
+    </div>
+  </div>
+
+  <!-- Returning user form -->
+  <div class="login-card" id="formReturn">
     <div class="login-card-title">Welcome back 👋</div>
-    <div class="login-card-sub">Enter your phone number to continue your preparation.</div>
-
-    {% with messages = get_flashed_messages() %}
-      {% if messages %}{% for msg in messages %}
-        <div class="flash-err">{{ msg }}</div>
-      {% endfor %}{% endif %}
-    {% endwith %}
-
+    <div class="login-card-sub">Enter your number to open your account.</div>
     <form method="POST" action="{{ url_for('login') }}">
+      <input type="hidden" name="intent" value="returning">
       <div class="field-label">Phone Number</div>
       <div class="phone-wrap">
         <select class="country-code" name="country_code">
@@ -195,18 +228,38 @@
         </select>
         <input class="phone-input" type="tel" name="phone"
                maxlength="10" inputmode="numeric"
-               placeholder="10-digit number" autofocus
+               placeholder="your number"
                oninput="this.value=this.value.replace(/\D/g,'')">
       </div>
-      <button type="submit" class="submit-btn">Continue →</button>
+      <button type="submit" class="submit-btn">Open My Account →</button>
     </form>
   </div>
 
-  <!-- Guest practice link -->
-  <div class="guest-link" onclick="toggleGuest()">
-    📚 Practice without an account
+  <!-- New user form -->
+  <div class="login-card" id="formNew">
+    <div class="login-card-title">Let's get started ✨</div>
+    <div class="login-card-sub">Enter your number — we'll set up your account.</div>
+    <form method="POST" action="{{ url_for('login') }}">
+      <input type="hidden" name="intent" value="new">
+      <div class="field-label">Phone Number</div>
+      <div class="phone-wrap">
+        <select class="country-code" name="country_code">
+          <option value="+91">🇮🇳 +91</option>
+          <option value="+1">🇺🇸 +1</option>
+          <option value="+44">🇬🇧 +44</option>
+          <option value="+971">🇦🇪 +971</option>
+          <option value="+61">🇦🇺 +61</option>
+        </select>
+        <input class="phone-input" type="tel" name="phone"
+               maxlength="10" inputmode="numeric"
+               placeholder="your number"
+               oninput="this.value=this.value.replace(/\D/g,'')">
+      </div>
+      <button type="submit" class="submit-btn new-btn">Set Up My Account →</button>
+    </form>
   </div>
 
+  <div class="guest-link" onclick="toggleGuest()">📚 Practice without an account</div>
   <div class="guest-form" id="guestForm">
     <div class="field-label" style="color:rgba(255,255,255,0.4);">Your Name</div>
     <form method="POST" action="{{ url_for('guest_login') }}">
@@ -219,10 +272,16 @@
 </div>
 
 <script>
-function toggleGuest() {
-  const f = document.getElementById('guestForm');
-  f.classList.toggle('open');
+function selectIntent(intent) {
+  document.getElementById('cardReturn').classList.toggle('selected', intent === 'returning');
+  document.getElementById('cardNew').classList.toggle('selected', intent === 'new');
+  document.getElementById('formReturn').classList.toggle('active', intent === 'returning');
+  document.getElementById('formNew').classList.toggle('active', intent === 'new');
+  const focusForm = intent === 'returning' ? 'formReturn' : 'formNew';
+  setTimeout(() => document.querySelector('#' + focusForm + ' input[name=phone]').focus(), 50);
 }
+function toggleGuest() { document.getElementById('guestForm').classList.toggle('open'); }
+selectIntent('returning');
 </script>
 </body>
 </html>

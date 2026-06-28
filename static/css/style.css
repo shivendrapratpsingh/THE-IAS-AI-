@@ -737,7 +737,7 @@ html, body { height: 100%; background: #F3F4F6; font-family: 'Poppins', sans-ser
   top: 0; left: 50%;
   width: min(320px, 80vw);
   height: 100%;
-  background: #fff;
+  background: #1C1C1E;
   z-index: 201;
   transform: translateX(calc(-50vw - 100%));
   transition: transform .28s cubic-bezier(.4,0,.2,1);
@@ -770,20 +770,20 @@ html, body { height: 100%; background: #F3F4F6; font-family: 'Poppins', sans-ser
   gap: 14px;
   padding: 14px 24px;
   text-decoration: none;
-  color: var(--text);
+  color: rgba(255,255,255,0.75);
   font-size: 14px;
   font-weight: 600;
   transition: background .15s;
 }
-.drawer-link:hover, .drawer-link.active { background: var(--orange-pale); color: var(--orange-dk); }
+.drawer-link:hover, .drawer-link.active { background: rgba(244,98,31,0.15); color: #FDA87A; }
 .drawer-link-icon { font-size: 18px; }
-.drawer-footer { padding: 16px 24px; border-top: 1px solid var(--border); }
+.drawer-footer { padding: 16px 24px; border-top: 1px solid rgba(255,255,255,0.1); }
 .drawer-logout {
   display: block;
   text-align: center;
   padding: 12px;
-  background: var(--surface);
-  color: var(--danger);
+  background: rgba(229,57,53,0.1);
+  color: #F87171;
   border-radius: 12px;
   text-decoration: none;
   font-size: 13px;

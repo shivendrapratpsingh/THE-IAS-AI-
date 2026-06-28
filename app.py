@@ -159,15 +159,22 @@ def login():
             session["user_mode"] = "upsc"
             return redirect(url_for("admin_auth"))
 
-        # First time? Redirect to onboarding (mode set during onboarding)
         data = storage.load_user(full_phone)
         # Restore stored user_mode so returning general-mode users aren't reset to upsc
         stored_mode = data.get("user_type") or data.get("profile", {}).get("user_mode")
         session["user_mode"] = stored_mode if stored_mode else "upsc"
 
-        if not data.get("onboarded"):
+        intent = request.form.get("intent", "returning")
+
+        # New user: always send to onboarding (they want to create an account)
+        if intent == "new":
             return redirect(url_for("onboarding"))
-        return redirect(url_for("home"))
+
+        # Returning user: go home if onboarded, otherwise onboarding
+        if data.get("onboarded"):
+            session["onboarded"] = True   # restore session backup
+            return redirect(url_for("home"))
+        return redirect(url_for("onboarding"))
 
     return render_template("login.html")
 
@@ -209,6 +216,11 @@ def onboarding():
         return redir
 
     phone, data = _get_current_user()
+
+    # Already onboarded? Don't re-onboard.
+    if request.method == "GET" and (data.get("onboarded") or session.get("onboarded")):
+        session["onboarded"] = True
+        return redirect(url_for("home"))
 
     if request.method == "POST":
         # Mode selection (UPSC vs general)
