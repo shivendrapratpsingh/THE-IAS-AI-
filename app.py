@@ -48,6 +48,15 @@ QUOTES = [
 ]
 
 
+def _shuffle_q(q, quiz_day):
+    """Return copy of q with shuffled options (deterministic per question+day)."""
+    import random as _r
+    r = _r.Random(f"{q['id']}-{quiz_day}")
+    indices = list(range(len(q['options'])))
+    r.shuffle(indices)
+    return {**q, 'options': [q['options'][i] for i in indices],
+            'correctIndex': indices.index(q['correctIndex'])}
+
 def _parse_daily_hours(value, default=4, minimum=1, maximum=16):
     try:
         hours = int(value)
@@ -445,7 +454,7 @@ def mcq():
                 topic = q["topic"]
                 ts = stats.setdefault(topic, {"correct": 0, "total": 0})
                 ts["total"] += 1
-                is_correct = (selected == q["correctIndex"])
+                is_correct = (selected == _shuffle_q(q, quiz_day)["correctIndex"])
                 if is_correct:
                     ts["correct"] += 1
                 data.setdefault("mcq_history", []).append({
@@ -461,14 +470,15 @@ def mcq():
 
         return redirect(url_for("mcq"))
 
-    questions = [storage.MCQ_BY_ID[qid] for qid in daily["question_ids"] if qid in storage.MCQ_BY_ID]
+    questions = [_shuffle_q(storage.MCQ_BY_ID[qid], quiz_day) for qid in daily["question_ids"] if qid in storage.MCQ_BY_ID]
     score = None
     today_topics = {}
     if daily.get("submitted"):
         answers = daily.get("answers", {})
         correct = sum(
             1 for qid, sel in answers.items()
-            if storage.MCQ_BY_ID.get(qid, {}).get("correctIndex") == sel
+            if _shuffle_q(storage.MCQ_BY_ID[qid], quiz_day).get("correctIndex") == sel
+            if storage.MCQ_BY_ID.get(qid)
         )
         score = {"correct": correct, "total": len(questions),
                  "pct": round(100 * correct / len(questions)) if questions else 0}
@@ -480,7 +490,7 @@ def mcq():
             t = q["topic"]
             today_topics.setdefault(t, {"correct": 0, "total": 0})
             today_topics[t]["total"] += 1
-            if selected == q.get("correctIndex"):
+            if selected == _shuffle_q(q, quiz_day).get("correctIndex"):
                 today_topics[t]["correct"] += 1
         for t in today_topics:
             d = today_topics[t]
@@ -547,7 +557,8 @@ def aaja_page():
     # Score from today's 10-question quiz
     answers = daily.get("answers", {})
     correct = sum(1 for qid, sel in answers.items()
-                  if storage.MCQ_BY_ID.get(qid, {}).get("correctIndex") == sel)
+                  if _shuffle_q(storage.MCQ_BY_ID[qid], storage.get_quiz_day()).get("correctIndex") == sel
+            if storage.MCQ_BY_ID.get(qid))
     total   = len(daily.get("question_ids", []))
     pct     = round(100 * correct / total) if total else 0
 
@@ -610,6 +621,7 @@ def aaja_quiz():
         action = request.form.get("action")
         if action == "submit" and not aaja.get("submitted"):
             answers = {}
+            aaja_day_sub = storage.get_quiz_day()
             for qid in aaja["question_ids"]:
                 val = request.form.get(f"answer_{qid}")
                 if val is not None and val != "":
@@ -626,7 +638,7 @@ def aaja_quiz():
                 topic = q["topic"]
                 ts = stats.setdefault(topic, {"correct": 0, "total": 0})
                 ts["total"] += 1
-                is_correct = (selected == q["correctIndex"])
+                is_correct = (selected == _shuffle_q(q, aaja_day_sub)["correctIndex"])
                 if is_correct:
                     ts["correct"] += 1
 
@@ -649,7 +661,8 @@ def aaja_quiz():
         return redirect(url_for("aaja_quiz"))
 
     # ── GET ──────────────────────────────────────────────────────────────────
-    questions = [storage.MCQ_BY_ID[qid] for qid in aaja["question_ids"]
+    aaja_day = storage.get_quiz_day()
+    questions = [_shuffle_q(storage.MCQ_BY_ID[qid], aaja_day) for qid in aaja["question_ids"]
                  if qid in storage.MCQ_BY_ID]
     score = None
     today_topics = {}
@@ -670,7 +683,7 @@ def aaja_quiz():
             t = q["topic"]
             today_topics.setdefault(t, {"correct": 0, "total": 0})
             today_topics[t]["total"] += 1
-            if selected == q.get("correctIndex"):
+            if selected == _shuffle_q(q, storage.get_quiz_day()).get("correctIndex"):
                 today_topics[t]["correct"] += 1
         for t in today_topics:
             d = today_topics[t]
@@ -1016,7 +1029,7 @@ def ping():
         conn = _pg2.connect(storage.DATABASE_URL, connect_timeout=30)
         conn.autocommit = True
         with conn.cursor() as cur:
-            cur.execute("SELECT COUNT(*) FROM users_v2")
+            cur.execute("SELECT COUNT(*) FROM users")
             count = cur.fetchone()[0]
         conn.close()
         read_ok = True
@@ -1030,7 +1043,7 @@ def ping():
         with conn2.cursor() as cur:
             import datetime as _dt
             cur.execute(
-                "INSERT INTO users_v2 (phone, data) VALUES (%s, %s::jsonb) "
+                "INSERT INTO users (phone, data) VALUES (%s, %s::jsonb) "
                 "ON CONFLICT (phone) DO UPDATE SET data = EXCLUDED.data",
                 ("__ping__", _json.dumps({"onboarded": True, "test": True, "ts": str(_dt.datetime.utcnow())}))
             )

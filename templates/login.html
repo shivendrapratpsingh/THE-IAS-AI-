@@ -93,16 +93,13 @@
       text-transform: uppercase; letter-spacing: .6px; margin-bottom: 8px;
     }
     .phone-wrap { display: flex; gap: 8px; margin-bottom: 16px; }
-    .country-code {
-      background: rgba(255,255,255,0.06);
+    .cc-badge {
+      background: rgba(255,255,255,0.08);
       border: 1.5px solid rgba(255,255,255,0.12);
-      border-radius: 14px; padding: 16px 10px;
+      border-radius: 14px; padding: 16px 12px;
       font-size: 14px; font-weight: 700; color: #fff;
-      font-family: 'Poppins', sans-serif; outline: none;
-      -webkit-appearance: none; appearance: none; cursor: pointer; min-width: 88px;
+      white-space: nowrap; flex-shrink: 0;
     }
-    .country-code:focus { border-color: #F4621F; }
-    .country-code option { background: #1C1C1E; }
     .phone-input {
       flex: 1; background: rgba(255,255,255,0.06);
       border: 1.5px solid rgba(255,255,255,0.12);
@@ -219,13 +216,8 @@
       <input type="hidden" name="intent" value="returning">
       <div class="field-label">Phone Number</div>
       <div class="phone-wrap">
-        <select class="country-code" name="country_code">
-          <option value="+91">🇮🇳 +91</option>
-          <option value="+1">🇺🇸 +1</option>
-          <option value="+44">🇬🇧 +44</option>
-          <option value="+971">🇦🇪 +971</option>
-          <option value="+61">🇦🇺 +61</option>
-        </select>
+        <div class="cc-badge">🇮🇳 +91</div>
+        <input type="hidden" name="country_code" value="+91">
         <input class="phone-input" type="tel" name="phone"
                maxlength="10" inputmode="numeric"
                placeholder="your number"
@@ -243,13 +235,8 @@
       <input type="hidden" name="intent" value="new">
       <div class="field-label">Phone Number</div>
       <div class="phone-wrap">
-        <select class="country-code" name="country_code">
-          <option value="+91">🇮🇳 +91</option>
-          <option value="+1">🇺🇸 +1</option>
-          <option value="+44">🇬🇧 +44</option>
-          <option value="+971">🇦🇪 +971</option>
-          <option value="+61">🇦🇺 +61</option>
-        </select>
+        <div class="cc-badge">🇮🇳 +91</div>
+        <input type="hidden" name="country_code" value="+91">
         <input class="phone-input" type="tel" name="phone"
                maxlength="10" inputmode="numeric"
                placeholder="your number"
