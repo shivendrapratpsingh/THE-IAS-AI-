@@ -1030,7 +1030,7 @@ def ping():
         with conn2.cursor() as cur:
             import datetime as _dt
             cur.execute(
-                "INSERT INTO users (phone, data) VALUES (%s, %s::jsonb) "
+                "INSERT INTO users_v2 (phone, data) VALUES (%s, %s::jsonb) "
                 "ON CONFLICT (phone) DO UPDATE SET data = EXCLUDED.data",
                 ("__ping__", _json.dumps({"onboarded": True, "test": True, "ts": str(_dt.datetime.utcnow())}))
             )
