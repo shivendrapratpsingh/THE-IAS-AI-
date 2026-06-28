@@ -91,21 +91,32 @@ def _get_conn():
 
 
 def _ensure_table():
-    """Create users table if it doesn't exist, and add missing columns if schema is old."""
+    """Create users table if it doesn't exist; migrate schema if columns are missing."""
     conn = _get_conn()
     conn.autocommit = True
     try:
         with conn.cursor() as cur:
+            # Get existing columns
             cur.execute("""
-                CREATE TABLE IF NOT EXISTS users (
-                    phone TEXT PRIMARY KEY,
-                    data  JSONB NOT NULL DEFAULT '{}'
-                )
+                SELECT column_name FROM information_schema.columns
+                WHERE table_name = 'users'
             """)
-            cur.execute("""
-                ALTER TABLE users
-                ADD COLUMN IF NOT EXISTS data JSONB NOT NULL DEFAULT '{}'
-            """)
+            existing = {row[0] for row in cur.fetchall()}
+
+            if not existing:
+                # Table doesn't exist at all — create fresh
+                cur.execute("""
+                    CREATE TABLE IF NOT EXISTS users (
+                        phone TEXT PRIMARY KEY,
+                        data  JSONB NOT NULL DEFAULT '{}'
+                    )
+                """)
+            else:
+                # Table exists — add any missing columns
+                if 'phone' not in existing:
+                    cur.execute("ALTER TABLE users ADD COLUMN phone TEXT")
+                if 'data' not in existing:
+                    cur.execute("ALTER TABLE users ADD COLUMN data JSONB NOT NULL DEFAULT '{}'")
     finally:
         conn.close()
 
