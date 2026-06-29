@@ -236,15 +236,18 @@
   <div class="adm-strip">
     <div class="adm-kpi">
       <div class="adm-kpi-val">{{ metrics.dau }}</div>
-      <div class="adm-kpi-lbl">DAU</div>
+      <div class="adm-kpi-lbl">Today's Users</div>
+      <div style="font-size:10px;color:rgba(255,255,255,0.3);margin-top:2px;">Active today</div>
     </div>
     <div class="adm-kpi">
       <div class="adm-kpi-val">{{ metrics.wau }}</div>
-      <div class="adm-kpi-lbl">WAU</div>
+      <div class="adm-kpi-lbl">This Week</div>
+      <div style="font-size:10px;color:rgba(255,255,255,0.3);margin-top:2px;">Last 7 days</div>
     </div>
     <div class="adm-kpi">
       <div class="adm-kpi-val">{{ metrics.mau }}</div>
-      <div class="adm-kpi-lbl">MAU</div>
+      <div class="adm-kpi-lbl">This Month</div>
+      <div style="font-size:10px;color:rgba(255,255,255,0.3);margin-top:2px;">Last 30 days</div>
     </div>
   </div>
 
@@ -253,8 +256,8 @@
   <div class="metrics-grid">
     <div class="m-card">
       <div class="m-card-val col-green">{{ metrics.d1_retention_pct }}%</div>
-      <div class="m-card-lbl">D1 Retention</div>
-      <div class="m-card-sub">came back next day</div>
+      <div class="m-card-lbl">Next-Day Return</div>
+      <div class="m-card-sub">% who came back next day</div>
     </div>
     <div class="m-card">
       <div class="m-card-val col-orange">{{ metrics.quiz_completion_pct }}%</div>
@@ -278,11 +281,11 @@
   <div class="insight-box">
     {% set dau_mau = ((metrics.dau / metrics.mau * 100)|round|int) if metrics.mau else 0 %}
     <div class="insight-row">
-      <span class="insight-key">DAU / MAU</span>
+      <span class="insight-key">Daily / Monthly ratio</span>
       <span class="insight-val {{ 'good' if dau_mau >= 20 else ('warn' if dau_mau >= 10 else 'bad') }}">{{ dau_mau }}%</span>
     </div>
     <div class="insight-row">
-      <span class="insight-key">D1 Retention</span>
+      <span class="insight-key">Next-Day Return Rate</span>
       <span class="insight-val {{ 'good' if metrics.d1_retention_pct >= 40 else ('warn' if metrics.d1_retention_pct >= 20 else 'bad') }}">{{ metrics.d1_retention_pct }}%</span>
     </div>
     {% set loyal = metrics.regularity.champion + metrics.regularity.regular %}

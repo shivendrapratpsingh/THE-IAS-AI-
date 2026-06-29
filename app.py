@@ -361,6 +361,7 @@ def home():
     return render_template(
         "home.html",
         profile=data["profile"],
+        notifications=[n for n in data.get("notifications", []) if not n.get("read")],
         phone=phone,
         streak=data.get("streak", {}),
         mcq_done_today=mcq_done_today,
@@ -987,6 +988,17 @@ def admin_edit_profile(user_key):
     storage.save_user(user_key, data)
     flash(f"Updated profile for {user_key}")
     return redirect(url_for("admin"))
+
+
+@app.route("/mark-notifications-read", methods=["POST"])
+def mark_notifications_read():
+    phone, data = _get_current_user()
+    if phone:
+        for n in data.get("notifications", []):
+            n["read"] = True
+        _save_current_user(phone, data)
+    from flask import jsonify
+    return jsonify(ok=True)
 
 
 @app.route("/admin/broadcast", methods=["POST"])

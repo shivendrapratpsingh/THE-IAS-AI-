@@ -48,6 +48,33 @@
 {% with messages = get_flashed_messages() %}
   {% if messages %}{% for msg in messages %}<div class="flash" style="margin:0 16px 12px;">{{ msg }}</div>{% endfor %}{% endif %}
 {% endwith %}
+{# ── Admin Notifications ── #}
+{% if notifications %}
+<div style="margin: 0 16px 14px;">
+  {% for n in notifications %}
+  <div style="
+    background: linear-gradient(135deg, rgba(244,98,31,0.15), rgba(244,98,31,0.08));
+    border: 1px solid rgba(244,98,31,0.35);
+    border-radius: 16px; padding: 14px 16px;
+    margin-bottom: 10px;
+  ">
+    <div style="display:flex; align-items:flex-start; gap:10px;">
+      <span style="font-size:20px; flex-shrink:0;">📢</span>
+      <div style="flex:1;">
+        <div style="font-size:12px; font-weight:700; color:#FDA87A; margin-bottom:4px; text-transform:uppercase; letter-spacing:.5px;">Message from BASS 50</div>
+        <div style="font-size:14px; color:rgba(255,255,255,0.85); line-height:1.5; font-weight:500;">{{ n.text }}</div>
+        <div style="font-size:11px; color:rgba(255,255,255,0.35); margin-top:6px;">{{ n.date }}</div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+<script>
+// Mark notifications read via background fetch
+fetch('/mark-notifications-read', {method:'POST', headers:{'Content-Type':'application/json'}});
+</script>
+{% endif %}
+
 
 {# ── Today's tasks ── #}
 <div class="section">
