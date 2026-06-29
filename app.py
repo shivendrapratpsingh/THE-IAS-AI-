@@ -49,13 +49,38 @@ QUOTES = [
 
 
 def _shuffle_q(q, quiz_day):
-    """Return copy of q with shuffled options (deterministic per question+day)."""
+    """
+    7x7 shuffle system: 49 unique option orderings per question, cycling daily forever.
+    
+    Each day picks a position in a 49-day cycle:
+      i = cycle // 7  (which of 7 base shuffles)
+      j = cycle  % 7  (which of 7 sub-shuffles)
+    Base shuffle[i] is composed with sub-shuffle[j] giving 49 distinct orderings.
+    After 49 days the cycle repeats automatically.
+    """
     import random as _r
-    r = _r.Random(f"{q['id']}-{quiz_day}")
-    indices = list(range(len(q['options'])))
-    r.shuffle(indices)
-    return {**q, 'options': [q['options'][i] for i in indices],
-            'correctIndex': indices.index(q['correctIndex'])}
+    from datetime import date as _date
+    try:
+        _d = _date.fromisoformat(str(quiz_day))
+    except Exception:
+        _d = _date.today()
+    day_num = (_d - _date(2024, 1, 1)).days
+
+    cycle = day_num % 49
+    i = cycle // 7
+    j = cycle % 7
+    n = len(q['options'])
+
+    r1 = _r.Random(f"{q['id']}:base:{i}")
+    idx1 = list(range(n)); r1.shuffle(idx1)
+
+    r2 = _r.Random(f"{q['id']}:sub:{j}")
+    idx2 = list(range(n)); r2.shuffle(idx2)
+
+    final = [idx1[idx2[k]] for k in range(n)]
+    return {**q,
+            'options': [q['options'][f] for f in final],
+            'correctIndex': final.index(q['correctIndex'])}
 
 def _parse_daily_hours(value, default=4, minimum=1, maximum=16):
     try:
