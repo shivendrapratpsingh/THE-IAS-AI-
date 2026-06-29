@@ -296,7 +296,11 @@
 
   {# Question card #}
   <div class="question-card" id="questionCard">
-    <div class="question-year-tag" id="qYear"></div>
+    <div class="q-img-wrap" id="qImgWrap" style="width:100%;aspect-ratio:16/9;border-radius:14px 14px 0 0;overflow:hidden;background:#f0f0f0;position:relative;display:none;">
+      <img id="qImg" src="" alt="" width="1280" height="720" style="width:100%;height:100%;object-fit:cover;display:block;animation:legalKenBurns 18s ease-in-out infinite alternate;will-change:transform;">
+      <div style="position:absolute;left:0;right:0;bottom:0;height:35%;background:linear-gradient(to top,rgba(255,255,255,0.9),transparent);pointer-events:none;"></div>
+    </div>
+    <div class="question-year-tag" id="qYear" style="margin-top:6px;"></div>
     <div class="question-text" id="qText">Loading…</div>
   </div>
 
@@ -321,6 +325,16 @@ const QUESTIONS = {{ questions | tojson }};
 let idx = 0;
 let answers = {};
 
+const TOPIC_IMAGES = {
+  'Polity': 'https://image.pollinations.ai/prompt/editorial%20digital%20painting%20of%20Indian%20Parliament%20building%20at%20golden%20hour%2C%20Constitution%20of%20India%20open%20book%2C%20scales%20of%20justice%2C%20saffron%20green%20white%20colors%2C%20cinematic%2C%20dignified%2C%20no%20text%2C%20no%20real%20faces%2C%2016%3A9?width=1280&height=720&nologo=true&model=flux&seed=248681314',
+  'History': 'https://image.pollinations.ai/prompt/editorial%20digital%20painting%20of%20ancient%20Indian%20monuments%2C%20Ashoka%20pillar%2C%20Mughal%20architecture%2C%20historical%20artifacts%20glowing%20warmly%2C%20saffron%20green%20tones%2C%20cinematic%2C%20no%20text%2C%20no%20real%20faces%2C%2016%3A9?width=1280&height=720&nologo=true&model=flux&seed=444103797',
+  'Geography': 'https://image.pollinations.ai/prompt/editorial%20digital%20painting%20of%20India%20physical%20map%2C%20Himalayan%20peaks%2C%20river%20deltas%2C%20diverse%20terrain%2C%20saffron%20green%20palette%2C%20soft%20aerial%20cinematic%20view%2C%20no%20text%2C%20no%20real%20faces%2C%2016%3A9?width=1280&height=720&nologo=true&model=flux&seed=1088198493',
+  'Economy': 'https://image.pollinations.ai/prompt/editorial%20digital%20painting%20of%20Indian%20economy%2C%20RBI%20building%2C%20rupee%20coins%2C%20rising%20growth%20chart%2C%20budget%20document%2C%20saffron%20green%20colors%2C%20dignified%20cinematic%2C%20no%20text%2C%20no%20real%20faces%2C%2016%3A9?width=1280&height=720&nologo=true&model=flux&seed=1900912159',
+  'Environment': 'https://image.pollinations.ai/prompt/editorial%20digital%20painting%20of%20Indian%20biodiversity%2C%20lush%20forests%2C%20tigers%2C%20clean%20rivers%2C%20solar%20panels%2C%20saffron%20and%20green%20tones%2C%20serene%20cinematic%2C%20no%20text%2C%20no%20real%20faces%2C%2016%3A9?width=1280&height=720&nologo=true&model=flux&seed=1581963763',
+  'Science': 'https://image.pollinations.ai/prompt/editorial%20digital%20painting%20of%20ISRO%20rocket%20launch%2C%20satellite%2C%20lab%20equipment%2C%20moon%20surface%2C%20saffron%20orange%20and%20deep%20blue%2C%20cinematic%2C%20futuristic%2C%20no%20text%2C%20no%20real%20faces%2C%2016%3A9?width=1280&height=720&nologo=true&model=flux&seed=1435251269',
+  'Current Affairs': 'https://image.pollinations.ai/prompt/editorial%20digital%20painting%20of%20India%20on%20world%20stage%2C%20UN%20podium%2C%20global%20map%2C%20news%20scroll%2C%20diplomatic%20meeting%20hall%2C%20saffron%20green%20cinematic%20lighting%2C%20dignified%2C%20no%20text%2C%20no%20real%20faces%2C%2016%3A9?width=1280&height=720&nologo=true&model=flux&seed=1702752483',
+};
+
 function showQuestion(i) {
   const q = QUESTIONS[i];
   const total = QUESTIONS.length;
@@ -330,6 +344,18 @@ function showQuestion(i) {
   document.getElementById('qProgress').style.width = `${(i / total) * 100}%`;
   document.getElementById('qYear').textContent     = q.year ? `UPSC ${q.year}` : 'Practice';
   document.getElementById('qText').textContent     = q.question;
+
+  // Update topic image
+  var imgWrap = document.getElementById('qImgWrap');
+  var imgEl   = document.getElementById('qImg');
+  var imgUrl  = TOPIC_IMAGES[q.topic] || null;
+  if (imgUrl && imgWrap && imgEl) {
+    imgEl.src = imgUrl;
+    imgEl.alt = q.topic + ' illustration';
+    imgWrap.style.display = 'block';
+  } else if (imgWrap) {
+    imgWrap.style.display = 'none';
+  }
 
   const letters = ['A','B','C','D'];
   document.getElementById('optionsList').innerHTML = q.options.map((opt, oi) => `
