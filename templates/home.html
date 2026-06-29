@@ -48,30 +48,116 @@
 {% with messages = get_flashed_messages() %}
   {% if messages %}{% for msg in messages %}<div class="flash" style="margin:0 16px 12px;">{{ msg }}</div>{% endfor %}{% endif %}
 {% endwith %}
-{# ── Admin Notifications ── #}
+{# ── AI Avatar Notification Popup ── #}
 {% if notifications %}
-<div style="margin: 0 16px 14px;">
-  {% for n in notifications %}
-  <div style="
-    background: linear-gradient(135deg, rgba(244,98,31,0.15), rgba(244,98,31,0.08));
-    border: 1px solid rgba(244,98,31,0.35);
-    border-radius: 16px; padding: 14px 16px;
-    margin-bottom: 10px;
+<!-- AI Avatar popup overlay -->
+<div id="bass-notif-overlay" style="
+  position:fixed; inset:0; z-index:9999;
+  display:flex; align-items:flex-end; justify-content:center;
+  padding-bottom:80px;
+  pointer-events:none;
+">
+  <div id="bass-notif-card" style="
+    background:#ffffff;
+    border-radius:24px;
+    box-shadow:0 8px 40px rgba(0,0,0,0.35);
+    max-width:340px; width:calc(100% - 32px);
+    padding:20px 18px 18px;
+    pointer-events:all;
+    animation: slideUp 0.4s ease;
+    position:relative;
   ">
-    <div style="display:flex; align-items:flex-start; gap:10px;">
-      <span style="font-size:20px; flex-shrink:0;">📢</span>
-      <div style="flex:1;">
-        <div style="font-size:12px; font-weight:700; color:#FDA87A; margin-bottom:4px; text-transform:uppercase; letter-spacing:.5px;">Message from BASS 50</div>
-        <div style="font-size:14px; color:rgba(255,255,255,0.85); line-height:1.5; font-weight:500;">{{ n.text }}</div>
-        <div style="font-size:11px; color:rgba(255,255,255,0.35); margin-top:6px;">{{ n.date }}</div>
-      </div>
+    <!-- Progress bar -->
+    <div style="position:absolute;top:0;left:0;right:0;height:3px;border-radius:24px 24px 0 0;background:#eee;overflow:hidden;">
+      <div id="bass-timer-bar" style="height:100%;background:#F4621F;width:100%;transition:width 10s linear;"></div>
     </div>
+
+    <!-- Avatar row -->
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;margin-top:6px;">
+      <div style="
+        width:46px;height:46px;border-radius:50%;
+        background:linear-gradient(135deg,#F4621F,#ff8c42);
+        display:flex;align-items:center;justify-content:center;
+        font-size:22px;flex-shrink:0;
+        box-shadow:0 2px 10px rgba(244,98,31,0.4);
+      ">🎓</div>
+      <div>
+        <div style="font-size:13px;font-weight:700;color:#1a1a1a;">BASS 50 AI</div>
+        <div style="font-size:11px;color:#888;">Official message</div>
+      </div>
+      <button onclick="dismissNotif()" style="
+        margin-left:auto;background:none;border:none;
+        font-size:18px;color:#aaa;cursor:pointer;padding:4px;line-height:1;
+      ">✕</button>
+    </div>
+
+    <!-- Messages -->
+    {% for n in notifications %}
+    <div style="
+      background:#FFF5F0;border-left:3px solid #F4621F;
+      border-radius:0 10px 10px 0;
+      padding:12px 14px;margin-bottom:8px;
+    ">
+      <div id="notif-text-{{ loop.index }}" style="font-size:14px;color:#1a1a1a;line-height:1.55;font-weight:500;">{{ n.text }}</div>
+      <div style="font-size:11px;color:#aaa;margin-top:5px;">{{ n.date }}</div>
+    </div>
+    {% endfor %}
+
+    <!-- Translate hint -->
+    <div id="bass-translate-status" style="font-size:11px;color:#aaa;text-align:center;margin-top:6px;"></div>
   </div>
-  {% endfor %}
 </div>
+
+<style>
+@keyframes slideUp {
+  from { opacity:0; transform:translateY(30px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+</style>
+
 <script>
-// Mark notifications read via background fetch
-fetch('/mark-notifications-read', {method:'POST', headers:{'Content-Type':'application/json'}});
+(function(){
+  var userLang = "{{ user_language | default('en') }}";
+  var messages = [
+    {% for n in notifications %}
+    { id: {{ loop.index }}, text: {{ n.text | tojson }} }{% if not loop.last %},{% endif %}
+    {% endfor %}
+  ];
+
+  // Auto-dismiss after 10 s
+  var bar = document.getElementById('bass-timer-bar');
+  if (bar) { setTimeout(function(){ bar.style.width='0'; }, 50); }
+  var autoTimer = setTimeout(dismissNotif, 10000);
+
+  window.dismissNotif = function(){
+    clearTimeout(autoTimer);
+    var el = document.getElementById('bass-notif-overlay');
+    if (el) { el.style.transition='opacity .3s'; el.style.opacity='0'; setTimeout(function(){ el.remove(); },300); }
+    fetch('/mark-notifications-read', {method:'POST', headers:{'Content-Type':'application/json'}});
+  };
+
+  // Translate if language is not English
+  var langMap = {
+    'hi':'hi','bn':'bn','te':'te','mr':'mr','ta':'ta','gu':'gu',
+    'kn':'kn','ml':'ml','pa':'pa','or':'or','ur':'ur','as':'as'
+  };
+  var targetLang = langMap[userLang] || null;
+  if (targetLang && targetLang !== 'en') {
+    var statusEl = document.getElementById('bass-translate-status');
+    if (statusEl) statusEl.textContent = 'Translating…';
+    messages.forEach(function(m){
+      var url = 'https://api.mymemory.translated.net/get?q=' + encodeURIComponent(m.text) + '&langpair=en|' + targetLang;
+      fetch(url).then(function(r){ return r.json(); }).then(function(d){
+        var translated = d && d.responseData && d.responseData.translatedText;
+        if (translated && translated !== m.text) {
+          var el = document.getElementById('notif-text-' + m.id);
+          if (el) el.textContent = translated;
+        }
+        if (statusEl) statusEl.textContent = '';
+      }).catch(function(){ if(statusEl) statusEl.textContent = ''; });
+    });
+  }
+})();
 </script>
 {% endif %}
 

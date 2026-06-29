@@ -362,6 +362,7 @@ def home():
         "home.html",
         profile=data["profile"],
         notifications=[n for n in data.get("notifications", []) if not n.get("read")],
+        user_language=data.get("prefs", {}).get("language", "en"),
         phone=phone,
         streak=data.get("streak", {}),
         mcq_done_today=mcq_done_today,
