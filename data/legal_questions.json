@@ -11,7 +11,8 @@
     "explanation": "Article 123 grants the President power to promulgate ordinances during recess of Parliament, having the same force as an Act, but must be approved within 6 weeks of reassembly.",
     "topic": "ordinance-article-123",
     "image": "legal/ordinance-article-123.jpg",
-    "image_prompt": "editorial digital painting of an empty Indian Parliament chamber at dusk, a presidential ordinance document and quill resting on a polished desk, warm saffron and green light, cinematic, dignified, no text, no real faces, 16:9"
+    "image_prompt": "editorial digital painting of an empty Indian Parliament chamber at dusk, a presidential ordinance document and quill resting on a polished desk, warm saffron and green light, cinematic, dignified, no text, no real faces, 16:9",
+    "image_url": "https://image.pollinations.ai/prompt/editorial%20digital%20painting%20of%20an%20empty%20Indian%20Parliament%20chamber%20at%20dusk%2C%20a%20presidential%20ordinance%20document%20and%20quill%20resting%20on%20a%20polished%20desk%2C%20warm%20saffron%20and%20green%20light%2C%20cinematic%2C%20dignified%2C%20no%20text%2C%20no%20real%20faces%2C%2016%3A9?width=1280&height=720&nologo=true&model=flux&seed=1303717155"
   },
   {
     "question": "The 'basic structure' doctrine of the Indian Constitution was propounded in which landmark case?",
@@ -25,7 +26,8 @@
     "explanation": "In Kesavananda Bharati v. State of Kerala (1973), the Supreme Court held that Parliament's power to amend the Constitution under Article 368 does not extend to altering its 'basic structure'.",
     "topic": "basic-structure-kesavananda",
     "image": "legal/basic-structure-kesavananda.jpg",
-    "image_prompt": "editorial digital painting of the Supreme Court of India, grand pillared facade, a glowing open Constitution book and brass scales of justice in front, soft saffron-green cinematic lighting, dignified, no text, no real faces, 16:9"
+    "image_prompt": "editorial digital painting of the Supreme Court of India, grand pillared facade, a glowing open Constitution book and brass scales of justice in front, soft saffron-green cinematic lighting, dignified, no text, no real faces, 16:9",
+    "image_url": "https://image.pollinations.ai/prompt/editorial%20digital%20painting%20of%20the%20Supreme%20Court%20of%20India%2C%20grand%20pillared%20facade%2C%20a%20glowing%20open%20Constitution%20book%20and%20brass%20scales%20of%20justice%20in%20front%2C%20soft%20saffron-green%20cinematic%20lighting%2C%20dignified%2C%20no%20text%2C%20no%20real%20faces%2C%2016%3A9?width=1280&height=720&nologo=true&model=flux&seed=1732266797"
   },
   {
     "question": "Which schedule of the Constitution deals with the disqualification of members on grounds of defection?",
@@ -39,6 +41,7 @@
     "explanation": "The Tenth Schedule, added by the 52nd Amendment Act (1985), contains provisions for disqualification of MPs/MLAs on grounds of defection.",
     "topic": "anti-defection-tenth-schedule",
     "image": "legal/anti-defection-tenth-schedule.jpg",
-    "image_prompt": "editorial digital painting symbolising legislative discipline, a legislative assembly hall with a rulebook on a central podium, orderly empty seats, warm saffron and green tones, dignified, no text, no real faces, 16:9"
+    "image_prompt": "editorial digital painting symbolising legislative discipline, a legislative assembly hall with a rulebook on a central podium, orderly empty seats, warm saffron and green tones, dignified, no text, no real faces, 16:9",
+    "image_url": "https://image.pollinations.ai/prompt/editorial%20digital%20painting%20symbolising%20legislative%20discipline%2C%20a%20legislative%20assembly%20hall%20with%20a%20rulebook%20on%20a%20central%20podium%2C%20orderly%20empty%20seats%2C%20warm%20saffron%20and%20green%20tones%2C%20dignified%2C%20no%20text%2C%20no%20real%20faces%2C%2016%3A9?width=1280&height=720&nologo=true&model=flux&seed=1395831093"
   }
 ]

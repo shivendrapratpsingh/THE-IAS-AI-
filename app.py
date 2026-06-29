@@ -341,6 +341,13 @@ def home():
     answer_done_today = any(a["date"] == today_iso for a in data.get("answer_history", []))
 
     legal_q = storage.get_daily_legal_question(date.today())
+    # Normalize legal_q fields for template
+    if legal_q:
+        legal_q = dict(legal_q)
+        if "correctIndex" not in legal_q:
+            legal_q["correctIndex"] = ord(legal_q.get("correct_answer", "A")) - ord("A")
+        if "source" not in legal_q or not legal_q["source"]:
+            legal_q["source"] = "Constitutional Law"
     daily_legal = data.get("daily_legal", {})
     legal_answered_today = daily_legal.get("date") == today_iso
     legal_selected = daily_legal.get("answer") if legal_answered_today else None
