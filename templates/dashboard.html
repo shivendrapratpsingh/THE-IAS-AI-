@@ -97,6 +97,12 @@
 <div class="section-pad">
   <div class="section-head">Legal Concept</div>
   <div class="legal-card">
+    <div class="legal-media">
+      <img class="legal-img"
+           src="{{ url_for('static', filename='images/' + (legal_q.image if legal_q.image is defined and legal_q.image else 'legal/_default.jpg')) }}"
+           alt="Illustration: {{ legal_q.topic if legal_q.topic is defined else 'legal concept' }}"
+           width="1280" height="720" loading="eager" decoding="async">
+    </div>
     <div class="legal-label">{{ legal_q.source }}</div>
     <div class="legal-q">{{ legal_q.question }}</div>
 

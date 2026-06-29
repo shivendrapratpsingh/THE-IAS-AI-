@@ -8,7 +8,10 @@
       "Article 356"
     ],
     "correct_answer": "A",
-    "explanation": "Article 123 grants the President power to promulgate ordinances during recess of Parliament, having the same force as an Act, but must be approved within 6 weeks of reassembly."
+    "explanation": "Article 123 grants the President power to promulgate ordinances during recess of Parliament, having the same force as an Act, but must be approved within 6 weeks of reassembly.",
+    "topic": "ordinance-article-123",
+    "image": "legal/ordinance-article-123.jpg",
+    "image_prompt": "editorial digital painting of an empty Indian Parliament chamber at dusk, a presidential ordinance document and quill resting on a polished desk, warm saffron and green light, cinematic, dignified, no text, no real faces, 16:9"
   },
   {
     "question": "The 'basic structure' doctrine of the Indian Constitution was propounded in which landmark case?",
@@ -19,7 +22,10 @@
       "Minerva Mills v. Union of India"
     ],
     "correct_answer": "B",
-    "explanation": "In Kesavananda Bharati v. State of Kerala (1973), the Supreme Court held that Parliament's power to amend the Constitution under Article 368 does not extend to altering its 'basic structure'."
+    "explanation": "In Kesavananda Bharati v. State of Kerala (1973), the Supreme Court held that Parliament's power to amend the Constitution under Article 368 does not extend to altering its 'basic structure'.",
+    "topic": "basic-structure-kesavananda",
+    "image": "legal/basic-structure-kesavananda.jpg",
+    "image_prompt": "editorial digital painting of the Supreme Court of India, grand pillared facade, a glowing open Constitution book and brass scales of justice in front, soft saffron-green cinematic lighting, dignified, no text, no real faces, 16:9"
   },
   {
     "question": "Which schedule of the Constitution deals with the disqualification of members on grounds of defection?",
@@ -30,6 +36,9 @@
       "Eleventh Schedule"
     ],
     "correct_answer": "C",
-    "explanation": "The Tenth Schedule, added by the 52nd Amendment Act (1985), contains provisions for disqualification of MPs/MLAs on grounds of defection."
+    "explanation": "The Tenth Schedule, added by the 52nd Amendment Act (1985), contains provisions for disqualification of MPs/MLAs on grounds of defection.",
+    "topic": "anti-defection-tenth-schedule",
+    "image": "legal/anti-defection-tenth-schedule.jpg",
+    "image_prompt": "editorial digital painting symbolising legislative discipline, a legislative assembly hall with a rulebook on a central podium, orderly empty seats, warm saffron and green tones, dignified, no text, no real faces, 16:9"
   }
 ]

@@ -493,8 +493,51 @@ html, body { height: 100%; background: #F3F4F6; font-family: 'Poppins', sans-ser
   background: #fff;
   border: 1px solid var(--border);
   border-radius: 16px;
-  padding: 16px;
+  padding: 0 0 16px;
   box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+  overflow: hidden;
+}
+.legal-card .legal-label,
+.legal-card .legal-q,
+.legal-card .legal-opts,
+.legal-card .bubble-explain { padding-left: 16px; padding-right: 16px; }
+.legal-card .legal-q { padding-top: 10px; }
+
+/* Image banner — ken-burns zoom + soft float */
+.legal-media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 16px 16px 0 0;
+  overflow: hidden;
+  margin-bottom: 14px;
+  background: #f0f0f0;
+}
+.legal-media::after {
+  content: "";
+  position: absolute; left: 0; right: 0; bottom: 0; height: 40%;
+  background: linear-gradient(to top, rgba(255,255,255,0.85), transparent);
+  pointer-events: none;
+}
+.legal-img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+  transform-origin: 50% 50%;
+  animation: legalKenBurns 18s ease-in-out infinite alternate,
+             legalFloat 7s ease-in-out infinite;
+  will-change: transform;
+}
+@keyframes legalKenBurns {
+  from { transform: scale(1.04) translate(0, 0); }
+  to   { transform: scale(1.14) translate(-1.5%, -1.5%); }
+}
+@keyframes legalFloat {
+  0%, 100% { filter: brightness(1); }
+  50%       { filter: brightness(1.05); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .legal-img { animation: none; transform: scale(1.04); }
 }
 .legal-q { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 12px; line-height: 1.5; }
 .legal-options { display: flex; flex-direction: column; gap: 8px; }
